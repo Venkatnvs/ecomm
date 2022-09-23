@@ -59,7 +59,6 @@ class Product(models.Model):
     description = models.TextField()
     long_description = models.TextField()
     by_seller = models.ForeignKey(SellerUser, on_delete=models.CASCADE)
-    image = models.ImageField(upload_to='products/uploads/%Y/%m/%d/')
     is_active = models.BooleanField(default=True)
     is_bestselling = models.BooleanField(default=False)
     is_featured = models.BooleanField(default=False)
