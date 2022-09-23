@@ -1,0 +1,93 @@
+{% extends 'ctm_admin/base/index.html' %}
+{% load static %}
+{% block title %}
+Category List
+{% endblock title %}
+
+
+{% block content %}
+<div class="row">
+    <div class="card">
+        <div class="card-body p-1">
+            <div class="col-md-3 m-1" style="float:right;">
+                <form method="get">
+                    <div class="input-group">
+                        <input class="form-control" type="text" placeholder="Search..." name="filter" id="id_filter" value="{{filter}}">
+                        <button class="btn btn-sm btn-primary" type="submit"><i class="bi bi-search"></i></button>
+                    </div>
+                </form>
+            </div>
+            <div class="col-md m-1" style="float:left;">
+                <b>Sort By :-</b>
+                <a class="badge badge-sm bg-warning text-dark" href="{% url 'admin-categorylist' %}?filter={{filter}}&order_by=id&page={{page_obj.number}}">Id</a>|
+                <a class="badge badge-sm bg-warning text-dark" href="{% url 'admin-categorylist' %}?filter={{filter}}&order_by=name&page={{page_obj.number}}">Name</a>|
+                <a class="badge badge-sm bg-warning text-dark" href="{% url 'admin-categorylist' %}?filter={{filter}}&order_by=description&page={{page_obj.number}}">Description</a>|
+                <a class="badge badge-sm bg-warning text-dark" href="{% url 'admin-categorylist' %}?filter={{filter}}&order_by=updated_at&page={{page_obj.number}}">Time</a>
+            </div>
+        </div>
+    </div>
+</div>
+<div class="row">
+    {% if category_list %}
+    {% for x in category_list %}
+    <div class="col-12 col-sm-6 col-md-6 col-lg-3">
+        <article class="article article-style-b">
+            <div class="article-header">
+                <!-- <div class="article-image" data-background="{{x.image.url}}" style="background-image: url(&quot;{{x.image.url}}&quot;);">
+                </div> -->
+                <div class="article-image">
+                    <img class="img-fluid" src="{{x.image.url}}" alt="category">
+                </div>
+                <div class="article-badge">
+                <div class="article-badge-item bg-warning"><i class="bi bi-fire"></i> <small class="text-dark"><strong>last-edit: </strong>{{x.updated_at}}</small></div>
+                </div>
+            </div>
+            <div class="article-details">
+                <div class="article-title">
+                <h2><a href="#">{{x.name}}</a></h2>
+                </div>
+                <span class="badge bg-secondary">Description: {{x.description}}</span>
+                <span class="badge bg-info">Slug: {{x.slug}}</span>
+                <div class="form-check form-switch mt-2">
+                    <input type="checkbox" name="checkbox" id="active-checkbox" class="form-check-input" {% if x.is_active %}checked{% endif %}>
+                    <label for="active-checkbox" class="form-check-label">Active</label>
+                </div>
+                <div class="article-cta">
+                    <a href="{% url 'admin-categoryupdate' x.id %}" class="btn btn-sm btn-warning">Edit<i class="bi bi-chevron-right"></i></a>
+                </div>
+                <p class="m-0 badge bg-danger-light"><small><strong>created-on: </strong>{{x.created_at}}</small></p>
+            </div>
+        </article>
+    </div>
+    {% endfor %}
+    {% else %}
+    <div class="m-1 text-center">Not Found</div>
+    {% endif %}
+</div>
+<div class="row">
+    <div class="col">
+        <nav style="float:right;">
+            <ul class="pagination">
+                {% if page_obj.has_previous %}
+                <li class="page-item"><a class="page-link" href="{% url 'admin-categorylist' %}?filter={{filter}}&order_by={% if order_by %}{{order_by}}{% else %}id{% endif %}&page={{page_obj.previous_page_number}}">Previous</a></li>
+                {% else %}
+                <li class="page-item disabled"><a class="page-link" href="#">Previous</a></li>
+                {% endif %}
+                {% for i in paginator.page_range %}
+                <li class="page-item"><a class="page-link" href="{% url 'admin-categorylist' %}?filter={{filter}}&order_by={% if order_by %}{{order_by}}{% else %}id{% endif %}&page={{i}}">{{i}}</a></li>
+                {% endfor %}
+                {% if page_obj.has_next %}
+                <li class="page-item"><a class="page-link" href="{% url 'admin-categorylist' %}?filter={{filter}}&order_by={% if order_by %}{{order_by}}{% else %}id{% endif %}&page={{page_obj.next_page_number}}">Next</a></li>
+                {% else %}
+                <li class="page-item disabled"><a class="page-link" href="#">Next</a></li>
+                {% endif %}
+            </ul>
+        </nav>
+    </div>
+</div>
+{% endblock content %}
+
+
+{% block styles %}
+<link href="{% static 'ctm_admin/css/category_list.css' %}" rel="stylesheet">
+{% endblock styles %}

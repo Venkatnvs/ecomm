@@ -1,0 +1,43 @@
+{% extends 'blog/base.html' %}
+{% block body %}
+<br/>
+<form class='form-inline'>
+    <div class='form-group mx-sm-3 mb-2'>
+        <label for='inputPassword2' class='sr-only'>Password</label>
+        <input type='text' class='form-control' placeholder='paste link' name='url'>
+    </div>
+    <button type='submit' class='btn btn-primary mb-2'>Search</button>
+</form>
+{% if feed %}
+<br>
+<hr>
+<!-- <div class="container">
+    {{feed.entries}}
+</div> -->
+<hr>
+<br>
+<h2>{{ feed.feed.title }}</h2>
+{% if feed.entries %}
+<div class='card-header bg-info m-2'>
+    Feeds
+</div>
+{% for entry in feed.entries %}
+<div class='card'>
+    <div class='card-body'>
+        <h5 class='card-title'>Headline: {{ entry.title }}</h5>
+        <p class='card-text'><h6>Description: </h6>
+            <div>{{entry.description | safe }}</div>
+        </p>
+        <a href='{{ entry.link }}' class='btn btn-primary nvs-fl'>Visit Link</a>
+    </div>
+    <p>{{ entry.published }}</p>
+</div>
+<hr class="bg-dark">
+{% endfor %}
+{% endif %}
+{% else %}
+<br />
+<p>Enter your favorite RSS feed above.</p>
+{% endif %}
+{{ feed2 }}
+{% endblock %}

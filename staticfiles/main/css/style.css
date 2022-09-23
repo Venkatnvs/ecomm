@@ -1,0 +1,49 @@
+.nvs-cart{
+    margin-right: 8px;
+}
+.nvs-box{
+	box-shadow:hsl(0, 0%, 80%) 0 0 16px;
+	background-color: #fff;
+	border-radius: 4px;
+	padding: 5px;
+    margin: auto;
+}
+.nvs-price{
+    float: right;
+}
+.nvs-checkout{
+	float: right;
+}
+.nvs-cart-row{
+	display: flex;
+	align-items: flex-start;
+	padding-bottom: 5;
+	border-bottom: 1px solid #ececec;
+	margin-bottom: 5;
+}
+.nvs-cart-items1{
+	flex: 1;
+}
+.nvs-cart-items2{
+	flex: 2;
+}
+.nvs-cart-img{
+	width: 90px;
+	padding: 5;
+	margin: 5;
+	border: 1px solid #000000;
+	border-radius: 3%;
+}
+.nvs-cart-quantity{
+	display: inline-block;
+}
+.nvs-col{
+	color: white;
+}
+.nvs-checkout-form{
+	display: inline-block !important;
+	padding: 5;
+}
+.nvs-checkout-sub_btn{
+	display: block !important;
+}

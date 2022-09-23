@@ -1,0 +1,59 @@
+{% extends 'clients/base.html' %} 
+{% load static %} 
+{% block title %} Login {% endblock %} 
+{% block content %}
+<div class="row">
+  <div class="col-md-4"></div>
+  <div class="col-md-4">
+    <div class="card mt-5 p-2">
+      <div class="card-body">
+        <div class="text-center">
+          <div class="card-title">
+            <h3>Login</h3>
+          </div>
+        </div>
+        <hr />
+        <form action="{% url 'login' %}" method="post">
+          {% csrf_token %}
+          {% include 'clients/messages.html' %}
+          <div class="form-group mb-2">
+            <label for="inputname">Username</label>
+            <input
+              required
+              type="text"
+              name="username"
+              placeholder="Username"
+              class="form-control"
+              id="inputname"
+
+              value="{{ FieldValues.username }}"
+            />
+          </div>
+          <div class="form-group mb-3">
+            <label for="inputpassword">Password</label>
+            <input
+              required
+              type="password"
+              name="password"
+              placeholder="password"
+              class="form-control"
+              id="inputpassword"
+            />
+          </div>
+          <input
+            type="submit"
+            value="Login"
+            class="btn btn-block btn-primary submit-btn"
+          />
+        </form>
+        <div class="container mt-2">
+          <span class="text-lead lead">Don't have an account? </span><a href="{% url 'register' %}" > Register</a><br >
+          <span class="text-lead lead">Forget password? </span><a href="{% url 'reset-password' %}" > Reset it</a>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="col-md-4"></div>
+</div>
+
+{% endblock %}

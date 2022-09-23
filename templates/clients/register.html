@@ -1,0 +1,83 @@
+{% extends 'clients/base.html' %}
+{% load static %} 
+{% block title %} Register {% endblock %}
+{% block content %}
+<div class="row">
+  <div class="col-md-4"></div>
+  <div class="col-md-4">
+    <div class="card mt-5 p-2">
+      <div class="card-body">
+        <div class="text-center">
+          <div class="card-title">
+            <h3>Register</h3>
+          </div>
+        </div>
+        <hr />
+        <form action="{% url 'register' %}" method="post">
+          {% csrf_token %} {% include 'clients/messages.html' %}
+          <div class="form-group mb-2">
+            <label for="inputname">Username</label>
+            <input
+              required
+              type="text"
+              name="username"
+              placeholder="Username"
+              class="form-control"
+              id="inputname"
+
+              value="{{ FieldValues.username }}"
+            />
+            <div
+              class="invalid-feedback invalid-username-feedback"
+              style="display: none"
+            ></div>
+            <p class="text-sm text-success username-success"></p>
+          </div>
+          <div class="form-group mb-2">
+            <label for="inputemail">Email address</label>
+            <input
+              required
+              type="email"
+              name="email"
+              placeholder="abc@gmail.com"
+              class="form-control"
+              id="inputemail"
+
+              value="{{ FieldValues.email }}"
+            />
+            <div
+              class="invalid-feedback invalid-email-feedback"
+              style="display: none"
+            ></div>
+            <p class="text-sm text-success email-success"></p>
+          </div>
+          <div class="form-group mb-3">
+            <label for="inputpassword">Password</label>
+            <input
+              required
+              type="password"
+              name="password"
+              placeholder="password"
+              class="form-control"
+              id="inputpassword"
+            />
+            <small class="float-end p-2 password-toggle">SHOW</small>
+          </div>
+          <input
+            type="submit"
+            value="Register"
+            class="btn btn-block btn-primary submit-btn"
+          />
+        </form>
+        <div class="mt-2">
+          <span class="text-lead lead">Already have an acccount? </span><a href="{% url 'login' %}" >Login</a>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="col-md-4"></div>
+</div>
+
+{% endblock %} {% block script %}
+<script src="{% static 'clients/js/register.js' %}"></script>
+{% endblock %}

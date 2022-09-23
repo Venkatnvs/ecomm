@@ -1,0 +1,165 @@
+/* 1.1 Article */
+.article {
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.03);
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.03);
+    background-color: #fff;
+    border-radius: 3px;
+    border: none;
+    position: relative;
+    margin-bottom: 30px;
+}
+.article .article-header {
+    height: 170px;
+    position: relative;
+    overflow: hidden;
+}
+.article .article-header .article-image {
+    background-color: #fbfbfb;
+    background-position: center;
+    background-size: cover;
+    background-repeat: no-repeat;
+    width: 100%;
+    height: 100%;
+    z-index: -1;
+}
+.article-image{
+    overflow:visible;
+    height: inherit;
+}
+.article .article-header .article-title {
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    width: 100%;
+    background: linear-gradient(
+        to bottom,
+        rgba(0, 0, 0, 0) 0%,
+        rgba(0, 0, 0, 0.01) 1%,
+        rgba(0, 0, 0, 0.65) 98%,
+        rgba(0, 0, 0, 0.65) 100%
+    );
+    padding: 10px;
+}
+.article .article-header .article-title h2 {
+    font-size: 16px;
+    line-height: 24px;
+}
+.article .article-header .article-title h2 a {
+    font-weight: 700;
+    text-decoration: none;
+    color: #fff;
+}
+.article .article-details {
+    background-color: #fff;
+    padding: 20px;
+    line-height: 24px;
+}
+.article .article-details .article-cta {
+    text-align: center;
+}
+.article .article-header .article-badge {
+    position: absolute;
+    bottom: 10px;
+    left: 10px;
+}
+.article .article-header .article-badge .article-badge-item {
+    padding: 7px 15px;
+    font-weight: 600;
+    color: #fff;
+    border-radius: 30px;
+    font-size: 12px;
+}
+.article .article-header .article-badge .article-badge-item .ion,
+.article .article-header .article-badge .article-badge-item .fas,
+.article .article-header .article-badge .article-badge-item .far,
+.article .article-header .article-badge .article-badge-item .fab,
+.article .article-header .article-badge .article-badge-item .fal {
+    margin-right: 3px;
+}
+.article.article-style-b .article-details .article-title {
+    margin-bottom: 10px;
+}
+.article.article-style-b .article-details .article-title h2 {
+    line-height: 22px;
+}
+.article.article-style-b .article-details .article-title a {
+    font-size: 16px;
+    font-weight: 600;
+}
+.article.article-style-b .article-details p {
+    color: #34395e;
+}
+.article.article-style-b .article-details .article-cta {
+    text-align: right;
+}
+.article.article-style-c .article-header {
+    height: 233px;
+}
+.article.article-style-c .article-details .article-category {
+    text-transform: uppercase;
+    margin-bottom: 5px;
+    letter-spacing: 1px;
+    color: #34395e;
+}
+.article.article-style-c .article-details .article-category a {
+    font-size: 10px;
+    color: #34395e;
+    font-weight: 700;
+}
+.article.article-style-c .article-details .article-title {
+    margin-bottom: 10px;
+}
+.article.article-style-c .article-details .article-title h2 {
+    line-height: 22px;
+}
+.article.article-style-c .article-details .article-title a {
+    font-size: 16px;
+    font-weight: 600;
+}
+.article.article-style-c .article-details p {
+    color: #34395e;
+}
+.article.article-style-c .article-user {
+    display: inline-block;
+    width: 100%;
+    margin-top: 20px;
+}
+.article.article-style-c .article-user img {
+    border-radius: 50%;
+    float: left;
+    width: 45px;
+    margin-right: 15px;
+}
+.article.article-style-c .article-user .user-detail-name {
+    overflow: hidden;
+    white-space: nowrap;
+    text-overflow: ellipsis;
+}
+.article.article-style-c .article-user .user-detail-name a {
+    font-weight: 700;
+}
+
+@media (max-width: 575.98px) {
+    .article .article-style-c .article-header {
+        height: 225px;
+    }
+}
+@media (min-width: 768px) and (max-width: 991.98px) {
+    .article {
+        margin-bottom: 40px;
+    }
+    .article .article-header {
+        height: 195px !important;
+    }
+    .article.article-style-c .article-header {
+        height: 155px;
+    }
+}
+@media (max-width: 1024px) {
+    .article.article-style-c .article-header {
+        height: 216px;
+    }
+    .article .article-header {
+        height: 155px;
+    }
+}

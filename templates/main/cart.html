@@ -1,0 +1,58 @@
+{% extends 'base2/index.html' %}
+{% load static %}
+{% block title %}
+Cart
+{% endblock title %}
+
+{% block content %}
+<div class="row">
+    <div class="col-lg-12">
+        <div class="nvs-box">
+            <a class="btn btn-primary" href="{% url 'home' %}"><i class="bi bi-arrow-left"></i> Continue Shopping</a>
+
+            <br>
+            <table class="table">
+                <thead>
+                    <tr>
+                        <th><h5>Items: <strong>3</strong></h5></th>
+                        <th><h5>Total: <strong>$40</strong></h5></th>
+                        <th>
+                            <a href="{% url 'checkout' %}" class="btn btn-success nvs-checkout">Checkout</a>
+                        </th>
+                    </tr>
+                </thead>
+            </table>
+        </div>
+        <br>
+        <div class="nvs-box">
+            <div class="nvs-cart-row">
+                <div class="nvs-cart-items1"><strong>S.no</strong></div>
+                <div class="nvs-cart-items2"><strong>Image</strong></div>
+                <div class="nvs-cart-items2"><strong>Item</strong></div>
+                <div class="nvs-cart-items1"><strong>Price</strong></div>
+                <div class="nvs-cart-items1"><strong>Quantity</strong></div>
+                <div class="nvs-cart-items1"><strong>Total</strong></div>
+            </div>
+            <div class="nvs-cart-row mt-2">
+                <div class="nvs-cart-items1">1</div>
+                <div class="nvs-cart-items2"><img class="nvs-cart-img" src="{% static 'main/img/no-image.jpg' %}" alt="product"></div>
+                <div class="nvs-cart-items2">Product 1</div>
+                <div class="nvs-cart-items1">$10</div>
+                <div class="nvs-cart-items1">
+                    <div>
+                        <a class="btn btn-sm btn-secondary" href="">
+                            <i class="bi bi-dash"></i>
+                        </a>
+                        <p class='nvs-cart-quantity'>2</p>
+                        <a class="btn btn-sm btn-secondary" href="">
+                            <i class="bi bi-plus nvs-col"></i>
+                        </a>
+                    </div>
+                </div>
+                <div class="nvs-cart-items1">$40</div>
+            </div>
+        </div>
+    </div>
+</div>
+
+{% endblock content %}

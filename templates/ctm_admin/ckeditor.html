@@ -1,0 +1,59 @@
+<!doctype html>
+<html lang="en">
+
+<head>
+    <meta charset="utf-8">
+    <meta name="robots" content="noindex, nofollow">
+    <title>Using Media Embed with Auto Embed</title>
+    <script src="https://cdn.ckeditor.com/4.19.1/standard-all/ckeditor.js"></script>
+    <script>
+        document.getElementById("id_name").onkeyup=function(){
+            document.getElementById("id_slug").value=document.getElementById("id_name").value.toLowerCase().replace(/[^\w ]+/g,'').replace(/ +/g,'-');
+        };
+        CKEDITOR.replace( 'product_long_description', {
+            skin:'moono',
+            extraPlugins: 'codesnippet,editorplaceholder,embed,autoembed,image2',
+            codeSnippet_theme: 'monokai_sublime',
+            editorplaceholder: 'Start typing here...',
+            embed_provider: 'https://ckeditor.iframe.ly/api/oembed?url={url}&callback={callback}&api_key=6ebca5bda576af3d0f1faa',
+            image2_alignClasses: ['image-align-left', 'image-align-center', 'image-align-right'],
+            image2_disableResizer: true,
+            height: 380,
+            removeButtons: 'PasteFromWord'
+        } );
+        tinymce.init({
+            selector: '#product_long_description2',
+            plugins: 'a11ychecker advcode casechange export formatpainter image editimage linkchecker autolink lists checklist media mediaembed pageembed permanentpen powerpaste table advtable tableofcontents tinycomments tinymcespellchecker',
+            toolbar: 'a11ycheck addcomment showcomments casechange checklist code export formatpainter image editimage pageembed permanentpen table tableofcontents',
+            toolbar_mode: 'floating',
+            tinycomments_mode: 'embedded',
+            tinycomments_author: 'Author name',
+        });
+    </script>
+</head>
+
+<body>
+    <textarea cols="10" id="editor1" name="editor1" rows="10">&lt;p&gt;This is some &lt;strong&gt;sample text&lt;/strong&gt;. You are using &lt;a href=&quot;https://ckeditor.com/&quot;&gt;CKEditor&lt;/a&gt;.&lt;/p&gt;</textarea>
+    <script>
+        CKEDITOR.replace('editor1', {
+            extraPlugins: 'embed,autoembed,image2',
+            height: 500,
+
+          // Load the default contents.css file plus customizations for this sample.
+            contentsCss: [
+                'http://cdn.ckeditor.com/4.19.1/full-all/contents.css',
+                'https://ckeditor.com/docs/ckeditor4/4.19.1/examples/assets/css/widgetstyles.css'
+            ],
+          // Setup content provider. See https://ckeditor.com/docs/ckeditor4/latest/features/media_embed
+            embed_provider: '//ckeditor.iframe.ly/api/oembed?url={url}&callback={callback}',
+
+          // Configure the Enhanced Image plugin to use classes instead of styles and to disable the
+          // resizer (because image size is controlled by widget styles or the image takes maximum
+          // 100% of the editor width).
+            image2_alignClasses: ['image-align-left', 'image-align-center', 'image-align-right'],
+            image2_disableResizer: true,
+            removeButtons: 'PasteFromWord'
+            });
+    </script>
+</body>
+</html>
