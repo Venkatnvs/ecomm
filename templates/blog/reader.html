@@ -1,4 +1,20 @@
 {% extends 'blog/base.html' %}
+{% load new_tags %}
+{% block title %}Rss Reader{% endblock title %}
+{% block styles %}
+<style>
+    img{
+        width: 250px !important;
+        height: 150px !important;
+    }
+    .bg-nvs{
+        background-color: rgb(151, 39, 82);
+    }
+    .nvs-fl{
+        float:inline-end;
+    }
+</style>
+{% endblock styles %}
 {% block body %}
 <br/>
 <form class='form-inline'>
@@ -12,7 +28,7 @@
 <br>
 <hr>
 <!-- <div class="container">
-    {{feed.entries}}
+    {{feed.entries | safe}}
 </div> -->
 <hr>
 <br>
@@ -25,12 +41,15 @@
 <div class='card'>
     <div class='card-body'>
         <h5 class='card-title'>Headline: {{ entry.title }}</h5>
+        {% if entry.yt_videoid %}
+        <iframe style="float:right;" src="https://www.youtube.com/embed/{{ entry.yt_videoid }}" frameborder="1" width="460" height="320"></iframe>
+        {% endif %}
         <p class='card-text'><h6>Description: </h6>
-            <div>{{entry.description | safe }}</div>
+            <div>{{entry.description | safe | slice:':550' | linebreaks }}...</div>
         </p>
         <a href='{{ entry.link }}' class='btn btn-primary nvs-fl'>Visit Link</a>
     </div>
-    <p>{{ entry.published }}</p>
+    <p class="mx-2">Date: {{ entry.published | rssdate }}</p>
 </div>
 <hr class="bg-dark">
 {% endfor %}

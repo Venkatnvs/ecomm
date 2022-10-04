@@ -1,0 +1,12 @@
+<html style="height: 100%">
+<head>
+    <meta name="viewport" content="width=device-width, minimum-scale=0.1" />
+    <title>images</title>
+</head>
+<body>
+    {% for a in imgs %}
+    <h6>{{a}}</h6>
+    <img src="data:image/jpeg;base64,{{a.base64}}"/><br><hr>
+    {% endfor %}
+</body>
+</html>

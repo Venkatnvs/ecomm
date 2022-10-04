@@ -24,4 +24,4 @@ def note_test(request, message):
             }
         }
     )
-    return HttpResponse('message:- '+message+' have been sent')
+    return HttpResponse('message:- "%s" have been sent',message)

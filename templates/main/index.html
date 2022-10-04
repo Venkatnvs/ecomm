@@ -1,5 +1,6 @@
 {% extends 'base/index.html' %}
 {% load static %}
+{% load compress %}
 {% block title %}
 Home
 {% endblock title %}
@@ -55,6 +56,7 @@ Home
 {% endblock body_hidden %}
 
 {% block scripts %}
+{% compress js inline %}
 <script>
     const UserName = JSON.parse(document.getElementById('user_name').textContent);
 
@@ -89,4 +91,5 @@ Home
         console.error('Chat socket closed unexpectedly');
     };
 </script>
+{% endcompress %}
 {% endblock scripts %}

@@ -28,13 +28,14 @@ SECRET_KEY = config('SECRET_KEY')
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = config('DEBUG', cast=bool)
 
-ALLOWED_HOSTS = ['127.0.0.1']
+ALLOWED_HOSTS = ['127.0.0.1','192.168.100.9','10.62.16.77']
 
 
 # Application definition
 
 INSTALLED_APPS = [
     'channels',
+    'compressor',
     'django.contrib.admin',
     'django.contrib.auth',
     'django.contrib.contenttypes',
@@ -49,12 +50,16 @@ INSTALLED_APPS = [
     'clients',
     'chat',
     'blog',
-    'videoplay',
     'notification',
-    'order'
+    'order',
+    'src'
 ]
 
 MIDDLEWARE = [
+    'django.middleware.gzip.GZipMiddleware', #This one
+    'htmlmin.middleware.HtmlMinifyMiddleware', #This one
+    'htmlmin.middleware.MarkRequestMiddleware', #This one
+
     'django.middleware.security.SecurityMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
     'django.middleware.common.CommonMiddleware',
@@ -141,9 +146,18 @@ USE_TZ = True
 
 STATIC_URL = 'static/'
 STATICFILES_DIRS = [os.path.join(BASE_DIR, 'staticfiles')]
+STATIC_ROOT = os.path.join(BASE_DIR,"static_root")
 
 MEDIA_URL = '/media/'
 MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
+
+STATICFILES_FINDERS = (
+    'django.contrib.staticfiles.finders.FileSystemFinder',
+    'django.contrib.staticfiles.finders.AppDirectoriesFinder',
+
+    # Add this
+    'compressor.finders.CompressorFinder',
+)
 
 LOGIN_URL = 'login'
 
@@ -156,6 +170,21 @@ MESSAGE_TAGS = {
     messages.ERROR :'danger'
 }
 
+
+COMPRESS_ENABLED = False
+COMPRESS_CSS_HASHING_METHOD = 'content'
+COMPRESS_FILTERS = {
+    'css':[
+        'compressor.filters.css_default.CssAbsoluteFilter',
+        'compressor.filters.cssmin.rCSSMinFilter',
+    ],
+    'js':[
+        'compressor.filters.jsmin.JSMinFilter',
+    ]
+}
+HTML_MINIFY = True
+KEEP_COMMENTS_ON_MINIFYING = False
+CONSERVATIVE_WHITESPACE_ON_MINIFYING = False
 
 EMAIL_HOST = config('EMAIL_HOST')
 EMAIL_HOST_USER = config('EMAIL_HOST_USER')
