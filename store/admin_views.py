@@ -1,5 +1,4 @@
-from multiprocessing import context
-from django.shortcuts import render
+from django.shortcuts import HttpResponse, render
 from django.views.generic import ListView, CreateView, UpdateView, DetailView
 from django.contrib.auth.decorators import login_required
 from django.contrib import messages
@@ -214,8 +213,13 @@ class ProductCreateView(View):
             sub_categories = SubCategory.objects.filter(is_active=True, category=value.id)
             categories_list.append({'category':value, 'subcategory':sub_categories})
         context = {
+            'title':'Add Product',
             'data': categories_list,
             'editor': editor,
             'seller': seller
         }
         return render(request, 'ctm_admin/products_create.html', context)
+
+    def post(self, request):
+        print(request.POST)
+        return HttpResponse('form submited')

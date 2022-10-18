@@ -1,7 +1,8 @@
 {% extends 'ctm_admin/base/index.html' %}
 {% load static %}
+{% load compress %}
 {% block title %}
-Add Product
+{{title}}
 {% endblock title %}
 
 
@@ -9,8 +10,10 @@ Add Product
 <div class="col-lg-12 m-1">
     <div class="card">
         <div class="card-header">
-            <h4>Add Product</h4>
+            <h4>{{title}}</h4>
         </div>
+        <form id="productform">
+            {% csrf_token %}
         <div class="card-body">
             <br>
             <h5>Product Basic Details</h5>
@@ -162,7 +165,7 @@ Add Product
                     <div class="col-md-4">
                         <div class="form-group mt-2">
                             <label for="id_media_type">Media Type</label>
-                            <select class="form-select" name="media_type[]" id="id_media_type">
+                            <select class="form-select media_type" name="media_type[]" id="id_media_type">
                                 <option selected value="">Choose...</option>
                                 <option value="1">Image</option>
                                 <option value="2">Video</option>
@@ -172,13 +175,15 @@ Add Product
                     <div class="col-md-4">
                         <div class="form-group mt-2">
                             <label for="id_select_media">Select Media</label>
-                            <input type="file" class="form-control media_src_remove" name="select_media[]" id="id_select_media">
+                            <input type="file" class="form-control select_media media_src_remove" name="select_media[]" id="id_select_media">
                         </div>
                     </div>
                     <div class="col-md-4">
                         <label>Preview</label>
-                        <img style="width:70%; display:none;" class="image_preview" alt="image">
-                        <video style="width:70%; display:none;" class="video_preview">hhh</video>
+                        <div class="row">
+                            <img style="width:70%; display:none;" class="image_preview" alt="image">
+                            <video style="width:70%; display:none;" class="video_preview" controls></video>
+                        </div>
                     </div>
                 </div>
             </div>
@@ -262,22 +267,36 @@ Add Product
             <h5>Product Tags</h5>
             <div class="row">
                 <div class="col-md-10">
-                    <input type="text" name="tags" data-role="tagsinput" />
+                    <input class="nvs_tags w-100" type="text" name="product_tags" data-role="tagsinput" />
                 </div>
             </div>
+            <div id="id_progressbar" class="row mt-2" style="display:none;">
+                <hr>
+                <div class="col-md">
+                    <div class="progress">
+                        <div id="bar_progress" class="progress-bar progress-bar-striped progress-bar-animated" role="progressbar" aria-valuenow="0" aria-valuemin="0" aria-valuemax="100" style="width:0%;">0%</div>
+                    </div>
+                </div>
+            </div>
+            <div class="col mt-2">
+                <br>
+                <button class="btn w-100 btn-primary submit_btn" type="button">SUBMIT</button>
+            </div>
+        </form>
         </div>
     </div>
 </div>
+{% compress js inline %}
 <script>
     document.getElementById("id_name").onkeyup=function(){
         document.getElementById("id_slug").value=document.getElementById("id_name").value.toLowerCase().replace(/[^\w ]+/g,'').replace(/ +/g,'-');
     };
-</script>
-<script>
     $(".add_media").click(function(){
         var media_row = $(".first_media").clone();
         media_row.removeClass('first_media');
-        media_row.find('.media_src_remove').attr('src','');
+        media_row.find('.select_media').val('');
+        media_row.find('.image_preview').attr('src','').css({'border-radius':'none'}).css({'border':'none'}).hide();
+        media_row.find('.video_preview').attr('src','').css({'border-radius':'none'}).css({'border':'none'}).hide();
         $(".media_div").append(media_row);
     });
     $('.remove_media').click(function(){
@@ -308,6 +327,65 @@ Add Product
             $('.about_div').children().last().remove();
         }
     });
+
+    $(document).on('change','#id_select_media',function(){
+        var media_type = $(this).parents('.media_div_row').find('.media_type').val();
+        var image_pre = $(this).parents('.media_div_row').find('.image_preview');
+        var video_pre = $(this).parents('.media_div_row').find('.video_preview');
+        showPreviewMedia(this,media_type,image_pre,video_pre);
+    });
+
+    function showPreviewMedia(input, media_type, image_pre, video_pre){
+        if(input.files && input.files[0]){
+            var reader = new FileReader();
+            reader.onload = function(e){
+                if(media_type=='1'){
+                    image_pre.attr('src',e.target.result);
+                    image_pre.show();
+                    image_pre.css({'border':'5px solid orange'});
+                    image_pre.css({'border-radius':'5px'});
+                }
+                if(media_type=='2'){
+                    video_pre.attr('src',e.target.result);
+                    video_pre.show();
+                    video_pre.css({'border':'5px solid orange'});
+                    video_pre.css({'border-radius':'5px'});
+                    video_pre.load();
+                    video_pre.play();
+                }
+            }
+            reader.readAsDataURL(input.files[0]);
+        }
+    }
+
+    $('.submit_btn').click(function(){
+        var form = new FormData($('#productform')[0]);
+        const UserName = JSON.parse(document.getElementById('user_name').textContent);
+        const EditorName = JSON.parse(document.getElementById('editor_name').textContent);
+        if(EditorName=='TinyMCE'){
+            form.append('long_desc',tinyMCE.activeEditor.getContent());
+        }else{
+            form.append('long_desc',CKEDITOR.instances.product_long_description.getData());
+        }
+        var xhr = new XMLHttpRequest()
+        xhr.onreadystatechange=function(){
+            if(xhr.status==200){
+                console.log(xhr.responseText);
+            }
+        }
+        xhr.open("POST","{% url 'admin-productcreate' %}",true);
+        $('#id_progressbar').show();
+
+
+        xhr.upload.addEventListener('progress',function(e){
+            if(e.lengthComputable){
+                var percentage = (e.loaded/e.total*100|0);
+                $('#bar_progress').css({'width':''+percentage+'%'}).text('Uploading... '+percentage+'%');
+                console.log(percentage)
+            }
+        });
+        xhr.send(form);
+    });
 </script>
 
 
@@ -337,11 +415,25 @@ Add Product
     } );
 </script>
 {% endif %}
+{% endcompress %}
+{% compress js inline %}
+<script src="{% static 'ctm_admin/js/tag_input.js' %}"></script>
+{% endcompress %}
 {% endblock content %}
 
+{% block styles %}
+{% compress css inline %}
+<link rel="stylesheet" href="{% static 'ctm_admin/css/tag_input.css' %}">
+{% endcompress %}
+{% endblock styles %}
+
+{% block body_hidden %}
+{{ request.user.username |json_script:"user_name" }}
+{{ editor.editor |json_script:"editor_name" }}
+{% endblock body_hidden %}
+
 {% block scripts_top %}
-<link rel="stylesheet" href="https://bootstrap-tagsinput.github.io/bootstrap-tagsinput/dist/bootstrap-tagsinput.css">
-<script src="https://bootstrap-tagsinput.github.io/bootstrap-tagsinput/dist/bootstrap-tagsinput.min.js"></script>
+
 <script src="https://code.jquery.com/jquery-3.6.1.min.js" integrity="sha256-o88AwQnZB+VDvE9tvIXrMQaPlFFSUTR+nldQm1LuPXQ=" crossorigin="anonymous"></script>
 {% if editor.editor == 'TinyMCE' %}
 <script src="https://cdn.tiny.cloud/1/brffh1txjfz0f4byqyup0lsm9my705onsw592h4flbm5zxi0/tinymce/6/tinymce.min.js" referrerpolicy="origin"></script>

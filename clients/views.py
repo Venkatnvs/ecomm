@@ -1,4 +1,4 @@
-from django.shortcuts import redirect, render
+from django.shortcuts import redirect, render, HttpResponseRedirect
 from django.views import View
 from decouple import config
 import json
@@ -120,12 +120,15 @@ class Verification(View):
 
 class Login(View):
     def get(self, request):
-        return render(request, 'clients/login.html')
+        context = {
+            'next':request.GET.get('next','/')
+        }
+        return render(request, 'clients/login.html', context)
 
     def post(self, request):
         username = request.POST['username']
         password = request.POST['password']
-
+        next = request.POST.get('next','/')
         if username and password:
             user = auth.authenticate(request, username=username, password=password)
 
@@ -133,15 +136,15 @@ class Login(View):
                 if user.is_active:
                     auth.login(request, user)
                     messages.success(request, 'Welcome '+user.username+' You are now loggined')
-                    return redirect('home')
+                    return HttpResponseRedirect(next)
 
                 messages.error(request, 'Account is not activated, Please check your email')
-                return render(request, 'clients/login.html')
+                return redirect('login')
             messages.error(request, 'Invalid credintails, try again')
-            return render(request, 'clients/login.html')
+            return redirect('login')
 
         messages.error(request, 'Please fill all fields')
-        return render(request, 'clients/login.html')
+        return redirect('login')
 
 class Logout(View):
     def post(self, request):
