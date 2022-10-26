@@ -52,6 +52,7 @@ INSTALLED_APPS = [
     'blog',
     'notification',
     'order',
+    'voice',
     'src'
 ]
 

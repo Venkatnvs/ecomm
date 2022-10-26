@@ -1,7 +1,9 @@
+from tkinter import N
 from django.shortcuts import HttpResponse, render
 from django.views.generic import ListView, CreateView, UpdateView, DetailView
 from django.contrib.auth.decorators import login_required
 from django.contrib import messages
+from numpy import product
 from clients.models import Customer, EditorType
 from .models import *
 from django.contrib.messages.views import SuccessMessageMixin
@@ -221,5 +223,142 @@ class ProductCreateView(View):
         return render(request, 'ctm_admin/products_create.html', context)
 
     def post(self, request):
-        print(request.POST)
+        p_name = request.POST.get('name')
+        p_slug = request.POST.get('slug')
+        p_brand = request.POST.get('brand')
+        p_subcategory = request.POST.get('subcategory')
+        p_sku = request.POST.get('sku')
+        p_seller = request.POST.get('seller')
+        p_quantity = request.POST.get('quantity')
+        p_old_price = request.POST.get('old_price')
+        p_offer = request.POST.get('offer')
+        p_new_price = request.POST.get('new_price')
+        p_short_description = request.POST.get('product_short_description')
+        p_is_active = request.POST.get('is_active','on')
+        p_is_bestselling = request.POST.get('is_bestselling','')
+        p_is_featured = request.POST.get('is_featured','')
+        p_is_digital = request.POST.get('is_digital','')
+        p_return_allowed = request.POST.get('return_allowed','')
+        p_media_type_l = request.POST.getlist('media_type[]')
+        p_media_content_l = request.FILES.getlist('select_media[]')
+        p_detail_title_l = request.POST.getlist('detail_title[]')
+        p_details_detail_l = request.POST.getlist('details_detail[]')
+        p_details_active_l = request.POST.getlist('details_active[]')
+        p_about_title_l = request.POST.getlist('about_title[]')
+        p_about_active_l = request.POST.getlist('about_active[]')
+        p_product_tags = request.POST.get('product_tags')
+        p_long_desc = request.POST.get('long_desc')
+
+        a_subcategory = SubCategory.objects.get(id=p_subcategory)
+        a_seller = SellerUser.objects.get(id=p_seller)
+
+
+        b_is_active = None
+        b_is_bestselling = None
+        b_is_featured = None
+        b_is_digital = None
+        b_return_allowed = None
+        if p_is_active == 'on':
+            b_is_active=True
+        else:
+            b_is_active=False
+
+        if p_is_bestselling == 'on':
+            b_is_bestselling=True
+        else:
+            b_is_bestselling=False
+
+        if p_is_featured == 'on':
+            b_is_featured=True
+        else:
+            b_is_featured=False
+
+        if p_is_digital == 'on':
+            b_is_digital=True
+        else:
+            b_is_digital=False
+
+        if p_return_allowed == 'on':
+            b_return_allowed=True
+        else:
+            b_return_allowed=False
+        
+        a_product = Product(
+            name=p_name,
+            slug=p_slug,
+            brand=p_brand,
+            subcategories=a_subcategory,
+            sku=p_sku,
+            old_price=p_old_price,
+            offer=p_offer,
+            new_price=p_new_price,
+            quantity=p_quantity,
+            description=p_short_description,
+            long_description=p_long_desc,
+            by_seller=a_seller,
+            is_active=b_is_active,
+            is_bestselling=b_is_bestselling,
+            is_featured=b_is_featured,
+            is_digital=b_is_digital,
+            return_allowed=b_return_allowed,
+            meta_keywords=p_name,
+            meta_description=p_short_description)
+        a_product.save()
+
+        a_i=0
+        for media in p_media_content_l:
+            a_media = ProductMedia(
+                product=a_product,
+                type = p_media_type_l[a_i],
+                content = media
+            )
+            a_media.save()
+            a_i+=1
+
+        a_j=0
+        for title in p_detail_title_l:
+            detail_active = None
+            if p_details_active_l[a_j] == 'on':
+                detail_active=True
+            else:
+                detail_active=False
+            a_details = ProductDetails(
+                product=a_product,
+                title=title,
+                details=p_details_detail_l[a_j],
+                is_active=detail_active
+            )
+            a_details.save()
+            a_j+=1
+
+        a_n=0
+        for about in p_about_title_l:
+            about_active = None
+            if p_about_active_l[a_n] == 'on':
+                about_active=True
+            else:
+                about_active=False
+            a_about=ProductAbout(
+                product=a_product,
+                title=about,
+                is_active=about_active
+            )
+            a_about.save()
+            a_n+=1
+        
+        product_tags_l = p_product_tags.split(',')
+        for tag in product_tags_l:
+            a_tags = ProductTags(
+                product=a_product,
+                title=tag
+            )
+            a_tags.save()
+
+        a_transaction = ProductTransaction(
+            product=a_product,
+            type = 1,
+            count = p_quantity,
+            description = str(p_quantity)+' items added to stock'
+        )
+        a_transaction.save()
         return HttpResponse('form submited')

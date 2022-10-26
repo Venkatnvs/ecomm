@@ -217,7 +217,7 @@
                         <div class="mt-2 form-group">
                             <label for="id_details_active">Active</label>
                             <div class="mt-2 form-check form-switch">
-                                <input type="checkbox" id="id_details_active" name="details_active" class="form-check-input" checked>
+                                <input type="checkbox" id="id_details_active" name="details_active[]" class="form-check-input" checked>
                             </div>
                         </div>
                     </div>
@@ -247,7 +247,7 @@
                         <div class="mt-2 form-group">
                             <label for="id_about_active">Active</label>
                             <div class="mt-2 form-check form-switch">
-                                <input type="checkbox" id="id_about_active" name="about_active" class="form-check-input" checked>
+                                <input type="checkbox" id="id_about_active" name="about_active[]" class="form-check-input" checked>
                         </div>
                     </div>
                     </div>
@@ -269,6 +269,9 @@
                 <div class="col-md-10">
                     <input class="nvs_tags w-100" type="text" name="product_tags" data-role="tagsinput" />
                 </div>
+            </div>
+            <div class="productpost" style="display: none;">
+                <h6>Done...</h6>
             </div>
             <div id="id_progressbar" class="row mt-2" style="display:none;">
                 <hr>
@@ -370,7 +373,9 @@
         var xhr = new XMLHttpRequest()
         xhr.onreadystatechange=function(){
             if(xhr.status==200){
-                console.log(xhr.responseText);
+                $('#id_progressbar').hide();
+                $('.productpost').text(xhr.responseText).show();
+                console.log(xhr.responseJSON);
             }
         }
         xhr.open("POST","{% url 'admin-productcreate' %}",true);

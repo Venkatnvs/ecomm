@@ -1,0 +1,16 @@
+[{
+    "question": "great",
+    "answer": [
+        "Helow",
+        "Good to see you",
+        "hi"
+    ]
+},
+{
+    "question":"urls",
+    "answer":[{
+        "youtube":"https://youtube.com",
+        "gmail":"https://mail.google.com",
+        "google":"https://google.com"
+    }]
+}]

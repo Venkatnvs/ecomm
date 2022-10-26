@@ -50,7 +50,7 @@ class Product(models.Model):
     name = models.CharField(max_length=255, unique=True, help_text='product name')
     slug = models.SlugField(max_length=255, unique=True, help_text="Unique and created from name", null=True, blank=True)
     brand = models.CharField(max_length=255, unique=True, help_text="Unique Brand name")
-    subcategories = models.OneToOneField(SubCategory, null=True, on_delete=models.CASCADE)
+    subcategories = models.ForeignKey(SubCategory, null=True, on_delete=models.CASCADE)
     sku = models.CharField(max_length=255, null=True, blank=True)
     old_price = models.DecimalField(max_digits=9, decimal_places=2, blank=True, default=0.00)
     offer = models.DecimalField(max_digits=3, decimal_places=0, default=0)

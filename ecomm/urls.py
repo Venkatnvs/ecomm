@@ -27,6 +27,7 @@ urlpatterns = [
     path('', include('store.urls')),
     path('src/', include('src.urls')),
     path('note/', include('notification.urls')),
+    path('voice/', include('voice.urls')),
     path('nvs-admin/', include('store.admin_urls')),
     path('support/', include('chat.urls')),
     path('auth/', include('clients.urls')),
