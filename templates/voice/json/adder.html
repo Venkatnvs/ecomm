@@ -1,0 +1,17 @@
+{% extends 'ctm_admin/base/index.html' %}
+{% load static %}
+{% block title %}
+Json Adder
+{% endblock title %}
+
+{% block styles %}
+<link rel="stylesheet" href="{% static  'ctm_admin/css/index.css' %}">
+{% endblock styles %}
+
+{% block content %}
+<form action="" method="post">
+    {% csrf_token %}
+    <input type="text" name="website" id="id_website" placeholder="website">
+    <input type="text" name="url" id="id_url" placeholder="">
+</form>
+{% endblock content %}

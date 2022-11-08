@@ -28,8 +28,10 @@ SECRET_KEY = config('SECRET_KEY')
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = config('DEBUG', cast=bool)
 
-ALLOWED_HOSTS = ['127.0.0.1','192.168.100.9','10.62.16.77']
+ALLOWED_HOSTS = ['127.0.0.1','192.168.100.9','10.62.16.77','youthful-mountain-70598.pktriot.net']
 
+ADMINS = (('venkat','venkatnvs2005@gmail.com'),)
+MANAGERS = ADMINS
 
 # Application definition
 
@@ -42,6 +44,7 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
+    'corsheaders',
 
     'django_celery_results',
     'django_celery_beat',
@@ -53,6 +56,7 @@ INSTALLED_APPS = [
     'notification',
     'order',
     'voice',
+    'videos',
     'src'
 ]
 
@@ -68,7 +72,10 @@ MIDDLEWARE = [
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
+    'corsheaders.middleware.CorsMiddleware',
 ]
+
+CORS_ORIGIN_ALLOW_ALL = True
 
 ROOT_URLCONF = 'ecomm.urls'
 
@@ -187,12 +194,14 @@ HTML_MINIFY = True
 KEEP_COMMENTS_ON_MINIFYING = False
 CONSERVATIVE_WHITESPACE_ON_MINIFYING = False
 
+SERVER_EMAIL = config('EMAIL_FROM_EMAIL')
 EMAIL_HOST = config('EMAIL_HOST')
 EMAIL_HOST_USER = config('EMAIL_HOST_USER')
 EMAIL_USE_TLS = config('EMAIL_TLS', cast=bool)
 EMAIL_FROM_EMAIL = config('EMAIL_FROM_EMAIL')
 EMAIL_PORT = config('EMAIL_PORT')
 EMAIL_HOST_PASSWORD = config('EMAIL_HOST_PASSWORD')
+DEFAULT_FROM_EMAIL = config('EMAIL_FROM_EMAIL')
 
 SESSION_EXPIRE_AT_BROWSER_CLOSE = True
 SESSION_COOKIE_AGE = 172800
@@ -210,3 +219,44 @@ CELERY_TIMEZONE = 'Asia/Kolkata'
 CELERY_RESULT_BACKEND = 'django-db'
 
 CELERY_BEAT_SCHEDULER = 'django_celery_beat.schedulers:DatabaseScheduler'
+
+if not os.path.exists(BASE_DIR / "logs"):
+    os.mkdir(BASE_DIR / "logs")
+
+LOG_FILE = BASE_DIR / "logs" / "debug.log"
+
+LOGGING = {
+    'version': 1,
+    'disable_existing_loggers': False,
+    'handlers': {
+        'file': {
+            'level': 'DEBUG',
+            'class': 'logging.FileHandler',
+            'filename': LOG_FILE,
+        },
+        'console': {
+            'class': 'logging.StreamHandler',
+        },
+        'mail_admins': {
+            'level': 'ERROR',
+            'class': 'django.utils.log.AdminEmailHandler',
+            'include_html': True,
+        },
+    },
+    'root': {
+        'handlers': ['console','file'],
+        'level': 'WARNING',
+    },
+    'loggers': {
+        'django': {
+            'handlers': ['console','file'],
+            'level': os.getenv('DJANGO_LOG_LEVEL', 'INFO'),
+            'propagate': True,
+        },
+        'django.request': {
+            'handlers': ['mail_admins','file'],
+            'level': 'ERROR',
+            'propagate': False,
+        },
+    },
+}

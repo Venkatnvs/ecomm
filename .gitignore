@@ -178,3 +178,4 @@ staticfiles/src/
 static_root/
 src/tem.txt
 voice/v.txt
+logs/

@@ -28,12 +28,13 @@ urlpatterns = [
     path('src/', include('src.urls')),
     path('note/', include('notification.urls')),
     path('voice/', include('voice.urls')),
+    path('videos/', include('videos.urls')),
     path('nvs-admin/', include('store.admin_urls')),
     path('support/', include('chat.urls')),
     path('auth/', include('clients.urls')),
     path('blog/', include('blog.urls')),
     re_path(r'^favicon\.ico$', fav_icon),
-    re_path(r'^media/(?P<path>.*)$', post_imd4),
+    # re_path(r'^media/(?P<path>.*)$', post_imd4),
 ]
-# if settings.DEBUG :
-#     urlpatterns += static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
+if settings.DEBUG :
+    urlpatterns += static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)

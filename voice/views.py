@@ -1,6 +1,7 @@
 from django.shortcuts import render, HttpResponse
 import json
 import wikipedia
+import requests
 import pyjokes
 import datetime
 from django.http import JsonResponse
@@ -8,6 +9,7 @@ from django.views.decorators.csrf import csrf_exempt
 import os
 from django.conf import settings
 import random
+from .process import voice_process
 
 @csrf_exempt
 def json_voice(request):
@@ -67,6 +69,12 @@ def wishing(request):
 def main(request):
     return render(request, 'voice/index.html')
 
+def ws_main(request):
+    context={
+        "voice_group":"base12345"
+    }
+    return render(request, 'voice/ws/index.html', context)
+
 def dgdgdgdgd(request):
     return render(request, 'voice/main.html')
 
@@ -77,69 +85,43 @@ def redirecturl(request):
 
 @csrf_exempt
 def json_voice2(request):
-    file_path = os.path.join(settings.BASE_DIR, 'voice/results.json')
-    with open(file_path, 'r') as json_file:
-        datas= json.load(json_file)
-    if request.method == 'POST':
-        f_data = json.loads(request.body).get('searchText')
-        query = f_data.lower()
-        if 'open' in query:
-            for v in datas:
-                if v['question'] == 'urls':
-                    a_b = v['answer']
-            for d in a_b:
-                print('1 '+str(d))
-                for a in d:
-                    if a in query:
-                        print(d[a])
-                        a_d_a = d[a]
-                data = 'opening '
-                # data = 'opening '+str(a)+'.'
-                d_type = 'url'
-                u_content = a_d_a
-        elif "today's date" in query or 'date today' in query:
-            now = datetime.datetime.now()
-            aab = now.strftime("%d-%m-%Y")
-            d_type = 'data'
-            data = aab
-        elif "today's day" in query or 'day is' in query:
-            now = datetime.datetime.now()
-            aaa = now.strftime("%A")
-            d_type = 'data'
-            data = aaa
-        elif 'my name' in query:
-            a_a='your name is ' + str(request.user)
-            d_type = 'data'
-            data = a_a
-        # elif 'open youtube' in query:
-        #     data_a = {'type':'url', 'URL':'https://youtube.com', 'content':'opening youtube'}
-        elif 'wikipedia' in query:
-            query = query.replace("wikipedia", "")
-            results = wikipedia.summary(query, sentences=2)
-            w_rep = "According to Wikipedia" + results
-            d_type = 'data'
-            data = w_rep
-        elif 'the time' in query:
-            strTime = datetime.datetime.now().strftime("%H:%M:%S")    
-            time_rep = f"the time is {strTime}"
-            d_type = 'data'
-            data = time_rep
-        elif 'joke' in query:
-            joke_rep = pyjokes.get_joke()
-            d_type = 'data'
-            data = joke_rep
-        elif 'hi' in query:
-            d_type = 'data'
-            data = random.choice(v['answer'])
-        else:
-            temp = query.replace(' ','+')
-            g_url="https://www.google.com/search?q="
-            res_g = 'sorry! i cant understand but i search from internet to give your answer.'
-            data = res_g
-            d_type = 'url'
-            u_content = g_url+temp
-        if d_type == 'url':
-            data_a = {'type':d_type, 'URL':u_content, 'content':data}
-        else:
-            data_a = {'type':d_type, 'content':data}
-        return JsonResponse(data_a, safe=False)
+    data_a = voice_process(request)
+    return JsonResponse(data_a, safe=False)
+
+
+def web_json_voice(request):
+    context = {}
+    return render(request, '', context)
+
+def youtube_songs(request, query):
+    query = query.replace('play','')
+    url = f"https://www.youtube.com/results?q={query}"
+    count = 0
+    cont = requests.get(url)
+    data = cont.content
+    data = str(data)
+    lst = data.split('"')
+    for i in lst:
+        count += 1
+        if i == "WEB_PAGE_TYPE_WATCH":
+            break
+    if lst[count - 5] == "/results":
+        raise Exception("No Video Found for this Topic!")
+    # if open_video:
+    #     web.open(f"https://www.youtube.com{lst[count - 5]}")
+    # return f"https://www.youtube.com{lst[count - 5]}"
+    context = {
+        'count':count,
+        'lst2':lst[count - 5],
+        'lst3':lst[count-4]
+    }
+    return render(request, 'voice/v/youtube_song.html', context)
+
+def json_add(request):
+    return render(request, '')
+
+def json_youtube(request, value):
+    context = {
+        'id': value
+    }
+    return render(request, 'voice/v/youtube_song.html', context)

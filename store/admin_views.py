@@ -119,7 +119,7 @@ class SellerUserCreate(SuccessMessageMixin, CreateView):
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
         states_data = []
-        file_path = os.path.join(settings.BASE_DIR, 'states_dist.json')
+        file_path = os.path.join(settings.BASE_DIR, 'data_files/states_dist.json')
         with open(file_path, 'r') as json_file:
             data = json.load(json_file)
             for values in data:
@@ -169,7 +169,7 @@ class SellerUserUpdate(SuccessMessageMixin, UpdateView):
         chs = context['selleruser'].state
         states_data = []
         data_dist = None
-        file_path = os.path.join(settings.BASE_DIR, 'states_dist.json')
+        file_path = os.path.join(settings.BASE_DIR, 'data_files/states_dist.json')
         with open(file_path, 'r') as json_file:
             data = json.load(json_file)
             for value in data:

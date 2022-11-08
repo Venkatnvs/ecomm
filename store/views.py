@@ -12,7 +12,7 @@ def state_dist(request):
         if search_str == 'Choose...':
             data_a = {'not_state'}
             return JsonResponse(list(data_a), safe=False)
-        file_path = os.path.join(settings.BASE_DIR, 'states_dist.json')
+        file_path = os.path.join(settings.BASE_DIR, 'data_files/states_dist.json')
         with open(file_path, 'r') as json_file:
             data = json.load(json_file)
             for v in data:
@@ -55,7 +55,7 @@ def Cart(request):
 
 def Checkout(request):
     states_data = []
-    file_path = os.path.join(settings.BASE_DIR, 'states_dist.json')
+    file_path = os.path.join(settings.BASE_DIR, 'data_files/states_dist.json')
     with open(file_path, 'r') as json_file:
         data = json.load(json_file)
         for values in data:
