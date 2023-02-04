@@ -1,9 +1,11 @@
 var SpeechRecognition = window.webkitSpeechRecognition;
+const synth = window.speechSynthesis;
 var msg = new SpeechSynthesisUtterance();
 var recognition = new SpeechRecognition();
 var Textbox = $('#textbox');
 var instructions = $('#instructions');
 var Content = ''
+const voices = synth.getVoices();
 recognition.continuous = true;
 // recognition.interimResults = true;
 recognition.onresult = function(event) {
@@ -61,6 +63,7 @@ Textbox.on('input', function() {
 });
 
 function Speekher(val){
+    msg.voice = voices[50];
     msg.text = val;
     window.speechSynthesis.speak(msg);
 }

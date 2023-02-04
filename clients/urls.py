@@ -1,9 +1,10 @@
-from django.urls import path
+from django.urls import path, include
 from .views import *
 from django.views.decorators.csrf import csrf_exempt
 
 
 urlpatterns = [
+    path('api/', include('clients.api_urls')),
     path('', Registration.as_view(), name='just-auth' ),
     path('register/', Registration.as_view(), name='register' ),
     path('login/', Login.as_view(), name='login' ),

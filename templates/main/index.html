@@ -55,6 +55,7 @@ Home
 {{ request.user.username |json_script:"user_name" }}
 {% endblock body_hidden %}
 
+{% if request.user.is_authenticated %}
 {% block scripts %}
 {% compress js inline %}
 <script>
@@ -93,3 +94,4 @@ Home
 </script>
 {% endcompress %}
 {% endblock scripts %}
+{% endif %}

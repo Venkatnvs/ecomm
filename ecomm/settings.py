@@ -28,7 +28,8 @@ SECRET_KEY = config('SECRET_KEY')
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = config('DEBUG', cast=bool)
 
-ALLOWED_HOSTS = ['127.0.0.1','192.168.100.9','10.62.16.77','youthful-mountain-70598.pktriot.net']
+#ALLOWED_HOSTS = ['127.0.0.1','192.168.100.9','10.62.16.77','youthful-mountain-70598.pktriot.net']
+ALLOWED_HOSTS = ['*']
 
 ADMINS = (('venkat','venkatnvs2005@gmail.com'),)
 MANAGERS = ADMINS
@@ -45,7 +46,7 @@ INSTALLED_APPS = [
     'django.contrib.messages',
     'django.contrib.staticfiles',
     'corsheaders',
-
+    'rest_framework',
     'django_celery_results',
     'django_celery_beat',
     
@@ -57,7 +58,8 @@ INSTALLED_APPS = [
     'order',
     'voice',
     'videos',
-    'src'
+    'src',
+    'draggables'
 ]
 
 MIDDLEWARE = [
@@ -243,10 +245,10 @@ LOGGING = {
             'include_html': True,
         },
     },
-    'root': {
-        'handlers': ['console','file'],
-        'level': 'WARNING',
-    },
+    # 'root': {
+        # 'handlers': ['console','file'],
+        # 'level': 'WARNING',
+    # },
     'loggers': {
         'django': {
             'handlers': ['console','file'],
