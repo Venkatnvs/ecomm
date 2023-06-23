@@ -45,7 +45,9 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
+    'django.contrib.humanize',
     'corsheaders',
+    "debug_toolbar",
     'rest_framework',
     'django_celery_results',
     'django_celery_beat',
@@ -66,7 +68,7 @@ MIDDLEWARE = [
     'django.middleware.gzip.GZipMiddleware', #This one
     'htmlmin.middleware.HtmlMinifyMiddleware', #This one
     'htmlmin.middleware.MarkRequestMiddleware', #This one
-
+    "debug_toolbar.middleware.DebugToolbarMiddleware",
     'django.middleware.security.SecurityMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
     'django.middleware.common.CommonMiddleware',
@@ -78,6 +80,10 @@ MIDDLEWARE = [
 ]
 
 CORS_ORIGIN_ALLOW_ALL = True
+
+INTERNAL_IPS = [
+    "127.0.0.1",
+]
 
 ROOT_URLCONF = 'ecomm.urls'
 

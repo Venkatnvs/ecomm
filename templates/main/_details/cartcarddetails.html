@@ -1,0 +1,20 @@
+{% load static %}
+{% load humanize %}
+<div class="nvs-cart-row mt-2">
+    <div class="nvs-cart-items1">{{count}}</div>
+    <div class="nvs-cart-items2"><img class="nvs-cart-img" src="{{data.product.productmedia_set.all.0.img_url}}" alt="product"></div>
+    <div class="nvs-cart-items2">{{data.product.name | truncatechars:100}}</div>
+    <div class="nvs-cart-items1">₹{{data.product.new_price |intcomma }}</div>
+    <div class="nvs-cart-items1">
+        <div>
+            <div data-product="{{data.product.id}}" data-action="remove" class="btn btn-sm btn-secondary nvs_addcart_card-button_js p-0 m-1 px-1" href="">
+                <i class="bi bi-dash"></i>
+            </div>
+            <p class='nvs-cart-quantity'>{{data.quantity}}</p>
+            <div data-product="{{data.product.id}}" data-action="add" class="btn btn-sm btn-success nvs_addcart_card-button_js p-0 m-1 px-1" href="">
+                <i class="bi bi-plus nvs-col"></i>
+            </div>
+        </div>
+    </div>
+    <div class="nvs-cart-items1">₹{{data.get_total|intcomma }}</div>
+</div>

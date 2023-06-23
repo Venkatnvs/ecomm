@@ -1,0 +1,143 @@
+{% extends 'base/index.html' %}
+{% load static %}
+{% block title %}
+{{ data.product.0.name | truncatechars:20 }} | NvsTrades
+{% endblock title %}
+
+{% block body_hidden %}
+{{ request.user.username |json_script:"user_name" }}
+{% include 'base/header.html' with order=order %}
+{% endblock body_hidden %}
+
+
+
+{% block content %}
+<div class="container">
+    <div class="col">
+        <div class="product-heading">
+            <span>{{data.product.0.subcategories.category}} ></span>
+            <span>{{data.product.0.subcategories}} ></span>
+            <h4><span class="nvs-heading">{{data.product.0.name}}</span></h4>
+        </div>
+        <hr>
+        <div class="product_media">
+            <div class="col-md-8">
+                <div id="carouselExampleControls" class="carousel carousel-dark slide" data-bs-ride="carousel">
+                    <ol class="carousel-indicators">
+                        {% for i in data.imgs %}
+                        {% if i.type == '1' %}
+                        <li data-bs-target="#carouselExampleIndicators" data-bs-slide-to="{{ forloop.counter0 }}"
+                            class="{% if forloop.first %}active{% endif %}" aria-current="true" aria-label="Slide 1">
+                        </li>
+                        {% endif %}
+                        {% endfor %}
+                    </ol>
+                    <div class="carousel-inner">
+                        {% for i in data.imgs %}
+                        {% if i.type == '1' %}
+                        <div class="carousel-item {% if forloop.first %}active{% endif %}">
+                            <img class="d-block w-100 slide_img" src="{{i.img_url}}" alt="pics_{{i.created_at}}">
+                        </div>
+                        {% endif %}
+                        {% endfor %}
+                    </div>
+                    <button class="carousel-control-prev" type="button" data-bs-target="#carouselExampleControls"
+                        data-bs-slide="prev">
+                        <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+                        <span class="visually-hidden">Previous</span>
+                    </button>
+                    <button class="carousel-control-next" type="button" data-bs-target="#carouselExampleControls"
+                        data-bs-slide="next">
+                        <span class="carousel-control-next-icon" aria-hidden="true"></span>
+                        <span class="visually-hidden">Next</span>
+                    </button>
+                </div>
+            </div>
+        </div>
+        <hr class="my-1">
+        <div class="price_data">
+            <div>
+                <span class="product_offer">-{{data.product.0.offer}}%</span>
+                &nbsp;&nbsp;
+                <div class="main_price">
+                    <span class="price_sy">₹</span>
+                    <span class="price_value">{{data.product.0.new_price}}</span>
+                </div>
+            </div>
+            <div>
+                <span class="product_mrplabel">
+                    M.R.P:&nbsp;{{data.product.0.old_price}}
+                </span>
+            </div>
+            <div>
+                <span>
+                    Inclusive of all taxes
+                </span>
+            </div>
+        </div>
+        <hr>
+        <div class="link_buy">
+            <h6>
+                <strong><span>Total: ₹{{data.product.0.new_price}}</span></strong>
+            </h6>
+            <h6>
+                <strong><span class="product_stock">Only {{data.product.0.quantity}} left in stock</span></strong>
+            </h6>
+            <div class="row d-flex justify-content-center">
+                <div class="col-md-8 m-2">
+                    <a class="button_links_buy2">
+                        <svg class="svg-icon" viewBox="0 0 20 20">
+                            <path
+                                d="M8.251,12.386c-1.023,0-1.856,0.834-1.856,1.856s0.833,1.853,1.856,1.853c1.021,0,1.853-0.83,1.853-1.853S9.273,12.386,8.251,12.386z M8.251,15.116c-0.484,0-0.877-0.393-0.877-0.874c0-0.484,0.394-0.878,0.877-0.878c0.482,0,0.875,0.394,0.875,0.878C9.126,14.724,8.733,15.116,8.251,15.116z">
+                            </path>
+                            <path
+                                d="M17.72,5.011H8.026c-0.271,0-0.49,0.219-0.49,0.489c0,0.271,0.219,0.489,0.49,0.489h8.962l-1.979,4.773H6.763L4.935,5.343C4.926,5.316,4.897,5.309,4.884,5.286c-0.011-0.024,0-0.051-0.017-0.074C4.833,5.166,4.025,4.081,2.33,3.908C2.068,3.883,1.822,4.075,1.795,4.344C1.767,4.612,1.962,4.853,2.231,4.88c1.143,0.118,1.703,0.738,1.808,0.866l1.91,5.661c0.066,0.199,0.252,0.333,0.463,0.333h8.924c0.116,0,0.22-0.053,0.308-0.128c0.027-0.023,0.042-0.048,0.063-0.076c0.026-0.034,0.063-0.058,0.08-0.099l2.384-5.75c0.062-0.151,0.046-0.323-0.045-0.458C18.036,5.092,17.883,5.011,17.72,5.011z">
+                            </path>
+                            <path
+                                d="M13.972,12.386c-1.022,0-1.855,0.834-1.855,1.856s0.833,1.853,1.855,1.853s1.854-0.83,1.854-1.853S14.994,12.386,13.972,12.386z M13.972,15.116c-0.484,0-0.878-0.393-0.878-0.874c0-0.484,0.394-0.878,0.878-0.878c0.482,0,0.875,0.394,0.875,0.878C14.847,14.724,14.454,15.116,13.972,15.116z">
+                            </path>
+                        </svg>
+                        <span>Add to Cart</span>
+                    </a>
+                </div>
+                <div class="col-md-8 mt-3">
+                    <a class="button_links_buy">
+                        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512.001 512.001"
+                            style="enable-background:new 0 0 512.001 512.001" xml:space="preserve">
+                            <path style="fill:#298983" d="m288.814 256.002-59.005-59.005H21.553v118.008h208.256z" />
+                            <path transform="rotate(-134.999 289.552 142.83)" style="fill:#a5f2e5"
+                                d="M210.055 83.824h158.99v118.011h-158.99z" />
+                            <path
+                                d="M512 255.804c0-2.858-1.135-5.6-3.157-7.62L282.692 22.032c-4.209-4.209-11.032-4.209-15.24 0l-98.684 98.684a10.771 10.771 0 0 0 0 15.24l39.489 39.489H10.777C4.825 175.444 0 180.269 0 186.221v139.561c0 5.952 4.825 10.777 10.777 10.777h197.479l-39.487 39.487a10.771 10.771 0 0 0 0 15.24l98.684 98.684a10.74 10.74 0 0 0 7.62 3.157c2.757 0 5.516-1.052 7.62-3.157l55.188-55.188c4.209-4.209 4.209-11.031 0-15.24s-11.032-4.209-15.24 0l-47.568 47.568-83.445-83.443 210.911-210.91 83.445 83.443-108.737 108.737c-4.209 4.209-4.209 11.031 0 15.24s11.032 4.209 15.24 0L508.845 263.82a10.771 10.771 0 0 0 3.157-7.62c0-.066-.009-.132-.01-.198-.001-.068.008-.132.008-.198zM21.553 196.997h208.256L288.812 256l-59.003 59.003H21.553V196.997zm170.075-68.66 83.445-83.443 112.425 112.424-83.445 83.445-112.425-112.426z" />
+                            <path style="fill:#62d9c7"
+                                d="M377.246 364.937 485.982 256.2l-83.445-83.443-210.91 210.91 83.445 83.443 47.568-47.568c4.209-4.209 11.032-4.209 15.24 0l39.365-39.365c-4.208-4.209-4.208-11.031.001-15.24z" />
+                        </svg>
+                        <span> &nbsp;Buy Now&nbsp;&nbsp;&nbsp;&nbsp;</span>
+                    </a>
+                </div>
+            </div>
+        </div>
+        <hr>
+        <div class="product_details">
+            <h5>
+                <strong><span>Product description</span></strong>
+            </h5>
+            <div class="smalldetials">
+                <p>
+                    <span>{{data.product.0.description}}</span>
+                </p>
+            </div>
+            <h5>
+                <strong><span>From the manufacturer</span></strong>
+            </h5>
+            <div class="col-md-12">
+                {{data.product.0.long_description|safe}}
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock content %}
+
+{% block styles %}
+<link rel="stylesheet" href="{% static 'main/css/productdetails.css' %}">
+{% endblock styles %}

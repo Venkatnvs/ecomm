@@ -14,4 +14,6 @@ urlpatterns = [
     path('seller-user-create/',SellerUserCreate.as_view(), name='admin-seller-usercreate'),
     path('seller-user-update/<slug:pk>', SellerUserUpdate.as_view(), name='admin-seller-userupdate'),
     path('product-create/',ProductCreateView.as_view(), name='admin-productcreate'),
+    path('product-list/', ProductsListview.as_view(), name='admin-productlist'),
+    path('product-update/<slug:pk>', ProductsUpdate.as_view(), name='admin-productupdate'),
 ]

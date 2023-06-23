@@ -26,7 +26,7 @@
           </a>
         </li><!-- End Search Icon-->
 
-        {% if client_logged == 1 %}
+        {% if request.user.is_authenticated %}
           <li class="nav-item dropdown">
 
             <a class="nav-link nav-icon" href="#" data-bs-toggle="dropdown">
@@ -105,13 +105,13 @@
 
             <a class="nav-link nav-profile d-flex align-items-center pe-0" href="#" data-bs-toggle="dropdown">
               <img src="{% static 'main/img/default-user.jpg' %}" alt="Profile" height="35" width="35" class="rounded-circle">
-              <span class="d-none d-md-block dropdown-toggle ps-2">{{client.username}}</span>
+              <span class="d-none d-md-block dropdown-toggle ps-2">{{request.user.username}}</span>
             </a><!-- End Profile Iamge Icon -->
 
             <ul class="dropdown-menu dropdown-menu-end dropdown-menu-arrow profile">
               <li class="dropdown-header">
-                <span>{{client.username}}</span>
-                <h6>{{client.email}}</h6>
+                <span>{{request.user.username}}</span>
+                <h6>{{request.user.email}}</h6>
               </li>
               <li>
                 <hr class="dropdown-divider">
@@ -158,7 +158,7 @@
         <li class="nav-item nvs-cart">
           <a class="position-relative" href="{% url 'cart' %}">
             <img  src="{% static 'main/img/cart.png' %}" alt="cart" height="60">
-            <span class="badge top-0 start-100 translate-middle rounded-pill bg-danger">99+</span>
+            <span class="badge top-0 start-90 translate-middle rounded-pill bg-danger">{{order.get_item_total}}</span>
             <!-- <span class="badge top-0 start-100 translate-middle rounded-pill bg-danger position-absolute top-0 start-100 translate-middle badge">100</span> -->
           </a>
         </li>

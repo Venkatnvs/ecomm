@@ -179,3 +179,5 @@ static_root/
 src/tem.txt
 voice/v.txt
 logs/
+req.txt
+order/try.py

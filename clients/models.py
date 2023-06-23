@@ -26,6 +26,14 @@ class AdminUser(models.Model):
     created_at = models.DateTimeField(auto_now_add=True)
     last_updated = models.DateTimeField(auto_now=True)
 
+    @property
+    def img_url(self):
+        try:
+            url = self.profile_pic.url
+        except:
+            url = '/static/main/img/no-image.jpg'
+        return url
+
     def __str__(self):
         return self.user_type.user.username
 
@@ -38,6 +46,14 @@ class CustomerUser(models.Model):
     created_at = models.DateTimeField(auto_now_add=True)
     last_updated = models.DateTimeField(auto_now=True)
 
+    @property
+    def img_url(self):
+        try:
+            url = self.profile_pic.url
+        except:
+            url = '/static/main/img/no-image.jpg'
+        return url
+
     def __str__(self):
         return self.user_type.user.username
 
@@ -49,6 +65,14 @@ class StaffUser(models.Model):
     zip = models.CharField(max_length=255, default="")
     created_at = models.DateTimeField(auto_now_add=True)
     last_updated = models.DateTimeField(auto_now=True)
+
+    @property
+    def img_url(self):
+        try:
+            url = self.profile_pic.url
+        except:
+            url = '/static/main/img/no-image.jpg'
+        return url
 
     def __str__(self):
         return self.user_type.user.username
@@ -65,6 +89,14 @@ class SellerUser(models.Model):
     by_admin = models.BooleanField(default=False)
     created_at = models.DateTimeField(auto_now_add=True)
     last_updated = models.DateTimeField(auto_now=True)
+
+    @property
+    def img_url(self):
+        try:
+            url = self.profile_pic.url
+        except:
+            url = '/static/main/img/no-image.jpg'
+        return url
 
     def __str__(self):
         return self.user_type.user.username

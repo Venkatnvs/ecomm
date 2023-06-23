@@ -15,6 +15,7 @@ from django.urls import reverse
 from django.contrib import auth
 from django.contrib.auth.tokens import PasswordResetTokenGenerator
 import threading
+from .state_data import Pin_dis
 
 # Create your views here.
 class EmailThread(threading.Thread):
@@ -25,6 +26,14 @@ class EmailThread(threading.Thread):
     def run(self):
         self.email.send(fail_silently=False)
 
+def states_get_pin(request):
+    try:
+        search_str = json.loads(request.body).get('zip')
+        data=Pin_dis(str(search_str))
+    except Exception as e:
+        data={"data":"Error"}
+    # data = {"dist":data}
+    return JsonResponse(data, safe=False)
 
 class Registration(View):
     def get(self, request):

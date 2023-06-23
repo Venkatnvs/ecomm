@@ -1,9 +1,7 @@
-from tkinter import N
 from django.shortcuts import HttpResponse, render
 from django.views.generic import ListView, CreateView, UpdateView, DetailView
 from django.contrib.auth.decorators import login_required
 from django.contrib import messages
-from numpy import product
 from clients.models import Customer, EditorType
 from .models import *
 from django.contrib.messages.views import SuccessMessageMixin
@@ -20,6 +18,7 @@ from django.views import View
 def main(request):
     return render(request, 'ctm_admin/index.html')
 
+@login_required()
 def ckeditor(request):
     return render(request, 'ctm_admin/ckeditor.html')
 
@@ -362,3 +361,30 @@ class ProductCreateView(View):
         )
         a_transaction.save()
         return HttpResponse('form submited')
+    
+class ProductsListview(ListView):
+    model = Product
+    template_name = 'ctm_admin/productslistview.html'
+    paginate_by = 4
+
+    def get_queryset(self):
+        filter_val = self.request.GET.get('filter','')
+        order_by = self.request.GET.get('order_by','id')
+        if filter_val != "":
+            cagr = Product.objects.filter(Q(name__contains=filter_val) | Q(description__contains=filter_val)).order_by(order_by)
+        else:
+            cagr = Product.objects.all().order_by(order_by)
+        return cagr
+
+    def get_context_data(self, **kwargs):
+        context = super(ProductsListview, self).get_context_data(**kwargs)
+        context['filter']=self.request.GET.get('filter','')
+        context['order_by']=self.request.GET.get('order_by','id')
+        context['all_table_data']=Product._meta.get_fields()
+        return context
+
+class ProductsUpdate(SuccessMessageMixin, UpdateView):
+    model = Product
+    success_message = 'Products updated successfuly'
+    fields = '__all__'
+    template_name = 'ctm_admin/productupdate.html'

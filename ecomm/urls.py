@@ -10,6 +10,7 @@ fav_icon = RedirectView.as_view(url='/static/icons/favicon.ico', permanent=True)
 urlpatterns = [
     path('admin/', admin.site.urls),
     path('', include('store.urls')),
+    path('order/', include('order.urls')),
     path('src/', include('src.urls')),
     path('note/', include('notification.urls')),
     path('voice/', include('voice.urls')),
@@ -19,6 +20,7 @@ urlpatterns = [
     path('auth/', include('clients.urls')),
     path('blog/', include('blog.urls')),
     path('e/', include('draggables.urls')),
+    path('__debug__/', include('debug_toolbar.urls')),
     re_path(r'^favicon\.ico$', fav_icon),
     # re_path(r'^media/categories/uploads/(?P<path>.*)$', post_imd4),
     # re_path(r'^media/(?P<path>.*)$', post_imd4),

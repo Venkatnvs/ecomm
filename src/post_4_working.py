@@ -10,9 +10,10 @@ from django.conf.urls.static import static
 from django.conf import settings
 
 def main(request, path):
-    base_path = 'C:/Users/MURALI/Desktop/store/venv/ecomm/media/categories/uploads/'
+    base_path = os.path.join(settings.BASE_DIR,'media')
+    base_path = os.path.join(base_path,'categories')
+    base_path = os.path.join(base_path,'uploads')
     img_path = os.path.join(base_path, path)
-    print(img_path)
     img = cv.imread(img_path, cv.IMREAD_UNCHANGED)
     img = cv.resize(img, (int(request.GET.get('w',200)), int(request.GET.get('h',200))))
     b = io.BytesIO()
@@ -34,7 +35,7 @@ def main(request, path):
         text=str(request.GET.get('wm-txt','NVS Watermark'))
         font = ImageFont.truetype('arial.ttf',int(request.GET.get('wm-fs',10)))
         tw, th = draw.textsize(text, font)
-        re = request.GET.get('wm-cl','000000')
+        re = request.GET.get('wm-cl','ffffff')
         rgb = tuple(int(re[i:i+2], 16) for i in (0,2,4))
         mx = int(request.GET.get('wm-mrx',10))
         my = int(request.GET.get('wm-mry',10))
@@ -42,7 +43,6 @@ def main(request, path):
         y = h - th - my
         draw.text((x,y), text, rgb, font=font)
     new_img.save(b, 'png', quality=int(request.GET.get('q',40)), optimize=True, lossless=False)
-    print(b.getbuffer().nbytes)
     img_c = b.getvalue()
     b.flush()
     b.seek(0)

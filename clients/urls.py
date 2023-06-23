@@ -10,6 +10,7 @@ urlpatterns = [
     path('login/', Login.as_view(), name='login' ),
     path('logout/', Logout.as_view(), name='logout' ),
     path('reset-password', ResetPassword.as_view(), name='reset-password' ),
+    path('state-pin', csrf_exempt(states_get_pin), name='state_pin' ),
     path('validate-username', csrf_exempt(UsernameValidation.as_view()), name='validate-username'),
     path('validate-email', csrf_exempt(EmailValidation.as_view()), name='validate-email'),
     path('activate-user/<uidb64>/<token>', Verification.as_view(), name='activate'),

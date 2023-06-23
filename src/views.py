@@ -1,4 +1,5 @@
 from django.shortcuts import render, HttpResponse
+from django.http import StreamingHttpResponse
 from .img import imgfun, img2fun
 from .models import image
 import uuid
@@ -92,8 +93,19 @@ def post_imd3(request):
 from .post_4_working import main
 
 def post_imd4(request, path):
-    img_c = main(request, path)
-    return HttpResponse(img_c, content_type='image/jpeg')
+    try:
+        img_c = main(request, path)
+        response = HttpResponse(content_type='image/jpeg')
+        response['Content-Disposition'] = 'filename="image.png"'
+        response.write(img_c)
+        return response
+    except Exception as e:
+        return HttpResponse("{ 'error' : 'Not Found' }")
+
+    # response = HttpResponse(mimetype = 'image/png' )
+    # response['Content-Disposition'] = 'attachment: filename=%s.png' % filename
+    # image.save(response , "png")
+    # return response  
     # aa = cv.imwrite(path+id.hex+'_image.jpg', img)
     # with open(path+id.hex+'_image.jpg', 'rb') as images:
     #     return HttpResponse(images.read(), content_type='image/jpeg;')

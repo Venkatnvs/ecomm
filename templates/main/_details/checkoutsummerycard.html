@@ -1,0 +1,25 @@
+{% load static %}
+{% load humanize %}
+<div class="col-lg-6">
+    <div class="nvs-box">
+      <a href="{% url 'cart' %}" class="btn btn-dark"><i class="bi bi-arrow-left"></i>Back to cart</a>
+      <hr>
+      <h5><strong>Order Summery</strong></h5>
+      <hr>
+      {% for i in data %}
+      <div class="nvs-cart-row mt-2">
+          <div class="nvs-cart-items1">{{forloop.counter}}</div>
+          <div class="nvs-cart-items2"><img class="nvs-cart-img" src="{{i.product.productmedia_set.all.0.img_url}}" alt="product"></div>
+          <div class="nvs-cart-items2">{{i.product.name | truncatechars:50}}</div>
+          <div class="nvs-cart-items1">₹{{i.product.new_price |floatformat:0|intcomma }}</div>
+          <div class="nvs-cart-items1">x{{i.quantity}}</div>
+      </div>
+      {% endfor %}
+      <br>
+      <div>
+          <h5>Items: <strong>{{order.get_item_total}}</strong></h5>
+          <h5>Total: <strong>₹{{order.get_cart_total|intcomma }}</strong></h5>
+      </div>
+    </div>
+    <br>
+</div>
