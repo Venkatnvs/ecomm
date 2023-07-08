@@ -362,6 +362,7 @@ class ProductCreateView(View):
         a_transaction.save()
         return HttpResponse('form submited')
     
+# The ProductsListview class is a subclass of ListView.
 class ProductsListview(ListView):
     model = Product
     template_name = 'ctm_admin/productslistview.html'
@@ -371,10 +372,16 @@ class ProductsListview(ListView):
         filter_val = self.request.GET.get('filter','')
         order_by = self.request.GET.get('order_by','id')
         if filter_val != "":
-            cagr = Product.objects.filter(Q(name__contains=filter_val) | Q(description__contains=filter_val)).order_by(order_by)
+            prod = Product.objects.filter(
+                Q(name__contains=filter_val) | 
+                Q(description__contains=filter_val) | 
+                Q(brand__contains = filter_val) | 
+                Q(subcategories__name__contains = filter_val) |
+                Q(subcategories__category__name__contains = filter_val)
+            ).order_by(order_by)
         else:
-            cagr = Product.objects.all().order_by(order_by)
-        return cagr
+            prod = Product.objects.all().order_by(order_by)
+        return prod
 
     def get_context_data(self, **kwargs):
         context = super(ProductsListview, self).get_context_data(**kwargs)

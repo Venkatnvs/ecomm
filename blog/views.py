@@ -19,7 +19,10 @@ class BlogCreate(CreateView):
 def feedimport(request):
     if request.GET.get('url'):
         url = request.GET['url'] #Getting URL
-        feed = feedparser.parse(url) #Parsing XML data
+        try:
+            feed = feedparser.parse(url) #Parsing XML data
+        except:
+            feed = None
     else:
         feed = None
     context = {

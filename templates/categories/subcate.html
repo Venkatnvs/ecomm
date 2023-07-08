@@ -1,0 +1,117 @@
+{% extends 'base/index.html'%}
+{% load static %}
+{% load compress %}
+{% block title %}
+Categories | NvsTrades
+{% endblock title %}
+
+{% block styles %}
+<link href="{% static 'categorie_lst/css/style.css' %}" rel="stylesheet">
+{% endblock styles %}
+
+{% block content %}
+<div class="row">
+    <div class="container">
+        <span class="nav_cate_ln">{{subcate_list.category}} > </span>
+        <h3 class="cate_heading">{{subcate_list}}</h3>
+        {% comment %} <div class="row">
+            <div class="subcate_items_lst">
+                {% for i in cate_list.subcategory_set.all %}
+                {% if i.is_active %}
+                <div class="subcate_items">
+                    <span>{{i.name}}</span>
+                </div>
+                {% endif %}
+                {% endfor %}
+            </div>
+        </div> {% endcomment %}
+        <div class="products_items">
+            <div id="main_productcontainer" class="container">
+                {% for i in products %}
+                    {% include 'main/_details/productcard.html' with product=i %}
+                {% endfor %}
+            </div>
+        </div>
+
+    </div>
+</div>
+{% endblock content %}
+
+{% block body_hidden %}
+{{ request.user.username |json_script:"user_name" }}
+{% include 'base/header.html' with order=order %}
+{% include 'base/sidebar.html' with categories=categories active=subcate_list %}
+{% endblock body_hidden %}
+
+{% block scripts_top %}
+<script>
+    var requestUser = '{{request.user}}';
+    function getCookie(name) {
+        var cookieValue = null;
+        if (document.cookie && document.cookie !== '') {
+            var cookies = document.cookie.split(';');
+            for (var i = 0; i < cookies.length; i++) {
+                var cookie = jQuery.trim(cookies[i]);
+                // Does this cookie string begin with the name we want?
+                if (cookie.substring(0, name.length + 1) === (name + '=')) {
+                    cookieValue = decodeURIComponent(cookie.substring(name.length + 1));
+                    break;
+                }
+            }
+        }
+        return cookieValue;
+    }
+    var csrftoken = getCookie('csrftoken');
+    var cart = JSON.parse(getCookie('cart'))
+
+    if (cart == undefined){
+        cart = {}
+        console.log('Cart Created!', cart)
+        document.cookie ='cart=' + JSON.stringify(cart) + ";domain=;path=/"
+    }
+    console.log('Cart:', cart)
+</script>
+{% endblock scripts_top %}
+
+{% block scripts %}
+{% compress js inline %}
+<script src="{% static 'main/js/cart.js' %}"></script>
+{% if request.user.is_authenticated %}
+<script>
+    const UserName = JSON.parse(document.getElementById('user_name').textContent);
+
+    const NotificationSocket = new WebSocket(
+        'ws://'
+        + window.location.host
+        + '/ws/notification/'
+        + UserName
+        + '/'
+    );
+
+    NotificationSocket.onmessage = function(e) {
+        const data = JSON.parse(e.data);
+        console.log('connected');
+        console.log(data.message);
+        document.getElementById('notifiocation-body').innerHTML = `
+            <li class="notification-item">
+                <i class="bi bi-info-circle text-info"></i>
+                <div>
+                    <h4>${data.message.title}</h4>
+                    <p>${data.message.body}</p>
+                    <p>${data.message.time}</p>
+                </div>
+            </li>
+            <li>
+                <hr class="dropdown-divider">
+            </li>`+document.getElementById('notifiocation-body').innerHTML;
+        document.getElementById("notification-badge").innerHTML= parseInt(document.getElementById("notification-badge").innerHTML) + 1;
+    };
+
+    NotificationSocket.onclose = function(e) {
+        console.log(e)
+        console.error('Chat socket closed unexpectedly');
+    };
+</script>
+{% endif %}
+{% endcompress %}
+{% endblock scripts %}

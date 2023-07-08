@@ -28,8 +28,13 @@ SECRET_KEY = config('SECRET_KEY')
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = config('DEBUG', cast=bool)
 
-#ALLOWED_HOSTS = ['127.0.0.1','192.168.100.9','10.62.16.77','youthful-mountain-70598.pktriot.net']
+# ALLOWED_HOSTS = ['127.0.0.1','192.168.100.9','10.62.16.77','youthful-mountain-70598.pktriot.net']
 ALLOWED_HOSTS = ['*']
+
+CSRF_TRUSTED_ORIGINS = [
+    'https://ae31-14-99-167-142.ngrok-free.app'
+]
+
 
 ADMINS = (('venkat','venkatnvs2005@gmail.com'),)
 MANAGERS = ADMINS
@@ -37,6 +42,7 @@ MANAGERS = ADMINS
 # Application definition
 
 INSTALLED_APPS = [
+    "daphne",
     'channels',
     'compressor',
     'django.contrib.admin',
@@ -53,6 +59,7 @@ INSTALLED_APPS = [
     'django_celery_beat',
     
     'store',
+    'store.details.categories',
     'clients',
     'chat',
     'blog',
@@ -104,7 +111,7 @@ TEMPLATES = [
 ]
 
 ASGI_APPLICATION = "ecomm.asgi.application"
-WSGI_APPLICATION = 'ecomm.wsgi.application'
+# WSGI_APPLICATION = 'ecomm.wsgi.application'
 
 
 # Database
@@ -211,7 +218,6 @@ EMAIL_PORT = config('EMAIL_PORT')
 EMAIL_HOST_PASSWORD = config('EMAIL_HOST_PASSWORD')
 DEFAULT_FROM_EMAIL = config('EMAIL_FROM_EMAIL')
 
-SESSION_EXPIRE_AT_BROWSER_CLOSE = True
 SESSION_COOKIE_AGE = 172800
 
 

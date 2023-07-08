@@ -104,7 +104,7 @@
           <li class="nav-item dropdown pe-3">
 
             <a class="nav-link nav-profile d-flex align-items-center pe-0" href="#" data-bs-toggle="dropdown">
-              <img src="{% static 'main/img/default-user.jpg' %}" alt="Profile" height="35" width="35" class="rounded-circle">
+              <img src="{{request.user.customer.img_url}}" alt="Profile" height="35" width="35" class="rounded-circle">
               <span class="d-none d-md-block dropdown-toggle ps-2">{{request.user.username}}</span>
             </a><!-- End Profile Iamge Icon -->
 
@@ -158,7 +158,7 @@
         <li class="nav-item nvs-cart">
           <a class="position-relative" href="{% url 'cart' %}">
             <img  src="{% static 'main/img/cart.png' %}" alt="cart" height="60">
-            <span class="badge top-0 start-90 translate-middle rounded-pill bg-danger">{{order.get_item_total}}</span>
+            <span class="badge top-0 start-90 translate-middle rounded-pill bg-danger position-absolute">{{order.get_item_total}}</span>
             <!-- <span class="badge top-0 start-100 translate-middle rounded-pill bg-danger position-absolute top-0 start-100 translate-middle badge">100</span> -->
           </a>
         </li>

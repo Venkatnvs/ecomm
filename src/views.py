@@ -1,5 +1,5 @@
 from django.shortcuts import render, HttpResponse
-from django.http import StreamingHttpResponse
+from django.http import StreamingHttpResponse,JsonResponse,FileResponse
 from .img import imgfun, img2fun
 from .models import image
 import uuid
@@ -13,6 +13,10 @@ import io
 import requests
 from django.conf.urls.static import static
 from django.conf import settings
+import jsonpickle
+import json
+from django.views.static import serve
+
 
 # Create your views here.
 def main(request):
@@ -95,20 +99,16 @@ from .post_4_working import main
 def post_imd4(request, path):
     try:
         img_c = main(request, path)
-        response = HttpResponse(content_type='image/jpeg')
-        response['Content-Disposition'] = 'filename="image.png"'
+        response = HttpResponse(content_type ="image/png")
+        response['Content-Disposition'] = "filename*=utf-8''main.png"
         response.write(img_c)
         return response
     except Exception as e:
-        return HttpResponse("{ 'error' : 'Not Found' }")
-
-    # response = HttpResponse(mimetype = 'image/png' )
-    # response['Content-Disposition'] = 'attachment: filename=%s.png' % filename
-    # image.save(response , "png")
-    # return response  
-    # aa = cv.imwrite(path+id.hex+'_image.jpg', img)
-    # with open(path+id.hex+'_image.jpg', 'rb') as images:
-    #     return HttpResponse(images.read(), content_type='image/jpeg;')
+        return JsonResponse({'error':'Not Found','message':jsonpickle.encode(e),},safe=False)
+        red = Image.new('RGBA', (1, 1), (255,0,0,0))
+        response = HttpResponse(content_type="image/png")
+        red.save(response, "png")
+        return response
 
 def post_img2(request):
     d = base64.b64encode(requests.get(request.GET.get('url','http://127.0.0.1:8000/media/categories/uploads/2022/09/05/69c6589653afdb9a.jpg')).content)
@@ -143,3 +143,22 @@ def getimage(request):
     # if request.method == 'POST':
     #     a = imgfun(request.POST['url'])
     #     return render(request, 'ctm_admin/test.html', {'a':a})
+
+from .ctmserver import MainCtm
+
+def ImageCtmServer(request,path):
+    try:
+        response = HttpResponse(content_type ="image/png")
+        # response['Content-Disposition'] = "filename*=utf-8''main.png"
+        response = MainCtm(request, path,response)
+        # response.write(img_c)
+        return response
+    except Exception as e:
+        base_path = os.path.join(settings.BASE_DIR,'media')
+        # base_path = os.path.join(base_path,'categories','uploads')
+        return serve(request,path,document_root=base_path)
+        # return JsonResponse({'error':'Not Found','message':jsonpickle.encode(e),},safe=False)
+        # red = Image.new('RGBA', (1, 1), (255,0,0,0))
+        # response = HttpResponse(content_type="image/png")
+        # red.save(response, "png")
+        # return response

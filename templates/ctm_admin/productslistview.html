@@ -36,17 +36,17 @@ Products List
                 <!-- <div class="article-image" data-background="{{x.image.url}}" style="background-image: url(&quot;{{x.image.url}}&quot;);">
                 </div> -->
                 <div class="article-image">
-                    <img class="img-fluid" src="{{x.image.url}}" alt="category">
+                    <img class="img-fluid" src="{{x.productmedia_set.all.0.img_url}}" alt="category">
                 </div>
                 <div class="article-badge">
-                <div class="article-badge-item bg-warning"><i class="bi bi-fire"></i> <small class="text-dark"><strong>last-edit: </strong>{{x.updated_at}}</small></div>
+                <div class="article-badge-item bg-warning"><i class="bi bi-fire"></i> <small class="text-dark"><strong>last-edit: </strong><span>{{x.updated_at}}</span></small></div>
                 </div>
             </div>
             <div class="article-details">
                 <div class="article-title">
-                <h2><a href="#">{{x.name}}</a></h2>
+                <h2><a href="#">{{x.name | truncatechars:50}}</a></h2>
                 </div>
-                <span class="badge bg-secondary">Description: {{x.description}}</span>
+                <span style="white-space: wrap;" class="badge bg-secondary">Description: {{x.description | truncatechars:50}}</span>
                 <span class="badge bg-info">Slug: {{x.slug}}</span>
                 <div class="form-check form-switch mt-2">
                     <input type="checkbox" name="checkbox" id="active-checkbox" class="form-check-input" {% if x.is_active %}checked{% endif %}>

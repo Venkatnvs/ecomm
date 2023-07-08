@@ -3,12 +3,64 @@
 {% block title %} Cart | NvsTrades {% endblock title %}
 {% block content %}
 <div class="container">
-  <div class="row">
-    {% include 'main/_details/checkoutsummerycard.html' with data=items %}
-    {% include 'main/_details/checkoutuserinfocard.html' %}
-  </div>
+  {% if order.get_item_total != 0 %}
+    <div class="row">
+      {% include 'main/_details/checkoutsummerycard.html' with data=items %}
+      {% include 'main/_details/checkoutuserinfocard.html' %}
+    </div>
+  {% else %}
+    <div class="row mt-1 d-flex justify-content-center align-items-center ">
+      <div class="card empty_crt_cont">
+        <img class="img-fluid" src="{% static 'main/img/empty_cart_img.jpg' %}" alt="Empty cart">
+        <h4>Your Cart is Currently Empty</h4>
+        <div class="empty_crt_cont-p">
+          <p>You have no items in your shopping cart.</p>
+          <p>Let's go buy something</p>
+        </div>
+        <button onclick="window.open('/','_self')" class="empty_crt_cont-btn"><i class="bi bi-cart"></i>&nbsp;RETURN TO SHOP</button>
+      </div>
+    </div>
+  {% endif %}
 </div>
 {% endblock content %}
 {% block scripts %}
     <script src="{% static 'main/js/add_pin.js' %}"></script>
 {% endblock scripts %}
+{% block styles %}
+<style>
+  .container{
+    padding: 0px !important;
+  }
+  .empty_crt_cont{
+    display: flex;
+    max-width: 500px;
+    align-items: center;
+    border-radius: 7px;
+  }
+  .empty_crt_cont >h4{
+    text-align: center;
+  }
+  .empty_crt_cont-p{
+    align-items: center;
+    justify-content: center;
+    margin-top: 8px;
+  }
+  .empty_crt_cont-p >p{
+    text-align: center;
+    display:flex;
+    align-items: center;
+    justify-content: center;
+    margin: 0px !important;
+    color: rgb(107, 107, 107);
+  }
+  .empty_crt_cont-btn{
+    border-radius: 4px;
+    margin-top: 25px;
+    margin-bottom: 25px;
+    color: white;
+    background-color: rgb(41, 171, 41);
+    border: none;
+    padding: 13px 10px;
+  }
+</style>
+{% endblock styles %}

@@ -4,8 +4,7 @@ from django.conf import settings
 import os
 import json
 from .models import Product,ProductMedia
-from order.models import Order
-from .utilitys import GetProductsHome,GetCartData
+from .utilitys import GetProductsHome,GetCartData,GetSubAndMainCate
 
 def state_dist(request):
     if request.method == 'POST':
@@ -29,10 +28,12 @@ def main(request):
     order = data['order']
     items = data['items']
     product_data = GetProductsHome(request)['product_data']
+    catedata = GetSubAndMainCate(request)['categories_list']
     context = {
         'products':product_data,
         'items':items,
         'order':order,
+        'categories':catedata,
     }
     return render(request, 'main/index.html', context)
 
@@ -41,9 +42,11 @@ def Cart(request):
     data = GetCartData(request)
     order = data['order']
     items = data['items']
+    catedata = GetSubAndMainCate(request)['categories_list']
     context = {
         'items':items,
         'order':order,
+        'categories':catedata,
         }
     return render(request, 'main/cart.html', context)
 
@@ -69,6 +72,7 @@ def ProductDetails(request,slug):
     data = GetCartData(request)
     order = data['order']
     items = data['items']
+    catedata = GetSubAndMainCate(request)['categories_list']
     product_data = ''
     prod = Product.objects.filter(slug=slug,is_active=True)
     img_d = ProductMedia.objects.filter(product=prod[0],is_active=True)
@@ -78,5 +82,6 @@ def ProductDetails(request,slug):
         'data':product_data,
         'items':items,
         'order':order,
+        'categories':catedata,
     }
     return render(request, 'main/productdetails.html', context)

@@ -1,4 +1,4 @@
-{% extends 'base2/index.html' %}
+{% extends 'base/index.html' %}
 {% load static %}
 {% load compress %}
 {% load humanize %}
@@ -6,13 +6,43 @@
 Cart | NvsTrades
 {% endblock title %}
 
+{% block styles %}
+<style>
+    .col-md-12{
+        padding: 0px !important;
+    }
+    .tableview_btn{
+        margin: 3px;
+        display: none;
+        align-items: center;
+        justify-content: flex-end;
+        margin-bottom: 3px;
+        margin-right: 5px;
+        float: right;
+    }
+    #tableview_btn-bimg{
+        max-height: 30px;
+        border-radius: 4px;
+        cursor: pointer;
+        box-shadow: 1px 8px 8px rgba(0, 0, 0, 0.2);
+        border: 1px solid rgb(46, 64, 169);
+    }
+    #tableview_btn-bimg:hover{
+        scale: 1.05;
+    }
+    @media only screen and (max-width: 760px), (min-device-width: 768px) and (max-device-width: 1024px)  {
+        .tableview_btn{
+            display: flex;
+        }
+    }
+</style>
+{% endblock styles %}
+
 {% block content %}
 <div class="row">
     <div class="col-md-12">
         <div class="nvs-box">
             <a class="btn btn-primary" href="{% url 'home' %}"><i class="bi bi-arrow-left"></i> Continue Shopping</a>
-
-            <br>
             <table class="table">
                 <thead>
                     <tr>
@@ -26,8 +56,30 @@ Cart | NvsTrades
             </table>
         </div>
         <br>
-        <div class="nvs-box">
-            <div class="nvs-cart-row">
+        <div style="display: flex; flex-direction:column;" class="nvs-box">
+            <div class="tableview_btn">
+                <img id="tableview_btn-bimg" src="{% static 'main/img/table-view.png' %}" data-toggimg="{% static 'main/img/list_view.png' %}" alt="table view">
+            </div>
+            <div id="table_cart-itms_view" style="overflow-x:auto;" class="table-responsive tabel_listcatr">
+
+            <table class="table">
+                <thead>
+                <tr>
+                    <th scope="col">S.no</th>
+                    <th scope="col">Image</th>
+                    <th style="min-width: 220px;" scope="col">Item</th>
+                    <th scope="col">Price</th>
+                    <th scope="col">Quantity</th>
+                    <th scope="col">Total</th>
+                </tr>
+                </thead>
+                <tbody>
+                    {% for i in items %}
+                        {% include 'main/_details/cartcarddetails_tbl.html' with data=i count=forloop.counter %}
+                    {% endfor %}
+                </tbody>
+            </table>
+            {% comment %} <div class="nvs-cart-row">
                 <div class="nvs-cart-items1"><strong>S.no</strong></div>
                 <div class="nvs-cart-items2"><strong>Image</strong></div>
                 <div class="nvs-cart-items2"><strong>Item</strong></div>
@@ -37,8 +89,9 @@ Cart | NvsTrades
             </div>
             {% for i in items %}
                 {% include 'main/_details/cartcarddetails.html' with data=i count=forloop.counter %}
-            {% endfor %}
+            {% endfor %} {% endcomment %}
         </div>
+    </div>
     </div>
 </div>
 </div>
@@ -47,6 +100,24 @@ Cart | NvsTrades
 
 {% block scripts %}
 {% compress js inline %}
+<script>
+    const tableViewElm = document.getElementById("tableview_btn-bimg");
+    const tableCartElm = document.getElementById("table_cart-itms_view");
+    console.log(tableCartElm)
+    console.log(tableViewElm)
+
+    tableViewElm.onclick = () => {
+        tableCartElm.classList.toggle('tabel_listcatr')
+        var img_src = tableViewElm.dataset.toggimg
+        tableViewElm.dataset.toggimg = tableViewElm.src;
+        tableViewElm.src = img_src;
+    }
+</script>
 <script src="{% static 'main/js/cart.js' %}"></script>
 {% endcompress %}
 {% endblock scripts %}
+{% block body_hidden %}
+{{ request.user.username |json_script:"user_name" }}
+{% include 'base/header.html' with order=order %}
+{% include 'base/sidebar.html' with categories=categories %}
+{% endblock body_hidden %}

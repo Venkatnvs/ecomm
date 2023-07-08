@@ -1,4 +1,3 @@
-
 import cv2 as cv
 import urllib
 import os
@@ -42,7 +41,7 @@ def main(request, path):
         x = w - tw - mx
         y = h - th - my
         draw.text((x,y), text, rgb, font=font)
-    new_img.save(b, 'png', quality=int(request.GET.get('q',40)), optimize=True, lossless=False)
+    new_img.save(b, 'png', quality=int(request.GET.get('q',100)), optimize=True, lossless=False)
     img_c = b.getvalue()
     b.flush()
     b.seek(0)

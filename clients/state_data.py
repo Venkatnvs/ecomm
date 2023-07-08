@@ -15,3 +15,15 @@ def Pin_dis(pin):
                 data_dist=i["District"]
                 data_state=i["StateName"]
         return {"data_c":data_res,"data_d":data_dist,'data_state':data_state}
+    
+def state_data_sending():
+    try:
+        states_data = []
+        file_path = os.path.join(settings.BASE_DIR, 'data_files/states_dist.json')
+        with open(file_path, 'r') as json_file:
+            data = json.load(json_file)
+            for values in data:
+                states_data.append(values['state'])
+    except Exception as e:
+        states_data=['Please Try again later.']
+    return states_data

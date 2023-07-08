@@ -1,6 +1,7 @@
 import json
-from store.models import Product,ProductMedia
+from store.models import Product,ProductMedia,Category,SubCategory
 from order.models import Order
+from clients.models import Customer
 
 def GetCartData(request):
     if request.user.is_authenticated:
@@ -40,7 +41,8 @@ def NoAuthCookies(request):
 
 def AuthOrderModels(request):
     customer = request.user
-    order, created = Order.objects.get_or_create(user__user=customer,is_completed=False)
+    cust = Customer.objects.filter(user=customer).first()
+    order, created = Order.objects.get_or_create(user=cust,is_completed=False)
     items = order.orderitems_set.all()
     return {'order':order,'items':items}
 
@@ -52,3 +54,13 @@ def GetProductsHome(request):
         data = {'product':i,'imgs':img_d}
         product_data.append(data)
     return {'product_data':product_data}
+
+def GetSubAndMainCate(request):
+    categories_list = []
+    categories = Category.objects.filter(is_active=True)
+    for value in categories:
+        sub_categories = SubCategory.objects.filter(is_active=True, category=value.id)
+        categories_list.append({'category':value, 'subcategory':sub_categories})
+    return {
+        'categories_list':categories_list,
+    }

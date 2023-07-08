@@ -14,12 +14,38 @@ class Customer(models.Model):
     user = models.OneToOneField(User, null=True, blank=True, on_delete=models.CASCADE)
     customer_type = models.CharField(max_length=100, choices=customer_type_choices, default="Customer")
 
+    @property
+    def img_url(self):
+        url = '/static/main/img/default-user.jpg'
+        if self.customer_type == "Admin":
+            try:
+                url = self.adminuser.profile_pic.url
+            except:
+                url = '/static/main/img/default-user.jpg'
+        if self.customer_type == "Staff":
+            try:
+                url = self.staffuser.profile_pic.url
+            except:
+                url = '/static/main/img/default-user.jpg'
+        if self.customer_type == "Seller":
+            try:
+                url = self.selleruser.profile_pic.url
+            except:
+                url = '/static/main/img/default-user.jpg'
+        if self.customer_type == "Customer":
+            try:
+                url = self.customeruser.profile_pic.url
+            except:
+                url = '/static/main/img/default-user.jpg'
+        return url
+
     def __str__(self):
         return self.user.username + ' ~' + self.customer_type
 
 class AdminUser(models.Model):
     user_type = models.OneToOneField(Customer, on_delete=models.CASCADE)
     profile_pic = models.ImageField(upload_to='Customer/AdminUser/%Y/%m/%d/')
+    address = models.TextField(default="")
     state = models.CharField(max_length=255, default="")
     city = models.CharField(max_length=255, default="")
     zip = models.CharField(max_length=255, default="")
@@ -31,7 +57,7 @@ class AdminUser(models.Model):
         try:
             url = self.profile_pic.url
         except:
-            url = '/static/main/img/no-image.jpg'
+            url = '/static/main/img/default-user.jpg'
         return url
 
     def __str__(self):
@@ -40,6 +66,7 @@ class AdminUser(models.Model):
 class CustomerUser(models.Model):
     user_type = models.OneToOneField(Customer, on_delete=models.CASCADE)
     profile_pic = models.ImageField(upload_to='Customer/CustomerUser/%Y/%m/%d/')
+    address = models.TextField(default="")
     state = models.CharField(max_length=255, default="")
     city = models.CharField(max_length=255, default="")
     zip = models.CharField(max_length=255, default="")
@@ -51,7 +78,7 @@ class CustomerUser(models.Model):
         try:
             url = self.profile_pic.url
         except:
-            url = '/static/main/img/no-image.jpg'
+            url = '/static/main/img/default-user.jpg'
         return url
 
     def __str__(self):
@@ -60,6 +87,7 @@ class CustomerUser(models.Model):
 class StaffUser(models.Model):
     user_type = models.OneToOneField(Customer, on_delete=models.CASCADE)
     profile_pic = models.ImageField(upload_to='Customer/StaffUser/%Y/%m/%d/')
+    address = models.TextField(default="")
     state = models.CharField(max_length=255, default="")
     city = models.CharField(max_length=255, default="")
     zip = models.CharField(max_length=255, default="")
@@ -71,7 +99,7 @@ class StaffUser(models.Model):
         try:
             url = self.profile_pic.url
         except:
-            url = '/static/main/img/no-image.jpg'
+            url = '/static/main/img/default-user.jpg'
         return url
 
     def __str__(self):
@@ -95,7 +123,7 @@ class SellerUser(models.Model):
         try:
             url = self.profile_pic.url
         except:
-            url = '/static/main/img/no-image.jpg'
+            url = '/static/main/img/default-user.jpg'
         return url
 
     def __str__(self):

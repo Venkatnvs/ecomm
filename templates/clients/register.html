@@ -1,11 +1,12 @@
 {% extends 'clients/base.html' %}
 {% load static %} 
+{% load compress %}
 {% block title %} Register {% endblock %}
 {% block content %}
-<div class="row">
-  <div class="col-md-4"></div>
-  <div class="col-md-4">
-    <div class="card mt-5 p-2">
+<div class="row p-3">
+  <div class="col-md-3"></div>
+  <div class="col-md-6">
+    <div class="card mt-3 p-3">
       <div class="card-body">
         <div class="text-center">
           <div class="card-title">
@@ -13,71 +14,157 @@
           </div>
         </div>
         <hr />
-        <form action="{% url 'register' %}" method="post">
+        <form action="{% url 'register' %}" method="post" enctype="multipart/form-data">
           {% csrf_token %} {% include 'clients/messages.html' %}
-          <div class="form-group mb-2">
-            <label for="inputname">Username</label>
-            <input
-              required
-              type="text"
-              name="username"
-              placeholder="Username"
-              class="form-control"
-              id="inputname"
+          <div class="container">
+            <div class="picture-container">
+              <div class="picture">
+                <img src="{% static 'clients/img/image_upload.jpg' %}" class="picture-src" id="wizardPicturePreview"
+                  title="">
+                <input type="file" id="wizard-picture" name="profile_img" onchange="Filevalidation()">
+              </div>
+              <h6>Profile Picture</h6>
 
-              value="{{ FieldValues.username }}"
-            />
-            <div
-              class="invalid-feedback invalid-username-feedback"
-              style="display: none"
-            ></div>
+            </div>
+          </div>
+          <div class="form-group mb-2">
+            <h5><strong>Basic Information</strong></h5>
+            <label for="inputname">Username</label>
+            <input required type="text" name="username" placeholder="Username" class="form-control" id="inputname"
+              value="{{ FieldValues.username }}" />
+            <div class="invalid-feedback invalid-username-feedback" style="display: none"></div>
             <p class="text-sm text-success username-success"></p>
+          </div>
+          <div class="form-group mt-1">
+            <label for="inputfirstname">Firstname</label>
+            <input required type="text" name="firstname" placeholder="Firstname" class="form-control"
+              id="inputfirstname" value="{{ FieldValues.firstname }}" />
+          </div>
+          <div class="form-group mt-1">
+            <label for="inputlastname">Lastname</label>
+            <input required type="text" name="lastname" placeholder="Lastname" class="form-control"
+              id="inputlastname" value="{{ FieldValues.lastname }}" />
           </div>
           <div class="form-group mb-2">
             <label for="inputemail">Email address</label>
-            <input
-              required
-              type="email"
-              name="email"
-              placeholder="abc@gmail.com"
-              class="form-control"
-              id="inputemail"
-
-              value="{{ FieldValues.email }}"
-            />
-            <div
-              class="invalid-feedback invalid-email-feedback"
-              style="display: none"
-            ></div>
+            <input required type="email" name="email" placeholder="abc@gmail.com" class="form-control" id="inputemail"
+              value="{{ FieldValues.email }}" />
+            <div class="invalid-feedback invalid-email-feedback" style="display: none"></div>
             <p class="text-sm text-success email-success"></p>
           </div>
-          <div class="form-group mb-3">
-            <label for="inputpassword">Password</label>
-            <input
-              required
-              type="password"
-              name="password"
-              placeholder="password"
-              class="form-control"
-              id="inputpassword"
-            />
-            <small class="float-end p-2 password-toggle">SHOW</small>
+          <div id="shipping-info">
+            <hr />
+            <h5><strong>Address</strong></h5>
+            <div class="form-group m-1">
+              <label for="inputAddress2">Line 1</label>
+              <input type="text" class="form-control" name="addr_line" id="inputAddress2"
+                placeholder="1234 Main,Apartment, studio, or floor" value="{{ FieldValues.addr_line }}" />
+            </div>
+            <div class="form-row m-1">
+              <div class="form-group d-inline-block col-lg-5 m-1">
+                <label for="inputState">State</label>
+                <select id="inputState" name="addr_state" class="form-control nvs-state">
+                  <option selected>Choose...</option>
+                  {% for x in data %}
+                  <option {% if FieldValues.addr_state == x %}selected{% endif %}>{{x}}</option>
+                  {% endfor %}
+                </select>
+              </div>
+              <div class="form-group d-inline-block col-md-4 m-1">
+                <label for="inputCity">City</label>
+                <select id="inputCity" name="addr_city" class="form-control nvs-city">
+                  <option selected>Please select state</option>
+                </select>
+              </div>
+              <div class="form-group d-inline-block col-md-2 m-1">
+                <label for="inputZip">Zip</label>
+                <input type="text" name="addr_zip" class="form-control pin_dist" id="inputZip" value="{{ FieldValues.addr_zip }}" />
+              </div>
+            </div>
+            <hr />
+            <div class="form-group mb-1">
+              <label for="inputpassword">Password</label>
+              <input required type="password" name="password" placeholder="password" class="form-control"
+                id="inputpassword" />
+              <small class="float-end p-2 password-toggle">SHOW</small>
+            </div>
+            <div class="form-group mb-3">
+              <label for="inputpassword">Confirm Password</label>
+              <input required type="password" name="password2" placeholder="Conform Password" class="form-control"
+                id="inputpassword2" />
+              <small class="float-end p-2 password-toggle-2">SHOW</small>
+            </div>
+            <br>
+            <hr class="mt-0" />
+            <div class="form-group m-1">
+              <div class="form-check">
+                <input class="form-check-input" name="terms_cond" type="checkbox" id="gridCheck" {% if FieldValues.terms_cond == 'on' %}checked{% endif %}/>
+                <label class="form-check-label" for="gridCheck">
+                  Terms and Conditions
+                </label>
+              </div>
+            </div>
           </div>
-          <input
-            type="submit"
-            value="Register"
-            class="btn btn-block btn-primary submit-btn"
-          />
+          <input type="submit" value="Register" class="btn w-100 btn-primary submit-btn" />
         </form>
         <div class="mt-2">
-          <span class="text-lead lead">Already have an acccount? </span><a href="{% url 'login' %}" >Login</a>
+          <span class="text-lead lead">Already have an acccount? </span><a href="{% url 'login' %}">Login</a>
         </div>
       </div>
     </div>
   </div>
-  <div class="col-md-4"></div>
+  <div class="col-md-3"></div>
 </div>
+{% endblock content %}
 
-{% endblock %} {% block script %}
+
+{% block script %}
+<script src="https://code.jquery.com/jquery-3.6.3.min.js"
+integrity="sha256-pvPw+upLPUjgMXY0G+8O0xUf+/Im1MZjXxxgOcBQBXU=" crossorigin="anonymous"></script>
+{% compress js inline %}
+<script>
+  $(document).ready(function () {
+    $("#wizard-picture").change(function () {
+      readURL(this);
+    });
+  });
+  function readURL(input) {
+    const fileInput = document.getElementById('wizard-picture');
+    var filePath = fileInput.value;
+    // Allowing file type
+    var allowedExtensions = /(\.jpg|\.jpeg|\.png|\.gif|\.apng|\.avif|\.webp)$/i;
+    if (!allowedExtensions.exec(filePath)) {
+      alert('Invalid file type');
+    }
+    else {
+      const fi = document.getElementById('wizard-picture');
+      // Check if any file is selected.
+      if (fi.files.length > 0) {
+        for (const i = 0; i <= fi.files.length - 1; i++) {
+
+          const fsize = fi.files.item(i).size;
+          const file = Math.round((fsize / 1024));
+          // The size of the file.
+          if (file >= 6144) {
+            alert(
+              "File too Big, please select a file less than 6mb");
+          } else {
+            if (input.files && input.files[0]) {
+              var reader = new FileReader();
+
+              reader.onload = function (e) {
+                $('#wizardPicturePreview').attr('src', e.target.result).fadeIn('slow');
+              }
+              reader.readAsDataURL(input.files[0]);
+            }
+          }
+        }
+      }
+    }
+  }
+</script>
 <script src="{% static 'clients/js/register.js' %}"></script>
-{% endblock %}
+<script src="{% static 'clients/js/address.js' %}"></script>
+<script src="{% static 'clients/js/add_pin.js' %}"></script>
+{% endcompress %}
+{% endblock script %}

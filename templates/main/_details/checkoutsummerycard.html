@@ -8,9 +8,9 @@
       <hr>
       {% for i in data %}
       <div class="nvs-cart-row mt-2">
-          <div class="nvs-cart-items1">{{forloop.counter}}</div>
-          <div class="nvs-cart-items2"><img class="nvs-cart-img" src="{{i.product.productmedia_set.all.0.img_url}}" alt="product"></div>
-          <div class="nvs-cart-items2">{{i.product.name | truncatechars:50}}</div>
+          <div style="margin-right: 8px;" class="nvs-cart-items">{{forloop.counter}}</div>
+          <div style="margin-right:5px;" class="nvs-cart-items1"><img class="nvs-cart-img" src="{{i.product.productmedia_set.all.0.img_url}}" alt="product"></div>
+          <div style="margin-right: 4px;" class="nvs-cart-items2">{{i.product.name | truncatechars:40}}</div>
           <div class="nvs-cart-items1">₹{{i.product.new_price |floatformat:0|intcomma }}</div>
           <div class="nvs-cart-items1">x{{i.quantity}}</div>
       </div>

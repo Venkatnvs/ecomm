@@ -3,7 +3,7 @@ from django.urls import path, include, re_path
 from django.views.generic.base import RedirectView
 from django.conf.urls.static import static
 from django.conf import settings
-from src.views import post_imd4
+from src.views import post_imd4,ImageCtmServer
 
 fav_icon = RedirectView.as_view(url='/static/icons/favicon.ico', permanent=True)
 
@@ -19,10 +19,14 @@ urlpatterns = [
     path('support/', include('chat.urls')),
     path('auth/', include('clients.urls')),
     path('blog/', include('blog.urls')),
+    path('sd/', include('store.details.categories.urls')),
     path('e/', include('draggables.urls')),
     path('__debug__/', include('debug_toolbar.urls')),
     re_path(r'^favicon\.ico$', fav_icon),
     # re_path(r'^media/categories/uploads/(?P<path>.*)$', post_imd4),
+    # re_path(r'^media/categories/uploads/(?P<path>.*)$', ImageCtmServer),
+    # re_path(r'^media/categories/uploads/(?P<path>.*)/(?P<username>\w+)?._s_h(?P<height>\d+)?_w(?P<width>\d+)?$', ImageCtmServer),
+    re_path(r'^media/(?P<path>.*)$', ImageCtmServer),
     # re_path(r'^media/(?P<path>.*)$', post_imd4),
 ]
 if settings.DEBUG :
