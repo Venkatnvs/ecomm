@@ -20,6 +20,7 @@ urlpatterns = [
     path('auth/', include('clients.urls')),
     path('blog/', include('blog.urls')),
     path('sd/', include('store.details.categories.urls')),
+    path('search/', include('store.details.search.urls')),
     path('e/', include('draggables.urls')),
     path('__debug__/', include('debug_toolbar.urls')),
     re_path(r'^favicon\.ico$', fav_icon),

@@ -60,6 +60,7 @@ INSTALLED_APPS = [
     
     'store',
     'store.details.categories',
+    'store.details.search',
     'clients',
     'chat',
     'blog',

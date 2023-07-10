@@ -2,12 +2,16 @@
 {% load static %}
 {% load compress %}
 {% block title %}
-Home | NvsTrades
+NvsTrades: {{searchdata}}
 {% endblock title %}
 
+{% block styles %}
+<link rel="stylesheet" href="{% static 'search/css/main.css' %}">
+{% endblock styles %}
 
 {% block content %}
 <div class="row">
+    <h4>Results:</h4>
     <div id="main_productcontainer" class="container">
         {% for i in products %}
             {% include 'main/_details/productcard.html' with product=i %}
@@ -20,11 +24,13 @@ Home | NvsTrades
 {{ request.user.username |json_script:"user_name" }}
 {{ searchdata | json_script:"user_squery"}}
 {% include 'base/header.html' with order=order searchdata=searchdata %}
-{% include 'base/sidebar.html' with categories=categories %}
+{% include 'search/searchsidebar.html' with categories=categories %}
 {% endblock body_hidden %}
+
 
 {% block scripts %}
 {% compress js inline %}
 <script src="{% static 'main/js/cart.js' %}"></script>
+<script src="{% static 'search/js/main.js' %}"></script>
 {% endcompress %}
 {% endblock scripts %}

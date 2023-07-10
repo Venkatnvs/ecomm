@@ -1,0 +1,22 @@
+<div class="search-bar">
+  <form id="search-form-hm" class="search-form d-flex align-items-center" method="GET" action="{% url 'st-search-mn' %}">
+    <input required id="search_inp_hm" type="text" name="squery" value="{{searchdata}}" placeholder="Search" title="Enter search keyword" />
+    {% comment %} {% csrf_token %} {% endcomment %}
+    <button type="submit" title="Search"><i class="bi bi-search"></i></button>
+  </form>
+  <div id="search-nvsdiv" class="search-nvs-re">
+    <ul id="search-rs-ul" class="list-group list-group-flush">
+      <li class="search-rs-li list-group-item">
+        <a href="">
+          <div class="search-rs-div">
+            <img src="/static/main/img/no-image.jpg"
+            alt="productimg">
+            <div class="search-rs-div-cnt">
+              <span>Not Found</span>
+            </div>
+          </div>
+        </a>
+      </li>
+    </ul>
+  </div>
+</div>

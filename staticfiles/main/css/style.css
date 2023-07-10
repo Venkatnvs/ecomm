@@ -137,6 +137,94 @@ a, a:hover, a:focus, a:active {
 .nvs-checkout-sub_btn{
 	display: block !important;
 }
+.search-nvs-re{
+	position: absolute;
+	margin-top: 2px;
+	display: flex;
+	align-items: flex-start;
+	justify-content: flex-start;
+	min-width: 320px;
+    z-index: 9998;
+	box-shadow: 0px 0px 15px 0px rgba(1, 41, 112, 0.1);
+	transition: 0.3s;
+	background-color: rgb(255, 255, 255);
+	overflow-x: hidden;
+	overflow-y: auto;
+	max-height: 650%;
+}
+.search-rs-div:hover{
+	color: #c86523;
+}
+.search-nvs-re > ul{
+	width: 100%;
+	background-color: white;
+	margin: 0px;
+	overflow-x: hidden;
+	overflow-y: auto;
+}
+.search-nvs-re > li{
+	cursor: pointer;
+	width: 100%;
+}
+.search-rs-li{
+	list-style: none;
+	margin: 0px;
+	padding: 0px;
+	cursor: pointer;
+}
+.search-rs-div{
+	display: flex;
+	flex-direction: row;
+	align-items: center;
+	margin: 3px;
+	gap: 3px;
+	cursor: pointer;
+	padding-right: 5px;
+}
+.search-rs-div > img{
+	height: 50px;
+	width: auto;
+	aspect-ratio: 3/2;
+	object-fit: contain;
+	cursor: pointer;
+}
+.search-rs-div-cnt{
+	display: flex;
+	align-items: center;
+	flex-direction: column;
+	cursor: pointer;
+	width: 200px;
+}
+.search-rs-div-cnt >span{
+	width: 100%;
+	overflow: hidden; 
+	white-space: nowrap;
+	text-overflow: ellipsis;
+	font-size: 13px;
+	font-family:sans-serif;
+	font-weight: 500;
+}
+.search-rs-div-cnt >span:hover{
+	overflow:visible;
+	white-space:normal;
+}
+.search-rs-div-cnt > p{
+	margin: 0px;
+}
+@media (max-width: 1199px) {
+	.search-nvs-re {
+		left: 0;
+		right: 0;
+		box-shadow: 0px 0px 15px 0px rgba(1, 41, 112, 0.1);
+		padding:0 20px;
+	}
+	.search-rs-div-cnt{
+		width: auto;
+		overflow: hidden; 
+		white-space: nowrap;
+		text-overflow: ellipsis;
+	}
+}
 @media (max-width: 268px){
     #main_product_details{
 		width: 140px;
