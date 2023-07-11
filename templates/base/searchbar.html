@@ -1,6 +1,6 @@
 <div class="search-bar">
   <form id="search-form-hm" class="search-form d-flex align-items-center" method="GET" action="{% url 'st-search-mn' %}">
-    <input required id="search_inp_hm" type="text" name="squery" value="{{searchdata}}" placeholder="Search" title="Enter search keyword" />
+    <input id="search_inp_hm" type="text" name="squery" value="{{searchdata.squery}}" placeholder="Search" title="Enter search keyword" />
     {% comment %} {% csrf_token %} {% endcomment %}
     <button type="submit" title="Search"><i class="bi bi-search"></i></button>
   </form>

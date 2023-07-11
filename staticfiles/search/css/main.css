@@ -30,7 +30,7 @@
 .all_stock_p{
     display: flex;
     align-items: center;
-    margin-left: 14px;
+    margin-left: 8px;
 }
 .all_stock_p >label{
     display: flex;
@@ -96,8 +96,37 @@
 }
 .ctmprice-range{
     margin-top: 5px;
-    gap: 10px;
+    gap: 8px;
     display: flex;
     align-items: center;
     margin-right: 10px;
+}
+.clearfltbtn{
+    display: flex;
+    align-items: flex-end;
+    justify-content: center;
+    margin-left: auto;
+}
+.clearfltbtn >a{
+    display: flex;
+    align-items: center;
+    padding: 5px 20px;
+    color: white;
+    background-color: #414141;
+    border-radius: 50px;
+    box-shadow: 3px 8px 8px rgba(0, 0, 0, 0.29);
+    font-weight: 500;
+}
+.p-nofound-div{
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 5px;
+}
+.p-nofound-div > img{
+    height: 70%;
+    width: auto;
+    aspect-ratio: 4/4;
+    object-fit: contain;
+    border: 1px solid gray;
 }

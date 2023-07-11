@@ -2,7 +2,7 @@
 {% load static %}
 {% load compress %}
 {% block title %}
-NvsTrades: {{searchdata}}
+NvsTrades: {{searchdata.squery}}
 {% endblock title %}
 
 {% block styles %}
@@ -12,11 +12,18 @@ NvsTrades: {{searchdata}}
 {% block content %}
 <div class="row">
     <h4>Results:</h4>
+    {% if products %}
     <div id="main_productcontainer" class="container">
         {% for i in products %}
             {% include 'main/_details/productcard.html' with product=i %}
         {% endfor %}
     </div>
+    {% else %}
+        <div class="container p-nofound-div">
+            <img class="imd-fluid" src="{% static 'search/img/product-not-found.jpg' %}" alt="img_p_not">
+            <!-- <h5 style="margin-left: 30%;"><strong>Not Found.</strong></h5> -->
+        </div>
+    {% endif %}
 </div>
 {% endblock content %}
 
@@ -24,7 +31,7 @@ NvsTrades: {{searchdata}}
 {{ request.user.username |json_script:"user_name" }}
 {{ searchdata | json_script:"user_squery"}}
 {% include 'base/header.html' with order=order searchdata=searchdata %}
-{% include 'search/searchsidebar.html' with categories=categories %}
+{% include 'search/searchsidebar.html' with categories=categories searchdata=searchdata %}
 {% endblock body_hidden %}
 
 

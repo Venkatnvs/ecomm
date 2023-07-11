@@ -2,7 +2,8 @@ from django.shortcuts import render
 from rest_framework.response import Response
 from rest_framework.decorators import api_view
 from store.models import Product,ProductMedia
-from ...utilitys import GetCartData,GetSubAndMainCate
+from store.utilitys import GetCartData,GetSubAndMainCate
+from .utilitys import GetProductSearch,GetProCateFilter
 
 @api_view(['GET','POST'])
 def HomeSearch(request):
@@ -26,26 +27,17 @@ def HomeSearch(request):
 def SearchResult(request):
     data = request.GET
     squery = data.get("squery",False)
-    print(data)
-    data = GetCartData(request)
-    order = data['order']
-    items = data['items']
-    product_data = GetProductSearch(request,squery)['product_data']
+    data_ct_or = GetCartData(request)
+    order = data_ct_or['order']
+    items = data_ct_or['items']
+    product_data = GetProductSearch(request)['product_data']
     catedata = GetSubAndMainCate(request)['categories_list']
     context = {
         'products':product_data,
         'items':items,
         'order':order,
         'categories':catedata,
-        'searchdata':squery,
+        'searchdata':data,
+        'searchcate':GetProCateFilter(request)['p_c_filter']
     }
     return render(request, 'search/main.html', context)
-
-def GetProductSearch(request,filter_val):
-    product_data = []
-    prod = Product.objects.filter(is_active=True,name__istartswith=filter_val)
-    for i in prod:
-        img_d = ProductMedia.objects.filter(product=i,is_active=True,type=1)
-        data = {'product':i,'imgs':img_d}
-        product_data.append(data)
-    return {'product_data':product_data}
