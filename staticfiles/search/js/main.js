@@ -16,7 +16,7 @@ avaStockCheck.onchange = (e) => {
     else{
         avacheck = 'no'
     }
-    url = `${window.location.pathname}?squery=${UserfilterEr(UserSQuery.squery)}&rpricemax=${UserfilterEr(UserSQuery.rpricemax)}&rpricemin=${UserfilterEr(UserSQuery.rpricemin)}&discountper=${UserfilterEr(UserSQuery.discountper)}&stockava=${avacheck}`
+    url = `${window.location.pathname}?squery=${UserfilterEr(UserSQuery.squery)}&rpricemax=${UserfilterEr(UserSQuery.rpricemax)}&rpricemin=${UserfilterEr(UserSQuery.rpricemin)}&discountper=${UserfilterEr(UserSQuery.discountper)}&stockava=${avacheck}&sort=${UserfilterEr(UserSQuery.sort)}`
     window.open(url,'_self')
 }
 
@@ -29,7 +29,7 @@ defBackbtn.onclick = (e) => {
     filterSidebar.style.display = 'flex';
 }
 priceGoBtn.onclick = (e) => {
-    url = `${window.location.pathname}?squery=${UserfilterEr(UserSQuery.squery)}&rpricemax=${priceMaxInp.value}&rpricemin=${priceMinInp.value}&discountper=${UserfilterEr(UserSQuery.discountper)}&stockava=${UserfilterEr(UserSQuery.stockava)}`
+    url = `${window.location.pathname}?squery=${UserfilterEr(UserSQuery.squery)}&rpricemax=${priceMaxInp.value}&rpricemin=${priceMinInp.value}&discountper=${UserfilterEr(UserSQuery.discountper)}&stockava=${UserfilterEr(UserSQuery.stockava)}&sort=${UserfilterEr(UserSQuery.sort)}`
     window.open(url,'_self')
 }
 

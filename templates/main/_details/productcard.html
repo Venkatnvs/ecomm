@@ -2,6 +2,9 @@
 <main id="main_product_details">
     <a href="{% url 'productdetails' product.product.slug %}" target="_blank">
         <div class="col-md-3 nvs-box_product">
+            {% if product.product.is_bestselling %}
+                <div class="prod_card_badge_bstsl">&nbsp;Best Selling</div>
+            {% endif %}
             <div class="nvs_img_cont">
                 <img class="nvs_product_img" src="{{ product.imgs.0.img_url }}" alt="product">
             </div>

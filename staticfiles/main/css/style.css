@@ -211,6 +211,50 @@ a, a:hover, a:focus, a:active {
 .search-rs-div-cnt > p{
 	margin: 0px;
 }
+.prod_card_badge_bstsl{
+	display: flex;
+	position: absolute;
+	background-color: #c86523;
+	color: white;
+	z-index: 9987;
+	margin-top: -5px;
+	margin-left: -5px;
+	border-radius: 4px 0 0 0;
+	padding: 3px 7px;
+	font-size: 13px;
+	font-family:'Franklin Gothic Medium', 'Arial Narrow', Arial, sans-serif;
+	font-style: italic;
+	letter-spacing: 0.7px;
+	text-align: start;
+}
+.prod_card_badge_bstsl::before{
+	color:white;
+	content: "# ";
+	animation: bounce2 1s ease 2;
+}
+.prod_card_badge_bstsl:hover{
+	font-style: normal;
+	animation: pulse 0.5s ease 1;
+}
+@keyframes bounce2 {
+	0%, 20%, 50%, 80%, 100% {transform: translateY(0);}
+	40% {transform: translateY(-30px);}
+	60% {transform: translateY(-15px);}
+}
+@keyframes pulse {
+	0% {
+	  transform: scale(1);
+	  opacity: 1;
+	}
+	60% {
+	  transform: scale(1.4);
+	  opacity: 0.4;
+	}
+	100% {
+	  transform: scale(1.5);
+	  opacity: 0.2;
+	}
+  }
 @media (max-width: 1199px) {
 	.search-nvs-re {
 		left: 0;

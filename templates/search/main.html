@@ -10,6 +10,12 @@ NvsTrades: {{searchdata.squery}}
 {% endblock styles %}
 
 {% block content %}
+<div class="row m-0 mb-1">
+    <div class="col-md-9"></div>
+    <div class="col-md-3 justify-content-end d-flex align-content-center">
+        {% include 'search/_details/sort_filters.html' with searchdata=searchdata %}
+    </div>
+</div>
 <div class="row">
     <h4>Results:</h4>
     {% if products %}

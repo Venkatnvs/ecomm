@@ -9,13 +9,21 @@ def GetProductSearch(request):
     discountper = data.get("discountper",0)
     dealsis = data.get("dealsis",False)
     stockava = data.get("stockava",0)
+    sort_by = data.get("sort",'id')
+    if sort_by == 'l2h':
+        sort_by = 'new_price'
+    elif sort_by == 'h2l':
+        sort_by = '-new_price'
+    elif sort_by == 'pbdt':
+        sort_by = '-created_at'
+    else:
+        sort_by = 'id'
     if stockava=='yes':
         stockava=-999
     elif stockava=='no':
         stockava=0
     else:
         stockava=0
-    print(stockava)
     product_data = []
     if rpricemin=="":
         rpricemin=0
@@ -32,12 +40,12 @@ def GetProductSearch(request):
                 new_price__gte =rpricemin,
                 offer__gte = discountper,
                 quantity__gte = stockava
-            )
+            ).order_by(sort_by)
         else:
-            prod = Product.objects.filter(is_active=True,name__istartswith=squery,quantity__gte = stockava)
+            prod = Product.objects.filter(is_active=True,name__istartswith=squery,quantity__gte = stockava).order_by(sort_by)
     except Exception as e:
         print(e)
-        prod = Product.objects.filter(is_active=True,name__istartswith=squery)
+        prod = Product.objects.filter(is_active=True,name__istartswith=squery).order_by(sort_by)
     if prod.exists():
         for i in prod:
             img_d = ProductMedia.objects.filter(product=i,is_active=True,type=1)
