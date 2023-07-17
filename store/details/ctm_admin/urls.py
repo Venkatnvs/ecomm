@@ -1,12 +1,14 @@
 from django.urls import path
-from store.admin_views import *
+from .views import *
 
 urlpatterns = [
     path('', main, name='admin-home'),
     path('ck/', ckeditor, name='admin-ck'),
     path('category-list/', CategoryListview.as_view(), name='admin-categorylist'),
+    path('category-requests/', CategoryRequestListview.as_view(), name='admin-categoryrequest'),
     path('category-create/', CategoryCreate.as_view(), name='admin-categorycreate'),
     path('category-update/<slug:pk>', CategoryUpdate.as_view(), name='admin-categoryupdate'),
+    path('category-approve/<slug:pk>', CategoryRequestUpdate.as_view(), name='admin-categoryapprove'),
     path('subcategory-list/', SubCategoryListview.as_view(), name='admin-subcategorylist'),
     path('subcategory-create/', SubCategoryCreate.as_view(), name='admin-subcategorycreate'),
     path('subcategory-update/<slug:pk>', SubCategoryUpdate.as_view(), name='admin-subcategoryupdate'),

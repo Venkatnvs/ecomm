@@ -1,31 +1,42 @@
+from django.shortcuts import render
 from django.shortcuts import HttpResponse, render
 from django.views.generic import ListView, CreateView, UpdateView, DetailView
 from django.contrib.auth.decorators import login_required
 from django.contrib import messages
 from clients.models import Customer, EditorType
-from .models import *
+from store.models import *
 from django.contrib.messages.views import SuccessMessageMixin
 from django.contrib.auth.models import User
-from django.core.files.storage import FileSystemStorage
 from django.shortcuts import redirect
 from django.db.models import Q
 from django.conf import settings
 import os
 import json
 from django.views import View
+from django.contrib.auth.decorators import user_passes_test
+from django.contrib.auth.mixins import UserPassesTestMixin
+from .models import *
 
-@login_required()
+@login_required
+@user_passes_test(lambda u: u.is_superuser)
 def main(request):
     return render(request, 'ctm_admin/index.html')
 
-@login_required()
+@login_required
+@user_passes_test(lambda u: u.is_superuser)
 def ckeditor(request):
     return render(request, 'ctm_admin/ckeditor.html')
 
-class CategoryListview(ListView):
+class CategoryListview(UserPassesTestMixin,ListView):
     model = Category
     template_name = 'ctm_admin/categorylistview.html'
     paginate_by = 4
+
+    def test_func(self):
+        try:
+            return self.request.user.is_superuser
+        except Exception as e:
+            return False
 
     def get_queryset(self):
         filter_val = self.request.GET.get('filter','')
@@ -43,22 +54,89 @@ class CategoryListview(ListView):
         context['all_table_data']=Category._meta.get_fields()
         return context
 
-class CategoryCreate(SuccessMessageMixin, CreateView):
+class CategoryRequestListview(UserPassesTestMixin,ListView):
+    model = RequestCategory
+    template_name = 'ctm_admin/categoryrequests.html'
+    paginate_by = 4
+
+    def test_func(self):
+        try:
+            return self.request.user.is_superuser
+        except Exception as e:
+            return False
+
+    def get_queryset(self):
+        filter_val = self.request.GET.get('filter','')
+        order_by = self.request.GET.get('order_by','id')
+        if filter_val != "":
+            cagr = RequestCategory.objects.filter(Q(category__name__contains=filter_val) | Q(category__description__contains=filter_val)).order_by(order_by)
+        else:
+            cagr = RequestCategory.objects.all().order_by(order_by)
+        return cagr
+
+    def get_context_data(self, **kwargs):
+        context = {'requestcategory_list':RequestCategory.objects.filter(is_completed=False,is_active=True)}
+        context['filter']=self.request.GET.get('filter','')
+        context['order_by']=self.request.GET.get('order_by','id')
+        context['all_table_data']=RequestCategory._meta.get_fields()
+        return context
+
+class CategoryCreate(UserPassesTestMixin,SuccessMessageMixin, CreateView):
     model = Category
     success_message = 'Category created successfuly'
     fields = '__all__'
     template_name = 'ctm_admin/categorycreate.html'
 
-class CategoryUpdate(SuccessMessageMixin, UpdateView):
+    def test_func(self):
+        try:
+            return self.request.user.is_superuser
+        except Exception as e:
+            return False
+
+class CategoryUpdate(UserPassesTestMixin,SuccessMessageMixin, UpdateView):
     model = Category
     success_message = 'Category updated successfuly'
     fields = '__all__'
     template_name = 'ctm_admin/categoryupdate.html'
 
-class SubCategoryListview(ListView):
+    def test_func(self):
+        try:
+            return self.request.user.is_superuser
+        except Exception as e:
+            return False
+
+class CategoryRequestUpdate(UserPassesTestMixin,SuccessMessageMixin, UpdateView):
+    model = Category
+    success_message = 'Requested Category added successfuly'
+    fields = '__all__'
+    template_name = 'ctm_admin/categoryrequestupdate.html'
+
+    def form_valid(self, form):
+        cate=form.save(commit=False)
+        cate.is_active = True
+        cate.save()
+        reqcate = RequestCategory.objects.get(category=cate)
+        reqcate.is_completed = True
+        reqcate.save()
+        messages.success(self.request, 'Requested Category added successfuly')
+        return redirect('admin-categoryrequest')
+
+    def test_func(self):
+        try:
+            return self.request.user.is_superuser
+        except Exception as e:
+            return False
+
+class SubCategoryListview(UserPassesTestMixin,ListView):
     model = SubCategory
     template_name = 'ctm_admin/subcategorylistview.html'
     paginate_by = 4
+
+    def test_func(self):
+        try:
+            return self.request.user.is_superuser
+        except Exception as e:
+            return False
 
     def get_queryset(self):
         filter_val = self.request.GET.get('filter','')
@@ -76,22 +154,40 @@ class SubCategoryListview(ListView):
         context['all_table_data']=SubCategory._meta.get_fields()
         return context
 
-class SubCategoryCreate(SuccessMessageMixin, CreateView):
+class SubCategoryCreate(UserPassesTestMixin,SuccessMessageMixin, CreateView):
     model = SubCategory
     success_message = 'Subcategory created successfuly'
     fields = '__all__'
     template_name = 'ctm_admin/subcategorycreate.html'
 
-class SubCategoryUpdate(SuccessMessageMixin, UpdateView):
+    def test_func(self):
+        try:
+            return self.request.user.is_superuser
+        except Exception as e:
+            return False
+
+class SubCategoryUpdate(UserPassesTestMixin,SuccessMessageMixin, UpdateView):
     model = SubCategory
     success_message = 'Subcategory updated successfuly'
     fields = '__all__'
     template_name = 'ctm_admin/subcategoryupdate.html'
 
-class SellerUserListview(ListView):
+    def test_func(self):
+        try:
+            return self.request.user.is_superuser
+        except Exception as e:
+            return False
+
+class SellerUserListview(UserPassesTestMixin,ListView):
     model = SellerUser
     template_name = 'ctm_admin/seller-user_listview.html'
     paginate_by = 4
+
+    def test_func(self):
+        try:
+            return self.request.user.is_superuser
+        except Exception as e:
+            return False
 
     def get_queryset(self):
         filter_val = self.request.GET.get('filter','')
@@ -109,11 +205,17 @@ class SellerUserListview(ListView):
         context['all_table_data']=SellerUser._meta.get_fields()
         return context
 
-class SellerUserCreate(SuccessMessageMixin, CreateView):
+class SellerUserCreate(UserPassesTestMixin,SuccessMessageMixin, CreateView):
     model = User
     success_message = 'Seller created successfuly'
     fields = ['first_name', 'last_name', 'email', 'username', 'password']
     template_name = 'ctm_admin/Seller-usercreate.html'
+
+    def test_func(self):
+        try:
+            return self.request.user.is_superuser
+        except Exception as e:
+            return False
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
@@ -156,11 +258,17 @@ class SellerUserCreate(SuccessMessageMixin, CreateView):
         return redirect('admin-seller-userlist')
 
 
-class SellerUserUpdate(SuccessMessageMixin, UpdateView):
+class SellerUserUpdate(UserPassesTestMixin,SuccessMessageMixin, UpdateView):
     model = User
     success_message = 'Seller created successfuly'
     fields = ['first_name', 'last_name', 'email', 'username']
     template_name = 'ctm_admin/Seller-user_update.html'
+
+    def test_func(self):
+        try:
+            return self.request.user.is_superuser
+        except Exception as e:
+            return False
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
@@ -204,7 +312,13 @@ class SellerUserUpdate(SuccessMessageMixin, UpdateView):
         messages.success(self.request, 'SellerUser Updated Successfully')
         return redirect('admin-seller-userlist')
 
-class ProductCreateView(View):
+class ProductCreateView(UserPassesTestMixin,View):
+    def test_func(self):
+        try:
+            return self.request.user.is_superuser
+        except Exception as e:
+            return False
+    
     def get(self, request):
         seller = SellerUser.objects.filter(user_type__user__is_active=True)
         editor, created = EditorType.objects.get_or_create()
@@ -363,10 +477,16 @@ class ProductCreateView(View):
         return HttpResponse('form submited')
     
 # The ProductsListview class is a subclass of ListView.
-class ProductsListview(ListView):
+class ProductsListview(UserPassesTestMixin,ListView):
     model = Product
     template_name = 'ctm_admin/productslistview.html'
     paginate_by = 4
+
+    def test_func(self):
+        try:
+            return self.request.user.is_superuser
+        except Exception as e:
+            return False
 
     def get_queryset(self):
         filter_val = self.request.GET.get('filter','')
@@ -390,8 +510,14 @@ class ProductsListview(ListView):
         context['all_table_data']=Product._meta.get_fields()
         return context
 
-class ProductsUpdate(SuccessMessageMixin, UpdateView):
+class ProductsUpdate(UserPassesTestMixin,SuccessMessageMixin, UpdateView):
     model = Product
     success_message = 'Products updated successfuly'
     fields = '__all__'
     template_name = 'ctm_admin/productupdate.html'
+
+    def test_func(self):
+        try:
+            return self.request.user.is_superuser
+        except Exception as e:
+            return False

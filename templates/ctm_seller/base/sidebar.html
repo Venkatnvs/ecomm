@@ -15,52 +15,30 @@
         </a>
         <ul id="category" class="nav-content collapse " data-bs-parent="#sidebar-nav">
           <li>
-            <a href="{% url 'admin-categorylist' %}">
+            <a href="{% url 'seller-categorylist' %}">
               <i class="bi bi-circle"></i><span>All Categories</span>
             </a>
           </li>
           <li>
-            <a href="{% url 'admin-categorycreate' %}">
-              <i class="bi bi-circle"></i><span>Add Categories</span>
-            </a>
-          </li>
-          <li>
-            <a href="{% url 'admin-categoryrequest' %}">
-              <i class="bi bi-circle"></i><span>Requested Categories</span>
-            </a>
-          </li>
-        </ul>
-      </li><!-- End Components Nav -->
-      <li class="nav-item">
-        <a class="nav-link collapsed" data-bs-target="#subcategory" data-bs-toggle="collapse" href="#">
-          <i class="bi bi-menu-button-wide"></i><span>SubCategories</span><i class="bi bi-chevron-down ms-auto"></i>
-        </a>
-        <ul id="subcategory" class="nav-content collapse" data-bs-parent="#sidebar-nav">
-          <li>
-            <a href="{% url 'admin-subcategorylist' %}" class="active">
-              <i class="bi bi-circle"></i><span>All Subcategories</span>
-            </a>
-          </li>
-          <li>
-            <a href="{% url 'admin-subcategorycreate' %}">
-              <i class="bi bi-circle"></i><span>Add Subcategories</span>
+            <a href="{% url 'seller-categoryrequest' %}">
+              <i class="bi bi-circle"></i><span>Request a Categories</span>
             </a>
           </li>
         </ul>
       </li><!-- End Components Nav -->
       <li class="nav-item">
         <a class="nav-link collapsed" data-bs-target="#selleruser" data-bs-toggle="collapse" href="#">
-          <i class="bi bi-menu-button-wide"></i><span>Sellers</span><i class="bi bi-chevron-down ms-auto"></i>
+          <i class="bi bi-menu-button-wide"></i><span>Staff</span><i class="bi bi-chevron-down ms-auto"></i>
         </a>
         <ul id="selleruser" class="nav-content collapse" data-bs-parent="#sidebar-nav">
           <li>
             <a href="{% url 'admin-seller-userlist' %}" class="active">
-              <i class="bi bi-circle"></i><span>All SellerUser</span>
+              <i class="bi bi-circle"></i><span>All StaffUser</span>
             </a>
           </li>
           <li>
             <a href="{% url 'admin-seller-usercreate' %}">
-              <i class="bi bi-circle"></i><span>Add SellerUser</span>
+              <i class="bi bi-circle"></i><span>Add StaffUser</span>
             </a>
           </li>
         </ul>

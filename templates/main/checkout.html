@@ -1,6 +1,6 @@
 {% extends 'base2/index.html' %}
 {% load static %}
-{% block title %} Cart | NvsTrades {% endblock title %}
+{% block title %} Cart | {{site_name}} {% endblock title %}
 {% block content %}
 <div class="container">
   {% if order.get_item_total != 0 %}

@@ -216,7 +216,7 @@ a, a:hover, a:focus, a:active {
 	position: absolute;
 	background-color: #c86523;
 	color: white;
-	z-index: 9987;
+	z-index: 987;
 	margin-top: -5px;
 	margin-left: -5px;
 	border-radius: 4px 0 0 0;
@@ -234,7 +234,8 @@ a, a:hover, a:focus, a:active {
 }
 .prod_card_badge_bstsl:hover{
 	font-style: normal;
-	animation: pulse 0.5s ease 1;
+	/* animation: pulse 0.1s ease 1; */
+	scale: 1.02;
 }
 @keyframes bounce2 {
 	0%, 20%, 50%, 80%, 100% {transform: translateY(0);}

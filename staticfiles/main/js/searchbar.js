@@ -36,9 +36,20 @@ searchHmInp.addEventListener("keyup", (e) => {
 
 function AddSearchli(data){
   searchRsUl.innerHTML = "";
+  current_url = `${window.location.protocol}//${window.location.host}`
   data.forEach(cnt=> {
+    let s_slug;
+    if(cnt.type == "cate"){
+      s_slug = `sd/c/${cnt.slug}`
+    }
+    else if(cnt.type == "prod"){
+      s_slug = `product/${cnt.slug}`
+    }
+    else if(cnt.type == 'subcate'){
+      s_slug = `sd/s/${cnt.slug}`
+    }
     searchRsUl.innerHTML += `<li class="search-rs-li list-group-item">
-          <a href="product/${cnt.slug}">
+          <a href="${current_url}/${s_slug}">
             <div class="search-rs-div">
               <img src="${cnt.image}"
               alt="productimg">

@@ -1,13 +1,12 @@
 from django.shortcuts import render
 from django.http import HttpResponse
-from store.utilitys import GetCartData,GetSubAndMainCate
+from store.utilitys import GetCartData
 from store.models import Category,SubCategory,Product,ProductMedia
 
 def CategoriePage(request,slug):
     data = GetCartData(request)
     order = data['order']
     items = data['items']
-    catedata = GetSubAndMainCate(request)['categories_list']
     categories = Category.objects.filter(slug=slug,is_active=True).first()
     product_data = []
     prod = Product.objects.filter(is_active=True,subcategories__category = categories)
@@ -18,7 +17,6 @@ def CategoriePage(request,slug):
     context = {
         'items':items,
         'order':order,
-        'categories':catedata,
         'cate_list':categories,
         'products':product_data,
     }
@@ -28,7 +26,6 @@ def SubCategoriePage(request,slug):
     data = GetCartData(request)
     order = data['order']
     items = data['items']
-    catedata = GetSubAndMainCate(request)['categories_list']
     subcategories = SubCategory.objects.filter(slug=slug,is_active=True).first()
     product_data = []
     prod = Product.objects.filter(is_active=True,subcategories=subcategories)
@@ -39,7 +36,6 @@ def SubCategoriePage(request,slug):
     context = {
         'items':items,
         'order':order,
-        'categories':catedata,
         'subcate_list':subcategories,
         'products':product_data,
     }

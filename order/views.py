@@ -3,7 +3,7 @@ from rest_framework.decorators import api_view
 from rest_framework.response import Response
 from store.models import Product
 from .models import Order,OrderItems
-from store.utilitys import GetCartData,GetSubAndMainCate
+from store.utilitys import GetCartData
 from order.try_img import get_amazon_product_page
 from clients.models import Customer
 
@@ -32,11 +32,9 @@ def try_amas(request):
     data = GetCartData(request)
     order = data['order']
     items = data['items']
-    catedata = GetSubAndMainCate(request)['categories_list']
     context = {
         'items':items,
         'order':order,
-        'categories':catedata,
     }
     return render(request, 'try/index.html',context)
 
