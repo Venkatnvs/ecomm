@@ -1,0 +1,29 @@
+<div class="btn-group">
+    <button type="button" style="background-color: #012970;color:white;" class="btn btn-sm dropdown-toggle" data-bs-toggle="dropdown" aria-expanded="false">
+        Sort by: <span>&nbsp;
+            {% if searchdata.sort == 'l2h' %}
+            Low to High
+            {% elif searchdata.sort == 'h2l' %}
+            High to Low
+            {% elif searchdata.sort == 'pbdt' %}
+            Publication Date
+            {% else %}
+            Features
+            {% endif %}
+        </span>
+    </button>
+    <ul class="dropdown-menu">
+        <li><a class="dropdown-item"
+                href="{% url 'st-search-mn' %}?squery={{searchdata.squery}}&rpricemax={{searchdata.rpricemax}}&rpricemin={{searchdata.rpricemin}}&discountper={{searchdata.discountper}}&stockava={{searchdata.stockava}}&sort=fe">Featured</a>
+        </li>
+        <li><a class="dropdown-item"
+                href="{% url 'st-search-mn' %}?squery={{searchdata.squery}}&rpricemax={{searchdata.rpricemax}}&rpricemin={{searchdata.rpricemin}}&discountper={{searchdata.discountper}}&stockava={{searchdata.stockava}}&sort=l2h">Price:
+                Low to High</a></li>
+        <li><a class="dropdown-item"
+                href="{% url 'st-search-mn' %}?squery={{searchdata.squery}}&rpricemax={{searchdata.rpricemax}}&rpricemin={{searchdata.rpricemin}}&discountper={{searchdata.discountper}}&stockava={{searchdata.stockava}}&sort=h2l">Price:
+                High to Low </a></li>
+        <li><a class="dropdown-item"
+                href="{% url 'st-search-mn' %}?squery={{searchdata.squery}}&rpricemax={{searchdata.rpricemax}}&rpricemin={{searchdata.rpricemin}}&discountper={{searchdata.discountper}}&stockava={{searchdata.stockava}}&sort=pbdt">Publication
+                Date</a></li>
+    </ul>
+</div>

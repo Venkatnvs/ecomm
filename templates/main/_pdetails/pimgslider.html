@@ -1,0 +1,45 @@
+<div class="product_media">
+    <div class="col-md-8">
+        {% comment %} data-interval="false" {% endcomment %}
+        <div id="carouselExampleControls" class="carousel carousel-dark"  data-bs-interval="false">
+            <ol class="carousel-indicators">
+                {% for i in data.imgs %}
+                {% if i.type == '1' %}
+                <li data-bs-target="#carouselExampleIndicators" data-bs-slide-to="{{ forloop.counter0 }}"
+                    class="{% if forloop.first %}active{% endif %}" aria-current="true" aria-label="Slide {{forloop.counter}}">
+                </li>
+                {% elif i.type == '2' %}
+                <li data-bs-target="#carouselExampleIndicators" data-bs-slide-to="{{ forloop.counter0 }}"
+                    class="{% if forloop.first %}active{% endif %}" aria-current="true" aria-label="Slide {{forloop.counter}}">
+                </li>
+                {% endif %}
+                {% endfor %}
+            </ol>
+            <div class="carousel-inner">
+                {% for i in data.imgs %}
+                {% if i.type == '1' %}
+                <div class="carousel-item {% if forloop.first %}active{% endif %}">
+                    <img class="d-block w-100 slide_img" src="{{i.img_url}}" alt="pics_{{i.created_at}}">
+                </div>
+                {% elif i.type == '2' %}
+                <div class="carousel-item {% if forloop.first %}active{% endif %}">
+                    <video class="img-fluid d-block w-100 slide_img" muted controls>
+                        <source src="{{i.img_url}}" type="video/mp4" />
+                    </video>
+                </div>
+                {% endif %}
+                {% endfor %}
+            </div>
+            <button class="carousel-control-prev" type="button" data-bs-target="#carouselExampleControls"
+                data-bs-slide="prev">
+                <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+                <span class="visually-hidden">Previous</span>
+            </button>
+            <button class="carousel-control-next" type="button" data-bs-target="#carouselExampleControls"
+                data-bs-slide="next">
+                <span class="carousel-control-next-icon" aria-hidden="true"></span>
+                <span class="visually-hidden">Next</span>
+            </button>
+        </div>
+    </div>
+</div>

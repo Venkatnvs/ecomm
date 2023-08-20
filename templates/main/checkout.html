@@ -1,134 +1,66 @@
 {% extends 'base2/index.html' %}
 {% load static %}
-{% block title %} Cart {% endblock title %}
+{% block title %} Cart | {{site_name}} {% endblock title %}
 {% block content %}
 <div class="container">
-  <div class="row">
-    <div class="col-lg-6">
-        <div class="nvs-box">
-          <a href="{% url 'cart' %}" class="btn btn-dark"><i class="bi bi-arrow-left"></i>Back to cart</a>
-          <hr>
-          <h5><strong>Order Summery</strong></h5>
-          <hr>
-          <div class="nvs-cart-row mt-2">
-              <div class="nvs-cart-items1">1</div>
-              <div class="nvs-cart-items2"><img class="nvs-cart-img" src="{% static 'main/img/no-image.jpg' %}" alt="product"></div>
-              <div class="nvs-cart-items2">Product 1</div>
-              <div class="nvs-cart-items1">$10</div>
-              <div class="nvs-cart-items1">x2</div>
-          </div>
-          <br>
-          <div>
-              <h5>Items: <strong>2</strong></h5>
-              <h5>Total: <strong>$40</strong></h5>
-          </div>
+  {% if order.get_item_total != 0 %}
+    <div class="row">
+      {% include 'main/_details/checkoutsummerycard.html' with data=items %}
+      {% include 'main/_details/checkoutuserinfocard.html' %}
+    </div>
+  {% else %}
+    <div class="row mt-1 d-flex justify-content-center align-items-center ">
+      <div class="card empty_crt_cont">
+        <img class="img-fluid" src="{% static 'main/img/empty_cart_img.jpg' %}" alt="Empty cart">
+        <h4>Your Cart is Currently Empty</h4>
+        <div class="empty_crt_cont-p">
+          <p>You have no items in your shopping cart.</p>
+          <p>Let's go buy something</p>
         </div>
-        <br>
-    </div>
-    <div class="col-lg-6">
-      <div class="card nvs-box">
-        <form class="form" action="#" method="post">
-          <div id="user-info">
-            <h5><strong>User Information</strong></h5>
-            <div class="form-row">
-              <div class="form-group d-inline-block col-md-4 m-1">
-                <label for="inputUsername">Username</label>
-                <input
-                  required
-                  type="text"
-                  class="form-control"
-                  id="inputUsername"
-                  placeholder="Username"
-                  {% if client_logged == 1 %}
-                    disabled
-                    value="{{client.username}}"
-                  {% endif %}
-                />
-              </div>
-              <div class="form-group d-inline-block col-md-6 m-1">
-                <label for="inputEmail4">Email</label>
-                <input
-                  required
-                  type="email"
-                  class="form-control"
-                  id="inputEmail4"
-                  placeholder="Email"
-                  {% if client_logged == 1 %}
-                    disabled
-                    value="{{client.email}}"
-                  {% endif %}
-                />
-              </div>
-            </div>
-          </div>
-          <div id="shipping-info">
-            <hr />
-            <h5><strong>Shipping Information</strong></h5>
-            <div class="form-group m-1">
-              <label for="inputAddress">Address</label>
-              <input
-                type="text"
-                class="form-control"
-                id="inputAddress"
-                placeholder="1234 Main"
-              />
-            </div>
-            <div class="form-group m-1">
-              <label for="inputAddress2">Address 2</label>
-              <input
-                type="text"
-                class="form-control"
-                id="inputAddress2"
-                placeholder="Apartment, studio, or floor"
-              />
-            </div>
-            <div class="form-row m-1">
-              <div class="form-group d-inline-block col-lg-5">
-                <label for="inputState">State</label>
-                <select id="inputState" class="form-control nvs-state">
-                  <option selected>Choose...</option>
-                  {% for x in data %}
-                  <option>{{x}}</option>
-                  {% endfor %}
-                </select>
-              </div>
-              <div class="form-group d-inline-block col-md-4">
-                <label for="inputState">City</label>
-                <select id="inputState" class="form-control nvs-city">
-                  <option selected>Please select state</option>
-                </select>
-              </div>
-              <div class="form-group d-inline-block col-md-2">
-                <label for="inputZip">Zip</label>
-                <input type="text" class="form-control" id="inputZip" />
-              </div>
-            </div>
-            <hr />
-            <div class="form-group m-1">
-              <div class="form-check">
-                <input
-                  class="form-check-input"
-                  type="checkbox"
-                  id="gridCheck"
-                />
-                <label class="form-check-label" for="gridCheck">
-                  Check me out
-                </label>
-              </div>
-            </div>
-          </div>
-          <input
-            type="submit"
-            class="btn btn-info nvs-checkout-sub_btn"
-            value="Continue"
-          />
-        </form>
-      </div>
-      <br>
-      <div class="nvs-box">
-        <h5>Paypal Options</h5>
+        <button onclick="window.open('/','_self')" class="empty_crt_cont-btn"><i class="bi bi-cart"></i>&nbsp;RETURN TO SHOP</button>
       </div>
     </div>
-  </div>
+  {% endif %}
 </div>
 {% endblock content %}
+{% block scripts %}
+    <script src="{% static 'main/js/add_pin.js' %}"></script>
+{% endblock scripts %}
+{% block styles %}
+<style>
+  .container{
+    padding: 0px !important;
+  }
+  .empty_crt_cont{
+    display: flex;
+    max-width: 500px;
+    align-items: center;
+    border-radius: 7px;
+  }
+  .empty_crt_cont >h4{
+    text-align: center;
+  }
+  .empty_crt_cont-p{
+    align-items: center;
+    justify-content: center;
+    margin-top: 8px;
+  }
+  .empty_crt_cont-p >p{
+    text-align: center;
+    display:flex;
+    align-items: center;
+    justify-content: center;
+    margin: 0px !important;
+    color: rgb(107, 107, 107);
+  }
+  .empty_crt_cont-btn{
+    border-radius: 4px;
+    margin-top: 25px;
+    margin-bottom: 25px;
+    color: white;
+    background-color: rgb(41, 171, 41);
+    border: none;
+    padding: 13px 10px;
+  }
+</style>
+{% endblock styles %}
