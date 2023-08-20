@@ -6,6 +6,11 @@ on:
   pull_request:
     branches: [ "master" ]
 
+env:
+  SECRET_KEY: django-insecure-tvu5sey(pive7yf951p09#o-fgxxbmip1veoofvf7z4zb5k+8g
+  DEBUG: True
+  REQUEST: http://
+
 jobs:
   build:
 
