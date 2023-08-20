@@ -18,7 +18,7 @@
           {% for i in categories %}
           <li class="nav-item">
             <a href="#"  class="nav-link {% if active.category != i.category %}collapsed{% endif %}" data-bs-target="#subcategories-nav-{{forloop.counter0}}" data-bs-toggle="collapse">
-              <img class="mx-2" width="40px" src="{{i.category.img_url}}" alt="cate_img"><span class="nav_item_cate" data-cateurl="{% url 'st-cate-index' i.category.slug %}" data-urlaction="self">{{i.category}}</span><i class="bi bi-chevron-down ms-auto"></i>
+              <img class="mx-2" width="40px" src="{{i.category.img_url}}" alt="cate_img"><span class="nav_item_cate" data-cateurl="{% url 'st-cate-index' i.category.slug %}" data-urlaction="self">{{i.category}}</span><i style="margin-right: 10px;justify-content: center;font-size: 10px;" class="bi bi-chevron-down ms-auto"></i>
             </a>
               <ul id="subcategories-nav-{{forloop.counter0}}" class="nav-content collapse sidebar-nav {% if active.category == i.category %}show{% endif %}" data-bs-parent="#categories-nav">
                 {% for d in i.subcategory %}
@@ -37,21 +37,21 @@
       <li class="nav-heading">Pages</li>
 
       <li class="nav-item">
-        <a class="nav-link collapsed" href="">
+        <a class="nav-link collapsed" href="{% url 'utils-profile-pg' %}">
           <i class="bi bi-person"></i>
           <span>Profile</span>
         </a>
       </li><!-- End Profile Page Nav -->
 
       <li class="nav-item">
-        <a class="nav-link collapsed" href="pages-faq.html">
+        <a class="nav-link collapsed" href="{% url 'utils-help-pg' %}">
           <i class="bi bi-question-circle"></i>
           <span>F.A.Q</span>
         </a>
       </li><!-- End F.A.Q Page Nav -->
 
       <li class="nav-item">
-        <a class="nav-link collapsed" href="pages-contact.html">
+        <a class="nav-link collapsed" href="{% url 'utils-contact-pg' %}">
           <i class="bi bi-envelope"></i>
           <span>Contact</span>
         </a>

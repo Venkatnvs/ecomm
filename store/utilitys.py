@@ -57,9 +57,9 @@ def GetProductsHome(request):
 
 def GetSubAndMainCate(request):
     categories_list = []
-    categories = Category.objects.filter(is_active=True)
+    categories = Category.objects.filter(is_active=True).order_by('name')
     for value in categories:
-        sub_categories = SubCategory.objects.filter(is_active=True, category=value.id)
+        sub_categories = SubCategory.objects.filter(is_active=True, category=value.id).order_by('name')
         categories_list.append({'category':value, 'subcategory':sub_categories})
     return {
         'categories_list':categories_list,

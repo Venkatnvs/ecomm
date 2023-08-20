@@ -85,6 +85,15 @@ class Product(models.Model):
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
 
+    @property
+    def first_img(self):
+        try:
+            img_url = ProductMedia.objects.filter(product=self,is_active=True,type=1).first()
+            url = img_url.img_url
+        except:
+            url = '/static/main/img/no-image.jpg'
+        return url
+
     class Meta:
         ordering = ['-created_at']
 

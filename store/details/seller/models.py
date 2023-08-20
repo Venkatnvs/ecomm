@@ -23,6 +23,16 @@ class SellerStaff(models.Model):
         except:
             url = '/static/main/img/default-user.jpg'
         return url
+    
+    @property
+    def user_staff(self):
+        try:
+            user = str(self.user)
+            value = user.replace(f'{self.seller}222','')
+        except Exception as e:
+            print(e)
+            value = self.user
+        return value
 
     def __str__(self):
         return f'{self.user.username} ~ {self.customer_type} | {self.seller}'

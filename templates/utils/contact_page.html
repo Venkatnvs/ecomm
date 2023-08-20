@@ -1,0 +1,77 @@
+{% extends 'base/index.html'%}
+{% load static %}
+{% load compress %}
+{% block title %}
+Contact Us | {{site_name}}
+{% endblock title %}
+
+
+{% block content %}
+<section class="contact-section">
+    <div class="row">
+    <div class="col-md-8 px-2">
+        <div class="card">
+            <div class="card-header m-0 p-1">
+                <h2 class="text-center">Contact Us</h2>
+            </div>
+            <div class="card-body">
+                <p class="text-center mt-2">We'd love to hear from you! Please fill out the form below to get in touch with us.</p>
+            <form action="#" method="post" class="contact-form">
+                <div class="form-group mb-2">
+                    <label for="name">Name <span class="text-danger">*</span></label>
+                    <input type="text" id="name" name="name" class="form-control" placeholder="Username" required>
+                </div>
+                <div class="form-group mb-2">
+                    <label for="email">Email <span class="text-danger">*</span></label>
+                    <input type="email" id="email" name="email" class="form-control" placeholder="Email" required>
+                </div>
+                <div class="form-group mb-2">
+                    <label for="message">Message <span class="text-danger">*</span></label>
+                    <textarea id="message" name="message" rows="5" class="form-control" placeholder="..." required></textarea>
+                </div>
+                <div class="form-group mb-3">
+                    <label for="message">Helping File</label>
+                    <input id="file" name="file" class="form-control" type="file">
+                </div>
+                <button type="submit" class="btn btn-primary w-100">Send Message</button>
+            </form>
+            </div>
+        </div>
+    </div>
+    <div class="col-md-4 px-2">
+        <div class="card mb-2">
+            <div class="card-header"><h5 class="text-center fs-5 fw-bolder">Want to chat now or get a call from us?</h5></div>
+        </div>
+        <div class="card mb-2">
+            <div class="card-header p-2"><h6 class="text-center text-dark m-0">Chat right now</h6></div>
+            <div class="card-body">
+                <p class="fs-6">Our messaging assistant can quickly solve many issues or direct you to the right person or place.</p>
+                <b><p class="fs-6">Instant chat and always available.</p></b>
+                <a target="_blank" href="{% url 'chatbot_fullpg_index' %}" class="btn btn-sm btn-outline-primary d-flex justify-content-center">Start Chatting</a>
+            </div>
+        </div>
+        <div class="card mb-2">
+            <div class="card-header p-2"><h6 class="text-center text-dark m-0">Have us call you</h6></div>
+            <div class="card-body">
+                <p class="fs-6">We'll first get a few details about your issue and then someone will call you right away.</p>
+                <a href="#" class="btn btn-sm btn-outline-primary d-flex justify-content-center">Call me</a>
+            </div>
+        </div>
+    </div>
+</div>
+
+</section>
+{% endblock content %}
+
+{% block body_hidden %}
+{{ request.user.username |json_script:"user_name" }}
+{{ searchdata | json_script:"user_squery"}}
+{% include 'base/header.html' with order=order searchdata=searchdata %}
+{% include 'base/sidebar.html' with categories=categories %}
+{% endblock body_hidden %}
+
+{% block scripts %}
+{% compress js inline %}
+<script src="{% static 'main/js/cart.js' %}"></script>
+{% endcompress %}
+{% endblock scripts %}

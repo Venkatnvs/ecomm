@@ -4,8 +4,8 @@
 
     <div class="d-flex align-items-center justify-content-between">
       <a href="{% url 'home' %}" class="logo d-flex align-items-center">
-        <img src="{% static 'icons/logo.jpg' %}" alt="">
-        <span class="d-none d-lg-block">{{site_name}}</span>
+        <img class="header_main_logo" src="{% static 'icons/logo.jpg' %}" alt="">
+        <span class="d-none d-lg-block header_main_logo_tit">{{site_name}}</span>
       </a>
       <i class="bi bi-list toggle-sidebar-btn"></i>
     </div><!-- End Logo -->
@@ -148,13 +148,13 @@
 
         {% else %}
           <li class="nav-item">
-            <a href="{% url 'login' %}" class="btn btn-success">Login</a>
+            <a href="{% url 'login' %}" class="btn btn-success login_btn_gsap">Login</a>
           </li>
         {% endif %}
         <li class="nav-item nvs-cart">
           <a class="position-relative" href="{% url 'cart' %}">
             <img  src="{% static 'main/img/cart.png' %}" alt="cart" height="60">
-            <span class="badge top-0 start-90 translate-middle rounded-pill bg-danger position-absolute">{{order.get_item_total}}</span>
+            <span class="badge top-0 start-90 translate-middle rounded-pill bg-danger position-absolute nvs_cart_cnt_bag">{{order.get_item_total}}</span>
             <!-- <span class="badge top-0 start-100 translate-middle rounded-pill bg-danger position-absolute top-0 start-100 translate-middle badge">100</span> -->
           </a>
         </li>

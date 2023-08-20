@@ -1,0 +1,12 @@
+{% extends 'base/index.html' %}
+{% block title %}Add Post{% endblock title %}
+
+{% block content %}
+<h1>{{site_name}}</h1>
+{% endblock content %}
+
+{% block body_hidden %}
+{{ request.user.username |json_script:"user_name" }}
+{% include 'blog/base/header.html' with order=order %}
+{% include 'blog/base/sidebar.html' %}
+{% endblock body_hidden %}

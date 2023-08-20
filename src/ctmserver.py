@@ -61,7 +61,7 @@ def PilChanges(request,fullpath):
     w, h = im.size
     bgcl = request.GET.get('bg-cl',False)
     draw = ImageDraw.Draw(im)
-    text=str(request.GET.get('wm-txt','NvsTrades'))
+    text=str(request.GET.get('wm-txt',settings.SITE_NAME))
     font = ImageFont.truetype('arial.ttf',int(request.GET.get('wm-fs',w*0.02)))
     tw, th = draw.textsize(text, font)
     wmcl = request.GET.get('wm-cl',False)

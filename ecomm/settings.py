@@ -54,6 +54,7 @@ INSTALLED_APPS = [
     'clients',
     'chat',
     'blog',
+    'blog.details.blog_admin',
     'notification',
     'order',
     'voice',
@@ -66,7 +67,7 @@ MIDDLEWARE = [
     'django.middleware.gzip.GZipMiddleware', #This one
     'htmlmin.middleware.HtmlMinifyMiddleware', #This one
     'htmlmin.middleware.MarkRequestMiddleware', #This one
-    "debug_toolbar.middleware.DebugToolbarMiddleware",
+    # "debug_toolbar.middleware.DebugToolbarMiddleware",
     'django.middleware.security.SecurityMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
     'django.middleware.common.CommonMiddleware',
@@ -85,6 +86,8 @@ INTERNAL_IPS = [
 
 SITE_NAME = 'NvsTrades'
 ROOT_URLCONF = 'ecomm.urls'
+USE_OBFUSCATED_JS = True
+SHOW_ANIMATIONS = False
 
 TEMPLATES = [
     {
