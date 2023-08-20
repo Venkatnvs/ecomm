@@ -1,0 +1,35 @@
+<script>
+    const UserName = JSON.parse(document.getElementById('user_name').textContent);
+
+    const NotificationSocket = new WebSocket(
+        'ws://'
+        + window.location.host
+        + '/ws/notification/'
+        + UserName
+        + '/'
+    );
+
+    NotificationSocket.onmessage = function(e) {
+        const data = JSON.parse(e.data);
+        console.log('connected');
+        console.log(data.message);
+        document.getElementById('notifiocation-body').innerHTML = `
+            <li class="notification-item">
+                <i class="bi bi-info-circle text-info"></i>
+                <div>
+                    <h4>${data.message.title}</h4>
+                    <p>${data.message.body}</p>
+                    <p>${data.message.time}</p>
+                </div>
+            </li>
+            <li>
+                <hr class="dropdown-divider">
+            </li>`+document.getElementById('notifiocation-body').innerHTML;
+        document.getElementById("notification-badge").innerHTML= parseInt(document.getElementById("notification-badge").innerHTML) + 1;
+    };
+
+    NotificationSocket.onclose = function(e) {
+        console.log(e)
+        console.error('Chat socket closed unexpectedly');
+    };
+</script>

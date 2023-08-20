@@ -1,0 +1,28 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+<body>
+    <div>
+        <label >coloured</label>
+        <img src="data:image/jpeg;base64,{{a}}" alt="hhhhh">
+    </div>
+    <div>
+        <label>resized</label>
+        <img src="data:image/jpeg;base64,{{b}}" alt="hhhhh">
+    </div>
+    <hr>
+    <form action="{% url 'src-home' %}" method="post">
+        {% csrf_token %}
+        <input type="text" name="url" id="url" value="{{value.url}}">
+        <input type="color" name="colour" value="{{value.colour}}">
+        <input type="text" name="width" value="{{value.width}}">
+        <input type="text" name="hight" value="{{value.hight}}">
+        <input type="submit" value="Submit">
+    </form>
+</body>
+</html>

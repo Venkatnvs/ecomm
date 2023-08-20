@@ -24,6 +24,11 @@
               <i class="bi bi-circle"></i><span>Add Categories</span>
             </a>
           </li>
+          <li>
+            <a href="{% url 'admin-categoryrequest' %}">
+              <i class="bi bi-circle"></i><span>Requested Categories</span>
+            </a>
+          </li>
         </ul>
       </li><!-- End Components Nav -->
       <li class="nav-item">
@@ -66,8 +71,13 @@
         </a>
         <ul id="product" class="nav-content collapse" data-bs-parent="#sidebar-nav">
           <li>
-            <a href="{% url 'admin-productcreate' %}" class="active">
+            <a href="{% url 'admin-productlist' %}" class="active">
               <i class="bi bi-circle"></i><span>All Product</span>
+            </a>
+          </li>
+          <li>
+            <a href="{% url 'admin-productcreate' %}" class="active">
+              <i class="bi bi-circle"></i><span>Create Product</span>
             </a>
           </li>
         </ul>

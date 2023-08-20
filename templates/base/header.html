@@ -4,29 +4,25 @@
 
     <div class="d-flex align-items-center justify-content-between">
       <a href="{% url 'home' %}" class="logo d-flex align-items-center">
-        <img src="{% static 'icons/logo.jpg' %}" alt="">
-        <span class="d-none d-lg-block">NvsTrades</span>
+        <img class="header_main_logo" src="{% static 'icons/logo.jpg' %}" alt="">
+        <span class="d-none d-lg-block header_main_logo_tit">{{site_name}}</span>
       </a>
       <i class="bi bi-list toggle-sidebar-btn"></i>
     </div><!-- End Logo -->
 
-    <div class="search-bar">
-      <form class="search-form d-flex align-items-center" method="POST" action="#">
-        <input type="text" name="query" placeholder="Search" title="Enter search keyword">
-        <button type="submit" title="Search"><i class="bi bi-search"></i></button>
-      </form>
-    </div><!-- End Search Bar -->
+    {% include 'base/searchbar.html' with searchdata=searchdata %}
+    <!-- End Search Bar -->
 
     <nav class="header-nav ms-auto">
       <ul class="d-flex align-items-center">
 
         <li class="nav-item d-block d-lg-none">
-          <a class="nav-link nav-icon search-bar-toggle " href="#">
+          <a class="nav-link nav-icon search-bar-toggle" href="#">
             <i class="bi bi-search"></i>
           </a>
         </li><!-- End Search Icon-->
 
-        {% if client_logged == 1 %}
+        {% if request.user.is_authenticated %}
           <li class="nav-item dropdown">
 
             <a class="nav-link nav-icon" href="#" data-bs-toggle="dropdown">
@@ -104,14 +100,14 @@
           <li class="nav-item dropdown pe-3">
 
             <a class="nav-link nav-profile d-flex align-items-center pe-0" href="#" data-bs-toggle="dropdown">
-              <img src="{% static 'main/img/default-user.jpg' %}" alt="Profile" height="35" width="35" class="rounded-circle">
-              <span class="d-none d-md-block dropdown-toggle ps-2">{{client.username}}</span>
+              <img src="{{request.user.customer.img_url}}" alt="Profile" height="35" width="35" class="rounded-circle">
+              <span class="d-none d-md-block dropdown-toggle ps-2">{{request.user.username}}</span>
             </a><!-- End Profile Iamge Icon -->
 
             <ul class="dropdown-menu dropdown-menu-end dropdown-menu-arrow profile">
               <li class="dropdown-header">
-                <span>{{client.username}}</span>
-                <h6>{{client.email}}</h6>
+                <span>{{request.user.username}}</span>
+                <h6>{{request.user.email}}</h6>
               </li>
               <li>
                 <hr class="dropdown-divider">
@@ -152,13 +148,13 @@
 
         {% else %}
           <li class="nav-item">
-            <a href="{% url 'login' %}" class="btn btn-success">Login</a>
+            <a href="{% url 'login' %}" class="btn btn-success login_btn_gsap">Login</a>
           </li>
         {% endif %}
         <li class="nav-item nvs-cart">
           <a class="position-relative" href="{% url 'cart' %}">
             <img  src="{% static 'main/img/cart.png' %}" alt="cart" height="60">
-            <span class="badge top-0 start-100 translate-middle rounded-pill bg-danger">99+</span>
+            <span class="badge top-0 start-90 translate-middle rounded-pill bg-danger position-absolute nvs_cart_cnt_bag">{{order.get_item_total}}</span>
             <!-- <span class="badge top-0 start-100 translate-middle rounded-pill bg-danger position-absolute top-0 start-100 translate-middle badge">100</span> -->
           </a>
         </li>

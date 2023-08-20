@@ -17,6 +17,14 @@ class Category(models.Model):
         ordering = ['-created_at']
         verbose_name_plural = 'Categories'
 
+    @property
+    def img_url(self):
+        try:
+            url = self.image.url
+        except:
+            url = '/static/main/img/no-image.jpg'
+        return url
+
     def get_absolute_url(self):
         return reverse('admin-categorylist')
 
@@ -40,6 +48,14 @@ class SubCategory(models.Model):
         ordering = ['-created_at']
         verbose_name_plural = 'Subcategories'
 
+    @property
+    def img_url(self):
+        try:
+            url = self.image.url
+        except:
+            url = '/static/main/img/no-image.jpg'
+        return url
+
     def get_absolute_url(self):
         return reverse('admin-subcategorylist')
 
@@ -50,7 +66,7 @@ class Product(models.Model):
     name = models.CharField(max_length=255, unique=True, help_text='product name')
     slug = models.SlugField(max_length=255, unique=True, help_text="Unique and created from name", null=True, blank=True)
     brand = models.CharField(max_length=255, unique=True, help_text="Unique Brand name")
-    subcategories = models.OneToOneField(SubCategory, null=True, on_delete=models.CASCADE)
+    subcategories = models.ForeignKey(SubCategory, null=True, on_delete=models.CASCADE)
     sku = models.CharField(max_length=255, null=True, blank=True)
     old_price = models.DecimalField(max_digits=9, decimal_places=2, blank=True, default=0.00)
     offer = models.DecimalField(max_digits=3, decimal_places=0, default=0)
@@ -59,7 +75,6 @@ class Product(models.Model):
     description = models.TextField()
     long_description = models.TextField()
     by_seller = models.ForeignKey(SellerUser, on_delete=models.CASCADE)
-    image = models.ImageField(upload_to='products/uploads/%Y/%m/%d/')
     is_active = models.BooleanField(default=True)
     is_bestselling = models.BooleanField(default=False)
     is_featured = models.BooleanField(default=False)
@@ -69,6 +84,15 @@ class Product(models.Model):
     meta_description = models.CharField("Meta Description", max_length=255, help_text="Content for description of meta tag")
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
+
+    @property
+    def first_img(self):
+        try:
+            img_url = ProductMedia.objects.filter(product=self,is_active=True,type=1).first()
+            url = img_url.img_url
+        except:
+            url = '/static/main/img/no-image.jpg'
+        return url
 
     class Meta:
         ordering = ['-created_at']
@@ -88,6 +112,14 @@ class ProductMedia(models.Model):
     is_active = models.BooleanField(default=True)
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
+
+    @property
+    def img_url(self):
+        try:
+            url = self.content.url
+        except:
+            url = '/static/main/img/no-image.jpg'
+        return url
 
     def __str__(self):
         return self.product.name
@@ -166,6 +198,14 @@ class ProductReviews(models.Model):
     is_active = models.BooleanField(default=True)
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
+
+    @property
+    def img_url(self):
+        try:
+            url = self.media.url
+        except:
+            url = '/static/main/img/no-image.jpg'
+        return url
 
     def __str__(self):
         return self.product.name

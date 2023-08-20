@@ -1,6 +1,11 @@
 from django.shortcuts import render
+from django.contrib.auth.decorators import login_required
+from rest_framework.response import Response
+from rest_framework.decorators import api_view
+from .chat_responce_v4 import ChatbotLogic
+from store.models import Product
+from django.template.loader import get_template
 
-# Create your views here.
 def index(request):
     return render(request, 'chatapp/index.html')
 
@@ -10,27 +15,27 @@ def room(request, room_name):
     }
     return render(request, 'chatapp/room.html', context)
 
+# @login_required()
+def ChatBotIndex(request):
+    return render(request, 'chatapp/chatbot_fullpg/index.html')
 
-# <script type="module">
-#   // Import the functions you need from the SDKs you need
-#   import { initializeApp } from "https://www.gstatic.com/firebasejs/9.9.3/firebase-app.js";
-#   import { getAnalytics } from "https://www.gstatic.com/firebasejs/9.9.3/firebase-analytics.js";
-#   // https://firebase.google.com/docs/web/setup#available-libraries
+@api_view(['GET','POST'])
+def chatbot_api(request):
+    user_message = request.data.get('message', '')
+    user_message = user_message.lower()
+    chatbot_logic = ChatbotLogic(request)
+    bot_response = chatbot_logic.process_user_message(user_message)
+    return Response({'response': bot_response})
 
-#   // Your web app's Firebase configuration
-#   // For Firebase JS SDK v7.20.0 and later, measurementId is optional
-#   const firebaseConfig = {
-#     apiKey: "AIzaSyDVVBY6eU-ZXYUpmWOqrCjbndrwQUpdm2c",
-#     authDomain: "nvshome-9d163.firebaseapp.com",
-#     projectId: "nvshome-9d163",
-#     storageBucket: "nvshome-9d163.appspot.com",
-#     messagingSenderId: "772976899813",
-#     appId: "1:772976899813:web:39caa29ca6633ee0dc460c",
-#     measurementId: "G-M4G9K15CYR"
-#   };
+@api_view(['GET'])
+def test_snippets(request):
+    products = Product.objects.all().reverse()[0:5]
+    context = {
+        "products":products,
+        "heading":"Top 5 Products:"
+    }
+    products_info = get_template("chatapp/chatbot_fullpg/ans_snippets/all_products.html").render(context)
+    return Response({"responce":products_info})
 
-#   // Initialize Firebase
-#   const app = initializeApp(firebaseConfig);
-#   const analytics = getAnalytics(app);
-# </script>
-# zvcbeeeycnktkwho
+def test_snippets2(request):
+    return render(request,"chatapp/chatbot_fullpg/test_ans.html")

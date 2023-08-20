@@ -1,0 +1,20 @@
+{% load static %}
+{% load humanize %}
+<tr>
+    <th class="th_sn_cartnu" scope="row">{{count}}</th>
+    <td scope="col"><img class="nvs-cart-img" src="{{data.product.productmedia_set.all.0.img_url}}" alt="product"></td>
+    <td style="min-width: 220px;" scope="col">{{data.product.name | truncatechars:100}}</td>
+    <td scope="col">₹{{data.product.new_price |intcomma }}</td>
+    <td scope="col">
+        <div class="d-flex flex-lg-row">
+            <div data-product="{{data.product.id}}" data-action="remove" class="btn nvs_addcart-button_i btn-sm btn-secondary nvs_addcart_card-button_js p-0 m-1 px-1" href="">
+                <i class="bi bi-dash"></i>
+            </div>
+            <p class='nvs-cart-quantity my-1'>{{data.quantity}}</p>
+            <div data-product="{{data.product.id}}" data-action="add" class="btn nvs_addcart-button_i btn-sm btn-success nvs_addcart_card-button_js p-0 m-1 px-1" href="">
+                <i class="bi bi-plus nvs-col"></i>
+            </div>
+        </div>
+    </td>
+    <td scope="col">₹{{data.get_total|intcomma }}</td>
+</tr>

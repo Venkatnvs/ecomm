@@ -1,0 +1,64 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link href="https://fonts.googleapis.com/css2?family=Material+Icons" rel="stylesheet" />
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@48,400,0,0" />
+    <link rel="stylesheet" href="{% static 'player/style.css' %}" />
+    <title>Video Player</title>
+</head>
+<body>
+    <p id="p_a"></p>
+    <section>
+    <div class="container">
+        <div class="video_player">
+            <video preload="metadata" class="main-video" id="video_d">
+                <source id="video_d_1080" size="1080">
+                <source id="video_d_720" size="720">
+            </video>
+        </div>
+
+        <!-- <div class="video_player">
+            <video preload="metadata" class="main-video">
+            <source src="/media/videos/test3/144p/index.m3u8" size="1080" type="video/mp4">
+            <track label="English" kind="subtitles" src="./How To Get Started With VSCode.vtt" srclang="en">
+            <track label="Urdu" kind="subtitles" src="./test.vtt" srclang="en">
+            </video>
+        </div> -->
+    </div>
+    
+    </section>
+    <script src="{% static 'player/script.js' %}"></script>
+    <script src="https://cdn.jsdelivr.net/npm/hls.js@1"></script>
+<script>
+    var video = document.getElementById('video_d');
+    // var psss = document.getElementById('p_a');
+    var videoSrc = "/media/videos/test2/master.m3u8";
+    if (Hls.isSupported()) {
+        var hls = new Hls();
+        hls.loadSource(videoSrc);
+        hls.attachMedia(video);
+    }
+    // var video1 = document.getElementById('video_d_1080');
+    // var videoSrc1 = "/media/videos/test2/1080p/index.m3u8";
+    // if (Hls.isSupported()) {
+    //     var hls7 = new Hls();
+    //     hls7.loadSource(videoSrc1);
+    //     // hls7.attachMedia(video);
+    //     video1.src = hls7.url;
+    //     psss.textContent = hls7.url;
+    // }
+    // var video2 = document.getElementById('video_d_720');
+    // var videoSrc2 = "/media/videos/test2/720p/index.m3u8";
+    // if (Hls.isSupported()) {
+    //     var hls = new Hls();
+    //     hls.loadSource(videoSrc2);
+    //     hls.attachMedia(video2);
+    // }
+</script>
+</body>
+
+</html>
