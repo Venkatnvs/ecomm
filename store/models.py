@@ -17,6 +17,14 @@ class Category(models.Model):
         ordering = ['-created_at']
         verbose_name_plural = 'Categories'
 
+    @property
+    def img_url(self):
+        try:
+            url = self.image.url
+        except:
+            url = '/static/main/img/no-image.jpg'
+        return url
+
     def get_absolute_url(self):
         return reverse('admin-categorylist')
 
@@ -39,6 +47,14 @@ class SubCategory(models.Model):
     class Meta:
         ordering = ['-created_at']
         verbose_name_plural = 'Subcategories'
+
+    @property
+    def img_url(self):
+        try:
+            url = self.image.url
+        except:
+            url = '/static/main/img/no-image.jpg'
+        return url
 
     def get_absolute_url(self):
         return reverse('admin-subcategorylist')
@@ -69,6 +85,15 @@ class Product(models.Model):
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
 
+    @property
+    def first_img(self):
+        try:
+            img_url = ProductMedia.objects.filter(product=self,is_active=True,type=1).first()
+            url = img_url.img_url
+        except:
+            url = '/static/main/img/no-image.jpg'
+        return url
+
     class Meta:
         ordering = ['-created_at']
 
@@ -87,6 +112,14 @@ class ProductMedia(models.Model):
     is_active = models.BooleanField(default=True)
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
+
+    @property
+    def img_url(self):
+        try:
+            url = self.content.url
+        except:
+            url = '/static/main/img/no-image.jpg'
+        return url
 
     def __str__(self):
         return self.product.name
@@ -165,6 +198,14 @@ class ProductReviews(models.Model):
     is_active = models.BooleanField(default=True)
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
+
+    @property
+    def img_url(self):
+        try:
+            url = self.media.url
+        except:
+            url = '/static/main/img/no-image.jpg'
+        return url
 
     def __str__(self):
         return self.product.name

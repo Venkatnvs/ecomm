@@ -1,4 +1,5 @@
 from django.shortcuts import render, HttpResponse
+from django.http import StreamingHttpResponse,JsonResponse,FileResponse
 from .img import imgfun, img2fun
 from .models import image
 import uuid
@@ -12,6 +13,10 @@ import io
 import requests
 from django.conf.urls.static import static
 from django.conf import settings
+import jsonpickle
+import json
+from django.views.static import serve
+
 
 # Create your views here.
 def main(request):
@@ -89,48 +94,21 @@ def post_imd3(request):
     # with open(path+id.hex+'_image.jpg', 'rb') as images:
     #     return HttpResponse(images.read(), content_type='image/jpeg;')
 
+from .post_4_working import main
+
 def post_imd4(request, path):
-    base_path = 'C:/Users/MURALI/Desktop/store/venv/ecomm/media/'
-    img_path = os.path.join(base_path, path)
-    print(img_path)
-    img = cv.imread(img_path, cv.IMREAD_UNCHANGED)
-    img = cv.resize(img, (int(request.GET.get('w',200)), int(request.GET.get('h',200))))
-    b = io.BytesIO()
-    if request.GET.get('is-bg', 'f') == 't':
-        try:
-            msk = img[:,:,3]==0
-            re = request.GET.get('col','000000')
-            rgb = list(int(re[i:i+2], 16) for i in (4,2,0))
-            rgb.append(255)
-            print(rgb)
-            img[msk] = rgb
-        except Exception as e:
-            print(e)
-    col_pill = cv.cvtColor(img, cv.COLOR_BGR2RGB)
-    new_img = Image.fromarray(col_pill)
-    if request.GET.get('is-wm', 'f') == 't':
-        w, h = new_img.size
-        draw = ImageDraw.Draw(new_img)
-        text=str(request.GET.get('wm-txt','NVS Watermark'))
-        font = ImageFont.truetype('arial.ttf',int(request.GET.get('wm-fs',10)))
-        tw, th = draw.textsize(text, font)
-        re = request.GET.get('wm-cl','000000')
-        rgb = tuple(int(re[i:i+2], 16) for i in (0,2,4))
-        mx = int(request.GET.get('wm-mrx',10))
-        my = int(request.GET.get('wm-mry',10))
-        x = w - tw - mx
-        y = h - th - my
-        draw.text((x,y), text, rgb, font=font)
-    new_img.save(b, 'png', quality=int(request.GET.get('q',40)), optimize=True, lossless=False)
-    print(b.getbuffer().nbytes)
-    img_c = b.getvalue()
-    b.flush()
-    b.seek(0)
-    b.close()
-    return HttpResponse(img_c, content_type='image/jpeg')
-    # aa = cv.imwrite(path+id.hex+'_image.jpg', img)
-    # with open(path+id.hex+'_image.jpg', 'rb') as images:
-    #     return HttpResponse(images.read(), content_type='image/jpeg;')
+    try:
+        img_c = main(request, path)
+        response = HttpResponse(content_type ="image/png")
+        response['Content-Disposition'] = "filename*=utf-8''main.png"
+        response.write(img_c)
+        return response
+    except Exception as e:
+        return JsonResponse({'error':'Not Found','message':jsonpickle.encode(e),},safe=False)
+        red = Image.new('RGBA', (1, 1), (255,0,0,0))
+        response = HttpResponse(content_type="image/png")
+        red.save(response, "png")
+        return response
 
 def post_img2(request):
     d = base64.b64encode(requests.get(request.GET.get('url','http://127.0.0.1:8000/media/categories/uploads/2022/09/05/69c6589653afdb9a.jpg')).content)
@@ -165,3 +143,22 @@ def getimage(request):
     # if request.method == 'POST':
     #     a = imgfun(request.POST['url'])
     #     return render(request, 'ctm_admin/test.html', {'a':a})
+
+from .ctmserver import MainCtm
+
+def ImageCtmServer(request,path):
+    try:
+        response = HttpResponse(content_type ="image/png")
+        # response['Content-Disposition'] = "filename*=utf-8''main.png"
+        response = MainCtm(request, path,response)
+        # response.write(img_c)
+        return response
+    except Exception as e:
+        base_path = os.path.join(settings.BASE_DIR,'media')
+        # base_path = os.path.join(base_path,'categories','uploads')
+        return serve(request,path,document_root=base_path)
+        # return JsonResponse({'error':'Not Found','message':jsonpickle.encode(e),},safe=False)
+        # red = Image.new('RGBA', (1, 1), (255,0,0,0))
+        # response = HttpResponse(content_type="image/png")
+        # red.save(response, "png")
+        # return response

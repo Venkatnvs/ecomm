@@ -1,11 +1,11 @@
 from django.shortcuts import render
 from django.http import JsonResponse
-from django.contrib.auth.models import User
 from django.conf import settings
 import os
 import json
+from .models import Product,ProductMedia
+from .utilitys import GetProductsHome,GetCartData
 
-# Create your views here.
 def state_dist(request):
     if request.method == 'POST':
         search_str = json.loads(request.body).get('searchText')
@@ -24,55 +24,58 @@ def state_dist(request):
 
 
 def main(request):
-    client_logged = ''
-    print(request.user)
-    if request.user == 'AnonymousUser':
-        client_logged = 0
-    check = User.objects.filter(username=request.user).exists()
-    if check:
-        user_details = User.objects.get(username=request.user)
-        client_logged = 1
-    else:
-        user_details = ''
+    data = GetCartData(request)
+    order = data['order']
+    items = data['items']
+    product_data = GetProductsHome(request)['product_data']
     context = {
-        'client' : user_details,
-        'client_logged': client_logged,
+        'products':product_data,
+        'items':items,
+        'order':order,
     }
     return render(request, 'main/index.html', context)
 
 
 def Cart(request):
-    check = User.objects.filter(username=request.user).exists()
-    if check:
-        user_details = User.objects.get(username=request.user)
-    else:
-        user_details = ''
+    data = GetCartData(request)
+    order = data['order']
+    items = data['items']
     context = {
-        'client' : user_details
-    }
+        'items':items,
+        'order':order,
+        }
     return render(request, 'main/cart.html', context)
 
 
 def Checkout(request):
+    data = GetCartData(request)
+    order = data['order']
+    items = data['items']
     states_data = []
     file_path = os.path.join(settings.BASE_DIR, 'data_files/states_dist.json')
     with open(file_path, 'r') as json_file:
         data = json.load(json_file)
         for values in data:
             states_data.append(values['state'])
-    client_logged = ''
-    print(request.user)
-    if request.user == 'AnonymousUser':
-        client_logged = 0
-    check = User.objects.filter(username=request.user).exists()
-    if check:
-        user_details = User.objects.get(username=request.user)
-        client_logged = 1
-    else:
-        user_details = ''
     context = {
-        'client' : user_details,
-        'client_logged': client_logged,
-        'data': states_data
+        'data': states_data,
+        'items':items,
+        'order':order,
     }
     return render(request, 'main/checkout.html', context)
+
+def ProductDetails(request,slug):
+    data = GetCartData(request)
+    order = data['order']
+    items = data['items']
+    product_data = ''
+    prod = Product.objects.filter(slug=slug,is_active=True)
+    img_d = ProductMedia.objects.filter(product=prod[0],is_active=True)
+    data = {'product':prod,'imgs':img_d}
+    product_data = data
+    context = {
+        'data':product_data,
+        'items':items,
+        'order':order,
+    }
+    return render(request, 'main/productdetails.html', context)

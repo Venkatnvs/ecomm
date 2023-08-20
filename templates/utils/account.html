@@ -1,0 +1,70 @@
+{% extends 'base/index.html'%}
+{% load static %}
+{% load compress %}
+{% block title %} Profile | {{site_name}} {% endblock title %}
+
+{% block styles %}
+<style>
+  .container{
+    padding-left: 0px;
+    padding-top: 0px;
+    padding-bottom: 0px;
+  }
+  .img-nvs-profile{
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    object-fit:cover;
+    width:110px;
+    height: 110px;
+    border-radius: 50%;
+  }
+  /* Additional styles (optional) */
+
+.profile-card {
+  text-align: center;
+  box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+}
+
+.profile-picture {
+  width: 120px;
+  height: 120px;
+  object-fit: cover;
+}
+
+.profile-name {
+  font-size: 24px;
+  color: #007b5e;
+}
+
+.profile-email,
+.profile-location {
+  font-size: 18px;
+  color: #444;
+}
+
+</style>
+{% endblock styles %}
+
+{% block content %}
+<div class="col-md-12">
+  <h3>Profile</h3>
+  <div class="row">
+    {% include 'utils/_account_dtl/main_profile_imgview.html' %}
+    {% include 'utils/_account_dtl/address_profile_oth.html' %}
+  </div>
+</div>
+{% endblock content %} 
+
+
+{% block body_hidden %} 
+{{ request.user.username |json_script:"user_name" }}
+{{ searchdata | json_script:"user_squery"}}
+{% include 'base/header.html' with order=order searchdata=searchdata %} 
+{% include 'base/sidebar.html' with categories=categories %} 
+{% endblock body_hidden %} 
+{% block scripts %}
+{% compress js inline %}
+<script src="{% static 'main/js/cart.js' %}"></script>
+{% endcompress %}
+{% endblock scripts %}

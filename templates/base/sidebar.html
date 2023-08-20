@@ -4,63 +4,54 @@
     <ul class="sidebar-nav" id="sidebar-nav">
 
       <li class="nav-item">
-        <a class="nav-link " href="{% url 'home' %}">
+        <a class="nav-link {% if active %}collapsed{% endif %}" href="{% url 'home' %}">
           <i class="bi bi-grid"></i>
           <span>Home</span>
         </a>
       </li><!-- End Dashboard Nav -->
 
       <li class="nav-item">
-        <a class="nav-link collapsed" data-bs-target="#components-nav" data-bs-toggle="collapse" href="#">
-          <i class="bi bi-menu-button-wide"></i><span>Components</span><i class="bi bi-chevron-down ms-auto"></i>
+        <a class="nav-link {% if not active %}collapsed{% endif %}" data-bs-target="#categories-nav" data-bs-toggle="collapse" href="#">
+          <i class="bi bi-menu-button-wide"></i><span>Categories</span><i class="bi bi-chevron-down ms-auto"></i>
         </a>
-        <ul id="components-nav" class="nav-content collapse " data-bs-parent="#sidebar-nav">
-          <li>
-            <a href="components-alerts.html">
-              <i class="bi bi-circle"></i><span>Alerts</span>
+        <ul id="categories-nav" class="nav-content collapse {% if active %}show{% endif %}" data-bs-parent="#sidebar-nav">
+          {% for i in categories %}
+          <li class="nav-item">
+            <a href="#"  class="nav-link {% if active.category != i.category %}collapsed{% endif %}" data-bs-target="#subcategories-nav-{{forloop.counter0}}" data-bs-toggle="collapse">
+              <img class="mx-2" width="40px" src="{{i.category.img_url}}" alt="cate_img"><span class="nav_item_cate" data-cateurl="{% url 'st-cate-index' i.category.slug %}" data-urlaction="self">{{i.category}}</span><i style="margin-right: 10px;justify-content: center;font-size: 10px;" class="bi bi-chevron-down ms-auto"></i>
             </a>
+              <ul id="subcategories-nav-{{forloop.counter0}}" class="nav-content collapse sidebar-nav {% if active.category == i.category %}show{% endif %}" data-bs-parent="#categories-nav">
+                {% for d in i.subcategory %}
+                <li class="nav-item">
+                  <a href="{% url 'st-subcate-index' d.slug %}" class="{% if active == d %}active{% endif %}">
+                    <i class="bi bi-circle"></i><span value="{{d.id}}">{{d}}</span>
+                  </a>
+                </li>
+                {% endfor %}
+              </ul>
           </li>
-          <li>
-            <a href="components-accordion.html">
-              <i class="bi bi-circle"></i><span>Accordion</span>
-            </a>
-          </li>
-          <li>
-            <a href="components-badges.html">
-              <i class="bi bi-circle"></i><span>Badges</span>
-            </a>
-          </li>
-          <li>
-            <a href="components-spinners.html">
-              <i class="bi bi-circle"></i><span>Spinners</span>
-            </a>
-          </li>
-          <li>
-            <a href="components-tooltips.html">
-              <i class="bi bi-circle"></i><span>Tooltips</span>
-            </a>
-          </li>
+          {% endfor %}
         </ul>
       </li><!-- End Components Nav -->
 
       <li class="nav-heading">Pages</li>
 
       <li class="nav-item">
-        <a class="nav-link collapsed" href="">
+        <a class="nav-link collapsed" href="{% url 'utils-profile-pg' %}">
           <i class="bi bi-person"></i>
           <span>Profile</span>
         </a>
       </li><!-- End Profile Page Nav -->
 
       <li class="nav-item">
-        <a class="nav-link collapsed" href="pages-faq.html">
+        <a class="nav-link collapsed" href="{% url 'utils-help-pg' %}">
           <i class="bi bi-question-circle"></i>
           <span>F.A.Q</span>
         </a>
       </li><!-- End F.A.Q Page Nav -->
 
       <li class="nav-item">
-        <a class="nav-link collapsed" href="pages-contact.html">
+        <a class="nav-link collapsed" href="{% url 'utils-contact-pg' %}">
           <i class="bi bi-envelope"></i>
           <span>Contact</span>
         </a>

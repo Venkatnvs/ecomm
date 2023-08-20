@@ -78,7 +78,8 @@ def voice_process(request):
             d_type = 'url'
             id_data = str(lst[count - 5])
             id = id_data.replace("watch",'').replace("?v=",'')
-            u_content = f"{request.scheme}://{request.META['HTTP_HOST']}/voice/d/yt{id}"
+            #u_content = f"{request.scheme}://{request.META['HTTP_HOST']}/voice/d/yt{id}"
+            u_content = f"https://www.youtube.com{lst[count - 5]}"
 
         elif 'the time' in query:
             strTime = datetime.datetime.now().strftime("%H:%M:%S")    

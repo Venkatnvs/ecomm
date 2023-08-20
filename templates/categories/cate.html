@@ -1,0 +1,56 @@
+{% extends 'base/index.html'%}
+{% load static %}
+{% load compress %}
+{% block title %}
+Categories | {{site_name}}
+{% endblock title %}
+
+{% block styles %}
+<link href="{% static 'categorie_lst/css/style.css' %}" rel="stylesheet">
+{% endblock styles %}
+
+{% block content %}
+<div class="row">
+    <div class="container">
+        <h3 class="cate_heading">{{cate_list}}</h3>
+        <div class="cate_decs">
+            <!-- <img src="{{cate_list.img_url}}" alt="cate_img"> -->
+            <span>{{cate_list.description}}</span>
+        </div>
+        <div class="row">
+            <div class="subcate_items_lst">
+                {% for i in cate_list.subcategory_set.all %}
+                {% if i.is_active %}
+                <a href="{% url 'st-subcate-index' i.slug %}">
+                    <div class="subcate_items">
+                        <img src="{{i.img_url}}" alt="sub_img">
+                        <span>{{i.name}}</span>
+                    </div>
+                </a>
+                {% endif %}
+                {% endfor %}
+            </div>
+        </div>
+        <div class="products_items">
+            <div id="main_productcontainer" class="container">
+                {% for i in products %}
+                    {% include 'main/_details/productcard.html' with product=i %}
+                {% endfor %}
+            </div>
+        </div>
+
+    </div>
+</div>
+{% endblock content %}
+
+{% block body_hidden %}
+{{ request.user.username |json_script:"user_name" }}
+{% include 'base/header.html' with order=order %}
+{% include 'base/sidebar.html' with categories=categories active=cate_list %}
+{% endblock body_hidden %}
+
+{% block scripts %}
+{% compress js inline %}
+<script src="{% static 'main/js/cart.js' %}"></script>
+{% endcompress %}
+{% endblock scripts %}

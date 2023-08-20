@@ -1,0 +1,176 @@
+{% extends 'base/index.html' %}
+{% load static %}
+{% load compress %}
+{% block title %}Add Post{% endblock title %}
+
+
+{% block styles %}
+<link rel="stylesheet" href="{% static 'ctm_admin/css/tag_input.css' %}">
+    <style>
+        .container{
+            padding-left: 0px;
+            padding-top: 0px;
+            padding-bottom: 0px;
+        }
+        .check_box_nvs{
+            padding: 10px;
+        }
+        .check_box_nvs:checked{
+            background-color:rgb(181, 17, 181);
+            border-color: rgb(181, 17, 181);
+        }
+        .nvs_sel_img-main{
+            height: 200px;
+            width: 100%;
+            border: 2px dashed #e4e5e7;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background-color: #f8f9fb;
+            flex-direction:column;
+            border-radius: 2px;
+        }
+        .br-1{
+            border-radius: 2px !important;
+        }
+        .fs-7{
+            font-size: 14px;
+        }
+    </style>
+{% endblock styles %}
+
+{% block content %}
+<h4>Add Post</h4>
+<form method="post" enctype="multipart/form-data">
+    {% csrf_token %}
+    <div class="col-md-12">
+        <div class="row">
+            <div class="col-md-8 px-2">
+                <div class="card">
+                    <div class="card-header">
+                        <h6>Post Details</h6>
+                    </div>
+                    <div class="card-body mt-1">
+                        <div class="form-group mb-3">
+                            <label for="title">Title<span class="text-danger">*</span></label>
+                            <input type="text" id="title" name="title" class="form-control" placeholder="Title" required>
+                        </div>
+                        <div class="form-group mb-3">
+                            <label for="slug">Slug <small style="font-size: 12px;">(If you leave it blank, it will be generated automatically.) </small><span class="text-danger">*</span></label>
+                            <input type="text" id="slug" name="slug" class="form-control" placeholder="Slug" required>
+                        </div>
+                        <div class="form-group mb-3">
+                            <label for="meta_tags_des">Summary & Description (Meta Tag)</label>
+                            <textarea id="meta_tags_des" name="meta_tags_des" class="form-control text-area" placeholder="Summary & Description (Meta Tag)" required></textarea>
+                        </div>
+                        <div class="form-group mb-3">
+                            <label for="mata_tags_key">Keywords (Meta Tag)</label>
+                            <input type="text" id="mata_tags_key" name="mata_tags_key" class="form-control" placeholder="Keywords (Meta Tag)" required>
+                        </div>
+                        <div class="form-group mb-3">
+                            <div class="row">
+                                <div class="col-md-4 m-0">
+                                    <label class="form-check-label fs-6" for="show_reg">Show Only to Registered Users</label>
+                                </div>
+                                <div class="col-md-3 d-flex align-items-center">
+                                    <input style="border-radius: 1px;" class="form-check-input check_box_nvs" type="checkbox" id="show_reg">
+                                </div>
+                            </div>
+                        </div>
+                        <div class="form-group mb-3">
+                            <div class="row">
+                                <div class="col-md-4 m-0">
+                                    <label class="form-check-label fs-6" for="add_to_slide">Add to Slider</label>
+                                </div>
+                                <div class="col-md-3 d-flex align-items-center">
+                                    <input style="border-radius: 1px;" class="form-check-input check_box_nvs" type="checkbox" id="add_to_slide">
+                                </div>
+                            </div>
+                        </div>
+                        <div class="form-group mb-3">
+                            <div class="row">
+                                <div class="col-md-4 m-0">
+                                    <label class="form-check-label fs-6" for="add_to_picks">Add to Our Picks</label>
+                                </div>
+                                <div class="col-md-3 d-flex align-items-center">
+                                    <input style="border-radius: 1px;" class="form-check-input check_box_nvs" type="checkbox" id="add_to_picks">
+                                </div>
+                            </div>
+                        </div>
+                        <div class="form-group mb-3">
+                            <label for="">Tags <small style="font-size: 12px;">(Type tag and hit enter)</small></label>
+                            <input class="bootstrap-tagsinput w-100" type="text" name="tags" data-role="tagsinput" />
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-4 px-1">
+                <div class="card mb-3">
+                    <div class="card-body mt-3">
+                        <h6 class="mb-0 pb-0">Image</h6>
+                        <p style="line-height: 2px;" class="m-0 p-0 mt-2 mb-3"><small class="text-secondary" style="font-size: 10px;">Main post image</small></p>
+                        <div class="sele_image_main">
+                            <div class="nvs_sel_img-main">
+                                <i style="color: #dadbdd;" class="bi bi-image fs-1"></i><br>
+                                <button style="border-radius: 3px;" class="btn border border-secondary-subtle" type="button">Select image</button>
+                            </div>
+                            <input type="file" class="d-none" id="main_img" name="main_img">
+                        </div>
+                        <h6 class="mt-2">or Add Image Url</h6>
+                        <div class="form-group">
+                            <input type="text" class="form-control" placeholder="Add Image Url" id="main_img_url" name="main_img_url">
+                        </div>
+                    </div>
+                </div>
+                <div class="card mb-3">
+                    <div class="card-body mt-3">
+                        <h6>Additional Images</h6>
+                        <p style="line-height: 2px;" class="m-0 p-0 mt-2 mb-3"><small class="text-secondary" style="font-size: 10px;">More main images (slider will be active)</small></p>
+                        <a href="#" class="btn btn-sm btn-primary my-2 br-1">Select image</a>
+                    </div>
+                </div>
+                <div class="card mb-3">
+                    <div class="card-body mt-3">
+                        <h6>File</h6>
+                        <p style="line-height: 2px;" class="m-0 p-0 mt-2 mb-3"><small class="text-secondary" style="font-size: 10px;">Downloadable additional files (.pdf, .docx, .zip etc..)</small></p>
+                        <a href="#" class="btn btn-sm btn-primary my-2 br-1">Select file</a>
+                    </div>
+                </div>
+                <div class="card">
+                    <div class="card-body mt-3">
+                        <h6 class="">Category</h6>
+                        <div class="form-group mt-3">
+                            <label class="fs-7">Category</label>
+                            <select name="lang_id" class="form-select form-select-sm br-1">
+                                <option value="0" selected="">Select</option>
+                            </select>
+                        </div>
+                        <div class="form-group mt-2">
+                            <label class="fs-7">Subcategory</label>
+                            <select name="lang_id" class="form-select form-select-sm br-1">
+                                <option value="0" selected="">Select</option>
+                            </select>
+                        </div>
+                    </div>
+                </div>
+                <div class="card">
+                    <div class="card-body mt-3">
+                        <h6 class="mb-3">Publish</h6>
+                        <button class="btn btn-sm btn-success mx-1 float-end" type="submit">Add Post</button>
+                        <button class="btn btn-sm btn-warning mx-1 float-end" type="button">Save as Draft</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</form>
+{% compress js inline %}
+<script src="{% static 'ctm_admin/js/tag_input.js' %}"></script>
+{% endcompress %}
+{% endblock content %}
+
+{% block body_hidden %}
+{{ request.user.username |json_script:"user_name" }}
+{% include 'blog/base/header.html' with order=order %}
+{% include 'blog/base/sidebar.html' %}
+{% endblock body_hidden %}

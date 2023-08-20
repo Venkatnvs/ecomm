@@ -139,6 +139,7 @@ venv/
 ENV/
 env.bak/
 venv.bak/
+.VSCodeCounter/
 
 # Spyder project settings
 .spyderproject
@@ -179,3 +180,29 @@ static_root/
 src/tem.txt
 voice/v.txt
 logs/
+req.txt
+order/try.py
+.vscode/
+tem.txt
+# dependencies
+/node_modules
+/.pnp
+.pnp.js
+
+# testing
+/coverage
+
+# production
+/build
+
+# misc
+.DS_Store
+.env.local
+.env.development.local
+.env.test.local
+.env.production.local
+
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+*.obfuscated.js

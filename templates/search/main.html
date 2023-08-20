@@ -1,0 +1,49 @@
+{% extends 'base/index.html'%}
+{% load static %}
+{% load compress %}
+{% block title %}
+{{site_name}}: {{searchdata.squery}}
+{% endblock title %}
+
+{% block styles %}
+<link rel="stylesheet" href="{% static 'search/css/main.css' %}">
+{% endblock styles %}
+
+{% block content %}
+<div class="row m-0 mb-1">
+    <div class="col-md-9"></div>
+    <div class="col-md-3 justify-content-end d-flex align-content-center">
+        {% include 'search/_details/sort_filters.html' with searchdata=searchdata %}
+    </div>
+</div>
+<div class="row">
+    <h4>Results:</h4>
+    {% if products %}
+    <div id="main_productcontainer" class="container">
+        {% for i in products %}
+            {% include 'main/_details/productcard.html' with product=i %}
+        {% endfor %}
+    </div>
+    {% else %}
+        <div class="container p-nofound-div">
+            <img class="imd-fluid" src="{% static 'search/img/product-not-found.jpg' %}" alt="img_p_not">
+            <!-- <h5 style="margin-left: 30%;"><strong>Not Found.</strong></h5> -->
+        </div>
+    {% endif %}
+</div>
+{% endblock content %}
+
+{% block body_hidden %}
+{{ request.user.username |json_script:"user_name" }}
+{{ searchdata | json_script:"user_squery"}}
+{% include 'base/header.html' with order=order searchdata=searchdata %}
+{% include 'search/searchsidebar.html' with categories=categories searchdata=searchdata %}
+{% endblock body_hidden %}
+
+
+{% block scripts %}
+{% compress js inline %}
+<script src="{% static 'main/js/cart.js' %}"></script>
+<script src="{% static 'search/js/main.js' %}"></script>
+{% endcompress %}
+{% endblock scripts %}

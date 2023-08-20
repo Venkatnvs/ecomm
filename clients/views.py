@@ -2,6 +2,7 @@ from django.shortcuts import redirect, render, HttpResponseRedirect
 from django.views import View
 from decouple import config
 import json
+from django.template.loader import get_template
 from django.http import JsonResponse
 from django.contrib.auth.models import User
 from validate_email import validate_email
@@ -15,6 +16,8 @@ from django.urls import reverse
 from django.contrib import auth
 from django.contrib.auth.tokens import PasswordResetTokenGenerator
 import threading
+from .state_data import Pin_dis,state_data_sending
+from clients.models import Customer
 
 # Create your views here.
 class EmailThread(threading.Thread):
@@ -25,42 +28,82 @@ class EmailThread(threading.Thread):
     def run(self):
         self.email.send(fail_silently=False)
 
+def states_get_pin(request):
+    try:
+        search_str = json.loads(request.body).get('zip')
+        data=Pin_dis(str(search_str))
+    except Exception as e:
+        data={"data":"Error"}
+    # data = {"dist":data}
+    return JsonResponse(data, safe=False)
 
 class Registration(View):
     def get(self, request):
-        return render(request, 'clients/register.html')
+        states_data=state_data_sending()
+        return render(request, 'clients/register.html',{'data': states_data})
 
     def post(self, request):
+        states_data=state_data_sending()
         username = request.POST['username']
+        firstname = request.POST['firstname']
+        lastname = request.POST['lastname']
         email = request.POST['email']
         password = request.POST['password']
-
+        password2 = request.POST['password2']
+        profile_pic = request.FILES['profile_img']
+        addr_line = request.POST['addr_line']
+        addr_state = request.POST['addr_state']
+        addr_city = request.POST['addr_city']
+        addr_zip = request.POST['addr_zip']
         context = {
+            'data': states_data,
             'FieldValues':request.POST
         }
-
         if not User.objects.filter(username=username).exists():
             if not User.objects.filter(email=email).exists():
 
+                if password != password2:
+                    messages.error(request, 'Password donot match')
+                    return render(request, 'clients/register.html', context)
                 if len(password)<8:
                     messages.error(request, 'Password too short')
                     return render(request, 'clients/register.html', context)
 
-                user = User.objects.create_user(username=username, email=email)
+                user = User.objects.create_user(username=username, email=email, first_name=firstname,last_name=lastname)
                 user.set_password(password)
                 user.is_active=False
                 user.save()
 
-                uidb64 = urlsafe_base64_encode(force_bytes(user.pk))
-                domain = get_current_site(request).domain
-                link = reverse('activate', kwargs={'uidb64':uidb64, 'token':token_generater.make_token(user)})
-                request_main = config('REQUEST')
-                from_mail = config('FROM_MAIL')
+                customer = Customer.objects.create(user=user, customer_type="Customer")
+                customer.save()
 
+                customer.customeruser.profile_pic=profile_pic
+                customer.customeruser.address=addr_line
+                customer.customeruser.state=addr_state
+                customer.customeruser.city=addr_city
+                customer.customeruser.zip=addr_zip
+                customer.customeruser.save()
+
+                email_tmp_path = 'emails/auth/email_verification.html'
+                domain = get_current_site(request).domain
+                request_main = config('REQUEST')
+                uidb64 = urlsafe_base64_encode(force_bytes(user.pk))
+                link = reverse('activate', kwargs={'uidb64':uidb64, 'token':token_generater.make_token(user)})
+                from_mail = config('FROM_MAIL')
                 activate_url = request_main+domain+link
 
-                email_subject = 'Activate your account'
-                email_body = 'Hi ' + user.username + " \n Please use this link to Verifi you identity \n" +activate_url
+                context_email_data = {
+                    'title':'NvsTrades',
+                    'baseurl':domain+request_main,
+                    'activate_url':activate_url,
+                    'user_name':user.username,
+                    'user_email':user.email,
+                }
+
+                email_body = get_template(email_tmp_path).render(context_email_data)
+
+                email_subject = 'Activate your account | NvsTrades'
+                # email_body = 'Hi ' + user.username + " \n Please use this link to Verifi you identity \n" +activate_url
 
                 email = EmailMessage(
                     email_subject,
@@ -68,13 +111,14 @@ class Registration(View):
                     from_mail,
                     [email],
                 )
+                email.content_subtype = 'html'
                 EmailThread(email).start()
                 messages.success(request, 'Account successfully created')
                 messages.info(request, 'A Verification email have been sent')
-                return render(request, 'clients/register.html')
+                return render(request, 'clients/register.html',context)
 
 
-        return render(request, 'clients/register.html')
+        return render(request, 'clients/register.html',context)
 
 class UsernameValidation(View):
     def post(self, request):
@@ -140,7 +184,7 @@ class Login(View):
 
                 messages.error(request, 'Account is not activated, Please check your email')
                 return redirect('login')
-            messages.error(request, 'Invalid credintails, try again')
+            messages.error(request, 'Account is not activated or Invalid credintails,Please check your email')
             return redirect('login')
 
         messages.error(request, 'Please fill all fields')
