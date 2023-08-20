@@ -1,0 +1,44 @@
+{% extends 'ctm_seller/base/index.html' %}
+{% load static %}
+{% block title %}
+Products List | {{site_name}}
+{% endblock title %}
+
+{% block content %}
+<div class="container w-100">
+    <h3>Select a Seller User</h3>
+    <form id="seller_form_adm" class="form mx-2" action="" method="post">
+        {% csrf_token %}
+        <div class="form-group mt-4">
+            <select name="sell_usr" class="form-select">
+                <option value="0" selected>Choose...</option>
+                {% for i in sellers %}
+                    <option value="{{i.id}}">{{i}}</option>
+                {% endfor %}
+            </select>
+        </div>
+        <div class="justify-content-center d-flex mt-2">
+            <button class="btn btn-success mt-3 w-50" type="submit">Select</button>
+        </div>
+    </form>
+</div>
+{% endblock content %}
+
+{% block styles %}
+<link href="{% static 'ctm_admin/css/category_list.css' %}" rel="stylesheet">
+{% endblock styles %}
+
+{% block scripts %}
+<script>
+    const sub_sell_adm = document.getElementById("seller_form_adm");
+    sub_sell_adm.onsubmit = (e) =>{
+        e.preventDefault();
+        const usr_id = e.currentTarget.sell_usr.value;
+        if(usr_id == 0){
+            alert("Please choose a seller")
+        }else{
+            sub_sell_adm.submit()
+        }
+    }
+</script>
+{% endblock scripts %}

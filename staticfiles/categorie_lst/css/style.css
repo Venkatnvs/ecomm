@@ -1,0 +1,90 @@
+.subcate_items_lst{
+    display: flex;
+    flex-direction: row;
+    width: 100%;
+    /* overflow-x: scroll; */
+    padding: 15px 5px;
+    /* min-width: 80px; */
+    white-space:wrap;
+    flex-wrap: wrap;
+    gap:10px;
+    align-items: center;
+}
+.subcate_items{
+    display: flex;
+    flex-direction: column;
+    padding: 5px;
+    border-radius: 2px;
+    background-color: white;
+    color: black;
+    margin-right: 8px;
+    font-family: 'Gill Sans', 'Gill Sans MT', Calibri, 'Trebuchet MS', sans-serif;
+    box-shadow: 2px 3px 7px rgb(19, 18, 18,0.6);
+    /* box-shadow: 5px 5px blue, 10px 10px red, 15px 15px green; */
+    cursor: pointer;
+    white-space:nowrap;
+    min-height: 30px;
+    align-items: center;
+    justify-content: center;
+    border: 1.5px solid rgb(0, 0, 0,0.7);
+}
+.subcate_items:hover{
+    scale: 1.05;
+    /* background-color: rgb(55, 71, 169); */
+}
+.subcate_items:hover span{
+    color: #c86523;
+    /* flex-direction:column; */
+}
+.subcate_items_lst::-webkit-scrollbar{
+    background-color: rgb(215, 212, 212);
+    -webkit-appearance: none;
+    height: 8px;
+}
+.subcate_items_lst::-webkit-scrollbar-thumb{
+    border-radius: 4px;
+    background-color: rgba(39, 38, 38, 0.5);
+    -webkit-box-shadow: 0 0 1px rgba(255,255,255,.5);
+}
+.cate_heading{
+    font-size: 28px;
+    font-weight: 700;
+    letter-spacing: 1px;
+}
+.subcate_items > img {
+    margin-bottom: 3px;
+    width: 80%;
+    height: 50px;
+    /* aspect-ratio: 3/2; */
+    border-radius: 4px;
+    object-fit: contain;
+    margin-right: 8px;
+}
+.cate_decs > img{
+    display: flex;
+    height: 80px;
+}
+.cate_decs{
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+}
+.nav_cate_ln{
+    display: flex;
+    align-items: center;
+    line-height: 2px;
+    margin-bottom: 10px;
+}
+@media (max-width: 500px){
+    .subcate_items>span{
+        font-size: 14px;
+        letter-spacing: 0px;
+    }
+    .subcate_items > img{
+        margin-bottom: 1px;
+        height: 30px;
+    }
+    .subcate_items{
+        padding: 3px;
+    }
+}

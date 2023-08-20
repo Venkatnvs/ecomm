@@ -1,8 +1,13 @@
-<footer id="footer" class="footer">
+<footer style="padding-top: 0px;" id="footer" class="footer">
+  {% include 'base/footer_det/social.html' %}
+  {% include 'base/footer_det/connect_links.html' %}
+  <hr style="color: #4a78cd;" class="my-1">
+  <section>
     <div class="copyright">
-      &copy; Copyright <strong><span>NvsTrades</span></strong>. All Rights Reserved
+      &copy; Copyright <strong><span>{{site_name}}</span></strong>. All Rights Reserved
     </div>
     <div class="credits">
       Designed by <a href="#">venkat</a>
     </div>
+  </section>
 </footer>

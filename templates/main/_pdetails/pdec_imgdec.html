@@ -1,0 +1,18 @@
+<div class="product_details">
+    <div class="smalldetials">
+        <h5>
+            <strong><span>Product description</span></strong>
+        </h5>
+        <p>
+            <span>{{data.product.0.description}}</span>
+        </p>
+    </div>
+    <div class="row">
+        {% comment %} <h5>
+            <strong><span>From the manufacturer</span></strong>
+        </h5> {% endcomment %}
+        <div class="html_details_pro">
+            {{data.product.0.long_description|safe}}
+        </div>
+    </div>
+</div>

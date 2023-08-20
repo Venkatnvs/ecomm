@@ -1,0 +1,89 @@
+{% extends 'base/index.html'%}
+{% load static %}
+{% load compress %}
+{% block title %}
+Home | {{site_name}}
+{% endblock title %}
+
+
+{% block content %}
+<div class="row">
+    <div id="images_show">
+
+    </div>
+</div>
+{% endblock content %}
+
+{% block body_hidden %}
+{{ request.user.username |json_script:"user_name" }}
+{% include 'base/header.html' with order=order %}
+{% include 'base/sidebar.html' with categories=categories %}
+{% endblock body_hidden %}
+
+{% block scripts_top %}
+<script>
+    var requestUser = '{{request.user}}';
+    function getCookie(name) {
+        var cookieValue = null;
+        if (document.cookie && document.cookie !== '') {
+            var cookies = document.cookie.split(';');
+            for (var i = 0; i < cookies.length; i++) {
+                var cookie = jQuery.trim(cookies[i]);
+                // Does this cookie string begin with the name we want?
+                if (cookie.substring(0, name.length + 1) === (name + '=')) {
+                    cookieValue = decodeURIComponent(cookie.substring(name.length + 1));
+                    break;
+                }
+            }
+        }
+        return cookieValue;
+    }
+    var csrftoken = getCookie('csrftoken');
+    var cart = JSON.parse(getCookie('cart'))
+
+    if (cart == undefined){
+        cart = {}
+        console.log('Cart Created!', cart)
+        document.cookie ='cart=' + JSON.stringify(cart) + ";domain=;path=/"
+    }
+    console.log('Cart:', cart)
+</script>
+{% endblock scripts_top %}
+
+{% if request.user.is_authenticated %}
+{% block scripts %}
+{% compress js inline %}
+<script src="{% static 'main/js/cart.js' %}"></script>
+<script>
+    const imageDiv = document.getElementById("images_show")
+    var data = {
+        producturl:'https://www.amazon.in/Canon-Digital-Camera-RF-S18-45mm-Black/dp/B0BYZHDRN6',
+    }
+    var apiUrl = '/order/get-item-amz';
+    var xhr = new XMLHttpRequest();
+    xhr.open('POST', apiUrl, true);
+    xhr.setRequestHeader("X-CSRFToken", csrftoken);
+    xhr.setRequestHeader('Content-Type', 'application/json');
+    xhr.onload = function() {
+        if (xhr.status === 200) {
+            imageDiv.innerHTML = '';
+            var response = JSON.parse(xhr.responseText);
+            console.log(response)
+            img_data = response.message.img_d
+            img_data.forEach((e)=>{
+                imageDiv.innerHTML += `<img height="300px" width="300px" src="${e}" alt="ggg">`;
+            })
+            const parser = new DOMParser();
+            const html = parser.parseFromString(response.message.ti_info.p_l_det, 'text/html');
+            var html_l = html.body.innerHTML
+            console.log(html_l)
+            var dom = document.createElement('div');
+            dom.innerHTML =html_l
+            imageDiv.appendChild(dom)
+        }
+    };
+    xhr.send(JSON.stringify(data));
+</script>
+{% endcompress %}
+{% endblock scripts %}
+{% endif %}

@@ -1,0 +1,59 @@
+<div class="col-md-6">
+    <div class="card pt-1">
+    <div class="card-body">
+      <div class="border-bottom">
+        <div class="row align-items-center text-center text-sm-start">
+          <div class="col-md-4">
+            <input class="d-none" id="avatarFile" type="file" />
+            <label class="cursor-pointer avatar avatar-5xl" for="avatarFile">
+            <img class="img-nvs-profile m-1 rounded-circle" src="{{request.user.customer.img_url}}" alt="profile" /></label>
+          </div>
+          <div class="col-md-8">
+            <h3 class="m-0 fw-bold">{{request.user.username}}</h3>
+            <h6 class="m-0">{{request.user.email}}</h6>
+            <p class="text-800 m-0 my-1">Joined 3 months ago</p>
+            <div>
+              <a class="me-2" href="#!"><i class="bi bi-linkedin text-400 hover-primary"></i></a>
+              <a class="me-2" href="#!"><i class="bi bi-facebook text-400 hover-primary"></i></a>
+              <a class="me-2" href="#!"><i class="bi bi-twitter text-400 hover-primary"></i></a>
+          </div>
+        </div>
+      </div>
+    </div>
+      <div class="d-flex justify-content-between pt-2">
+        <div class="">
+          <h6 class="mb-2">Total Spent</h6>
+          <h5 class="text-dark fs-6 fw-semibold mb-0">₹894</h5>
+        </div>
+        <div class="text-end">
+          <h6 class="mb-2">Last Order</h6>
+          <h5 class="text-dark fs-6 fw-semibold mb-0">1 week ago</h5>
+        </div>
+        <div class="text-end">
+          <h6 class="mb-2">Total Orders</h6>
+          <h5 class="text-dark fs-6 fw-semibold mb-0">97</h5>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+{% comment %} <section class="profile-section bg-light py-5">
+  <div class="container">
+      <div class="row justify-content-center">
+          <div class="col-md-6 col-lg-4">
+              <div class="profile-card p-4 bg-white rounded shadow">
+                  <img src="{{request.user.customer.img_url}}" alt="Profile Picture" class="profile-picture mb-3 rounded-circle">
+                  <h2 class="profile-name mb-2">{{request.user.username}}</h2>
+                  <p class="profile-email mb-4">{{request.user.email}}</p>
+                  <p class="profile-location mb-4">Location: Earth, Eco-Friendly Planet</p>
+                  <div class="social-media-links">
+                      <a href="#" target="_blank" class="social-link"><i class="bi bi-facebook"></i></a>
+                      <a href="#" target="_blank" class="social-link"><i class="bi bi-twitter"></i></a>
+                      <a href="#" target="_blank" class="social-link"><i class="bi bi-instagram"></i></a>
+                      <a href="#" target="_blank" class="social-link"><i class="bi bi-linkedin"></i></a>
+                  </div>
+              </div>
+          </div>
+      </div>
+  </div>
+</section> {% endcomment %}

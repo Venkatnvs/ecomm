@@ -1,6 +1,7 @@
 from django.urls import path
-from . import views
+from .views import *
 
 urlpatterns= [
-    path('', views.index, name='blog-index'),
+    path("", BlogMain, name="blog-main"),
+    path('import/', feedimport, name='blog-import'),
 ]

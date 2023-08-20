@@ -1,0 +1,125 @@
+<div class="">
+  <div class="search_aside_head">
+    <div id="back_defside-search" class="font-weight-bold text-dark">
+      <i class="bi bi-arrow-left"></i>
+    </div>
+    <h3 class="search_aside_head"><strong>FILTERS</strong></h3>
+    <div class="clearfltbtn">
+      <a href="{% url 'st-search-mn' %}?squery={{searchdata.squery}}" title="Clear Filters">Clear</a>
+    </div>
+  </div>
+  <hr class="my-1" />
+  <div class="row discount-off-div">
+    <h5 class="m-0 mt-2"><strong>Price</strong></h5>
+    <span
+      ><a
+        href="{% url 'st-search-mn' %}?squery={{searchdata.squery}}&rpricemax=100&rpricemin=&discountper={{searchdata.discountper}}&stockava={{searchdata.stockava}}&sort={{searchdata.sort}}"
+        >Under ₹100</a
+      ></span
+    >
+    <span
+      ><a
+        href="{% url 'st-search-mn' %}?squery={{searchdata.squery}}&rpricemax=500&rpricemin=200&discountper={{searchdata.discountper}}&stockava={{searchdata.stockava}}&sort={{searchdata.sort}}"
+        >₹200 - ₹500</a
+      ></span
+    >
+    <span
+      ><a
+        href="{% url 'st-search-mn' %}?squery={{searchdata.squery}}&rpricemax=1000&rpricemin=500&discountper={{searchdata.discountper}}&stockava={{searchdata.stockava}}&sort={{searchdata.sort}}"
+        >₹500 - ₹1,000</a
+      ></span
+    >
+    <span
+      ><a
+        href="{% url 'st-search-mn' %}?squery={{searchdata.squery}}&rpricemax=&rpricemin=1000&discountper={{searchdata.discountper}}&stockava={{searchdata.stockava}}&sort={{searchdata.sort}}"
+        >Over ₹1,000</a
+      ></span
+    >
+    <div class="ctmprice-range">
+      <div class="price_inp">
+        <span class="my-2">₹</span>
+        <input
+          id="rpricemin-inp"
+          type="number"
+          placeholder="Min"
+          min="0"
+          maxlength="999999999"
+          class="form-control form-control-sm"
+          aria-label="Amount (to the nearest rupees)"
+        />
+      </div>
+      <div class="price_inp">
+        <span class="my-2">₹</span>
+        <input
+          id="rpricemax-inp"
+          type="number"
+          placeholder="Max"
+          min="0"
+          maxlength="999999999"
+          class="form-control form-control-sm"
+          aria-label="Amount (to the nearest rupees)"
+        />
+      </div>
+      <button
+        id="pricerng_gobtn"
+        class="btn btn-sm btn-outline-primary mx-3"
+        type="submit"
+      >
+        Go
+      </button>
+    </div>
+  </div>
+  <div class="row discount-off-div">
+    <h5 class="m-0 mt-2"><strong>Discount</strong></h5>
+    <span
+      ><a
+        href="{% url 'st-search-mn' %}?squery={{searchdata.squery}}&rpricemax={{searchdata.rpricemax}}&rpricemin={{searchdata.rpricemin}}&discountper=10&stockava={{searchdata.stockava}}&sort={{searchdata.sort}}"
+        >10% Off or more</a
+      ></span
+    >
+    <span
+      ><a
+        href="{% url 'st-search-mn' %}?squery={{searchdata.squery}}&rpricemax={{searchdata.rpricemax}}&rpricemin={{searchdata.rpricemin}}&discountper=25&stockava={{searchdata.stockava}}&sort={{searchdata.sort}}"
+        >25% Off or more</a
+      ></span
+    >
+    <span
+      ><a
+        href="{% url 'st-search-mn' %}?squery={{searchdata.squery}}&rpricemax={{searchdata.rpricemax}}&rpricemin={{searchdata.rpricemin}}&discountper=35&stockava={{searchdata.stockava}}&sort={{searchdata.sort}}"
+        >35% Off or more</a
+      ></span
+    >
+    <span
+      ><a
+        href="{% url 'st-search-mn' %}?squery={{searchdata.squery}}&rpricemax={{searchdata.rpricemax}}&rpricemin={{searchdata.rpricemin}}&discountper=50&stockava={{searchdata.stockava}}&sort={{searchdata.sort}}"
+        >50% Off or more</a
+      ></span
+    >
+    <span
+      ><a
+        href="{% url 'st-search-mn' %}?squery={{searchdata.squery}}&rpricemax={{searchdata.rpricemax}}&rpricemin={{searchdata.rpricemin}}&discountper=60&stockava={{searchdata.stockava}}&sort={{searchdata.sort}}"
+        >60% Off or more</a
+      ></span
+    >
+    <span
+      ><a
+        href="{% url 'st-search-mn' %}?squery={{searchdata.squery}}&rpricemax={{searchdata.rpricemax}}&rpricemin={{searchdata.rpricemin}}&discountper=70&stockava={{searchdata.stockava}}"
+        >70% Off or more</a
+      ></span
+    >
+  </div>
+  <div class="row discount-off-div">
+    <h5 class="m-0 mt-2"><strong>Availability</strong></h5>
+    <div class="form-check all_stock_p">
+      <input class="form-check-input" type="checkbox" name="avaliable_stock"
+      id="avaliable_stock_inp" 
+      {% if searchdata.stockava == "yes" %} checked {%endif %} />
+      <label for="avaliable_stock_inp">Include Out of Stock</label>
+    </div>
+  </div>
+  <div class="row discount-off-div">
+    <h5 class="m-0 mt-2"><strong>Deals & Discounts</strong></h5>
+    <span>All Discounts</span>
+    <span>Today's Dealse</span>
+  </div>
+</div>

@@ -1,0 +1,64 @@
+{% extends 'base/index.html'%}
+{% load static %}
+{% load compress %}
+{% block title %}
+Help Page | {{site_name}}
+{% endblock title %}  
+
+
+{% block content %}
+<section class="faq-section py-5">
+    <div class="container">
+        <h1 class="text-center mb-5">Frequently Asked Questions</h1>
+        <div class="accordion" id="faqAccordion">
+            <!-- FAQ Item 1 -->
+            <div class="card">
+                <div class="card-header" id="faqHeading1">
+                    <h2 class="mb-0">
+                        <button class="btn btn-link" type="button" data-toggle="collapse" data-target="#faqCollapse1" aria-expanded="true" aria-controls="faqCollapse1">
+                            How can I place an order?
+                        </button>
+                    </h2>
+                </div>
+                <div id="faqCollapse1" class="collapse show" aria-labelledby="faqHeading1" data-parent="#faqAccordion">
+                    <div class="card-body">
+                        To place an order, simply browse our eco-friendly products, add items to your cart, and proceed to checkout. Follow the steps to provide shipping and payment information to complete your purchase.
+                    </div>
+                </div>
+            </div>
+
+            <!-- FAQ Item 2 -->
+            <div class="card">
+                <div class="card-header" id="faqHeading2">
+                    <h2 class="mb-0">
+                        <button class="btn btn-link collapsed" type="button" data-toggle="collapse" data-target="#faqCollapse2" aria-expanded="false" aria-controls="faqCollapse2">
+                            What payment methods do you accept?
+                        </button>
+                    </h2>
+                </div>
+                <div id="faqCollapse2" class="collapse" aria-labelledby="faqHeading2" data-parent="#faqAccordion">
+                    <div class="card-body">
+                        We accept payments via credit cards, debit cards, PayPal, and other secure online payment methods. Your payment information is always protected and encrypted.
+                    </div>
+                </div>
+            </div>
+
+            <!-- Add more FAQ items here -->
+
+        </div>
+    </div>
+</section>
+{% endblock content %}
+
+{% block body_hidden %}
+{{ request.user.username |json_script:"user_name" }}
+{{ searchdata | json_script:"user_squery"}}
+{% include 'base/header.html' with order=order searchdata=searchdata %}
+{% include 'base/sidebar.html' with categories=categories %}
+{% endblock body_hidden %}
+
+{% block scripts %}
+{% compress js inline %}
+<script src="{% static 'main/js/cart.js' %}"></script>
+{% endcompress %}
+{% endblock scripts %}

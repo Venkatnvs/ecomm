@@ -1,11 +1,16 @@
 from django.shortcuts import render
-from django.http import HttpResponse
 import feedparser
 
-def index(request):
+def BlogMain(request):
+    return render(request,'blog/main/index.html')
+
+def feedimport(request):
     if request.GET.get('url'):
         url = request.GET['url'] #Getting URL
-        feed = feedparser.parse(url) #Parsing XML data
+        try:
+            feed = feedparser.parse(url) #Parsing XML data
+        except:
+            feed = None
     else:
         feed = None
     context = {

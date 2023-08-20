@@ -1,7 +1,8 @@
 {% extends 'ctm_admin/base/index.html' %}
 {% load static %}
+{% load compress %}
 {% block title %}
-Add Product
+{{title}}
 {% endblock title %}
 
 
@@ -9,8 +10,10 @@ Add Product
 <div class="col-lg-12 m-1">
     <div class="card">
         <div class="card-header">
-            <h4>Add Product</h4>
+            <h4>{{title}}</h4>
         </div>
+        <form id="productform">
+            {% csrf_token %}
         <div class="card-body">
             <br>
             <h5>Product Basic Details</h5>
@@ -74,7 +77,7 @@ Add Product
                 <div class="col-md-6">
                     <div class="form-group mt-2">
                         <label for="id_quantity">Product Stock</label>
-                        <input type="number" min="0" step="1" class="form-control" id="id_quuantity" name="quantity" placeholder="quantity">
+                        <input type="number" min="0" step="1" class="form-control" id="id_quuantity" name="quantity" placeholder="Quantity">
                     </div>
                 </div>
             </div>
@@ -158,11 +161,11 @@ Add Product
             <hr>
             <h5>Product Media</h5>
             <div class="media_div">
-                <div class="row first_media">
+                <div class="row media_div_row first_media">
                     <div class="col-md-4">
                         <div class="form-group mt-2">
                             <label for="id_media_type">Media Type</label>
-                            <select class="form-select" name="media_type" id="id_media_type">
+                            <select class="form-select media_type" name="media_type[]" id="id_media_type">
                                 <option selected value="">Choose...</option>
                                 <option value="1">Image</option>
                                 <option value="2">Video</option>
@@ -172,39 +175,221 @@ Add Product
                     <div class="col-md-4">
                         <div class="form-group mt-2">
                             <label for="id_select_media">Select Media</label>
-                            <input type="file" class="form-control" name="select_media" id="id_select_media">
+                            <input type="file" class="form-control select_media media_src_remove" name="select_media[]" id="id_select_media">
                         </div>
                     </div>
                     <div class="col-md-4">
                         <label>Preview</label>
-                        <img style="width:70%; display:none;" class="image_preview" alt="image">
-                        <video style="width:70%; display:none;" class="video_preview">hhh</video>
+                        <div class="row">
+                            <img style="width:70%; display:none;" class="image_preview" alt="image">
+                            <video style="width:70%; display:none;" class="video_preview" controls></video>
+                        </div>
                     </div>
                 </div>
             </div>
             <br>
             <div class="row">
                 <div class="col-md-6">
-                    <button class="btn btn-success w-100 add_media" type="button">Add Media Content</button>
+                    <button class="btn btn-success w-100 add_media m-1" type="button">Add Media Content</button>
                 </div>
                 <div class="col-md-6">
                     <button type="button" class="btn btn-danger w-100 remove_media">Remove Media Content</button>
                 </div>
             </div>
+            <br>
+            <hr>
+            <h5>Product Details</h5>
+            <div class="details_div">
+                <div class="row details_div_row first_details">
+                    <div class="col-md-5">
+                        <div class="form-group mt-2">
+                            <label for="id_details_title">Title</label>
+                            <input type="text" class="form-control details_tilte_text" id="id_details_title" name="detail_title[]" placeholder="Title...">
+                        </div>
+                    </div>
+                    <div class="col-md-5">
+                        <div class="form-group mt-2">
+                            <label for="id_details_detail">Details</label>
+                            <input type="text" class="form-control details_detail_text" name="details_detail[]" id="id_details_detail" placeholder="Details...">
+                        </div>
+                    </div>
+                    <div class="col-md-2">
+                        <div class="mt-2 form-group">
+                            <label for="id_details_active">Active</label>
+                            <div class="mt-2 form-check form-switch">
+                                <input type="checkbox" id="id_details_active" name="details_active[]" class="form-check-input" checked>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <br>
+            <div class="row">
+                <div class="col-md-6">
+                    <button class="btn btn-success w-100 add_details" type="button">Add Details</button>
+                </div>
+                <div class="col-md-6">
+                    <button type="button" class="btn btn-danger w-100 remove_details">Remove Details</button>
+                </div>
+            </div>
+            <br>
+            <hr>
+            <h5>Product About</h5>
+            <div class="about_div">
+                <div class="row about_div_row first_about">
+                    <div class="col-md-10">
+                        <div class="form-group mt-2">
+                            <label for="id_about_title">Title</label>
+                            <input type="text" class="form-control about_tilte_text" id="id_about_title" name="about_title[]" placeholder='Points...'>
+                        </div>
+                    </div>
+                    <div class="col-md-2">
+                        <div class="mt-2 form-group">
+                            <label for="id_about_active">Active</label>
+                            <div class="mt-2 form-check form-switch">
+                                <input type="checkbox" id="id_about_active" name="about_active[]" class="form-check-input" checked>
+                        </div>
+                    </div>
+                    </div>
+                </div>
+            </div>
+            <br>
+            <div class="row">
+                <div class="col-md-6">
+                    <button class="btn btn-success w-100 add_about" type="button">Add About Detail</button>
+                </div>
+                <div class="col-md-6">
+                    <button type="button" class="btn btn-danger w-100 remove_about">Remove About Detail</button>
+                </div>
+            </div>
+            <br>
+            <hr>
+            <h5>Product Tags</h5>
+            <div class="row">
+                <div class="col-md-10">
+                    <input class="nvs_tags w-100" type="text" name="product_tags" data-role="tagsinput" />
+                </div>
+            </div>
+            <div class="productpost" style="display: none;">
+                <h6>Done...</h6>
+            </div>
+            <div id="id_progressbar" class="row mt-2" style="display:none;">
+                <hr>
+                <div class="col-md">
+                    <div class="progress">
+                        <div id="bar_progress" class="progress-bar progress-bar-striped progress-bar-animated" role="progressbar" aria-valuenow="0" aria-valuemin="0" aria-valuemax="100" style="width:0%;">0%</div>
+                    </div>
+                </div>
+            </div>
+            <div class="col mt-2">
+                <br>
+                <button class="btn w-100 btn-primary submit_btn" type="button">SUBMIT</button>
+            </div>
+        </form>
         </div>
     </div>
 </div>
+{% compress js inline %}
 <script>
     document.getElementById("id_name").onkeyup=function(){
         document.getElementById("id_slug").value=document.getElementById("id_name").value.toLowerCase().replace(/[^\w ]+/g,'').replace(/ +/g,'-');
     };
-</script>
-<script>
     $(".add_media").click(function(){
         var media_row = $(".first_media").clone();
         media_row.removeClass('first_media');
-        media_row.replaceAll('src','');
+        media_row.find('.select_media').val('');
+        media_row.find('.image_preview').attr('src','').css({'border-radius':'none'}).css({'border':'none'}).hide();
+        media_row.find('.video_preview').attr('src','').css({'border-radius':'none'}).css({'border':'none'}).hide();
         $(".media_div").append(media_row);
+    });
+    $('.remove_media').click(function(){
+        if($('.media_div').find('.media_div_row').length>1){
+            $('.media_div').children().last().remove();
+        }
+    });
+    $(".add_details").click(function(){
+        var details_row = $(".first_details").clone();
+        details_row.removeClass('first_details');
+        details_row.find('.details_tilte_text').val('');
+        details_row.find('.details_detail_text').val('');
+        $(".details_div").append(details_row);
+    });
+    $('.remove_details').click(function(){
+        if($('.details_div').find('.details_div_row').length>1){
+            $('.details_div').children().last().remove();
+        }
+    });
+    $(".add_about").click(function(){
+        var about_row = $(".first_about").clone();
+        about_row.removeClass('first_about');
+        about_row.find('.about_tilte_text').val('');
+        $(".about_div").append(about_row);
+    });
+    $('.remove_about').click(function(){
+        if($('.about_div').find('.about_div_row').length>1){
+            $('.about_div').children().last().remove();
+        }
+    });
+
+    $(document).on('change','#id_select_media',function(){
+        var media_type = $(this).parents('.media_div_row').find('.media_type').val();
+        var image_pre = $(this).parents('.media_div_row').find('.image_preview');
+        var video_pre = $(this).parents('.media_div_row').find('.video_preview');
+        showPreviewMedia(this,media_type,image_pre,video_pre);
+    });
+
+    function showPreviewMedia(input, media_type, image_pre, video_pre){
+        if(input.files && input.files[0]){
+            var reader = new FileReader();
+            reader.onload = function(e){
+                if(media_type=='1'){
+                    image_pre.attr('src',e.target.result);
+                    image_pre.show();
+                    image_pre.css({'border':'5px solid orange'});
+                    image_pre.css({'border-radius':'5px'});
+                }
+                if(media_type=='2'){
+                    video_pre.attr('src',e.target.result);
+                    video_pre.show();
+                    video_pre.css({'border':'5px solid orange'});
+                    video_pre.css({'border-radius':'5px'});
+                    video_pre.load();
+                    video_pre.play();
+                }
+            }
+            reader.readAsDataURL(input.files[0]);
+        }
+    }
+
+    $('.submit_btn').click(function(){
+        var form = new FormData($('#productform')[0]);
+        const UserName = JSON.parse(document.getElementById('user_name').textContent);
+        const EditorName = JSON.parse(document.getElementById('editor_name').textContent);
+        if(EditorName=='TinyMCE'){
+            form.append('long_desc',tinyMCE.activeEditor.getContent());
+        }else{
+            form.append('long_desc',CKEDITOR.instances.product_long_description.getData());
+        }
+        var xhr = new XMLHttpRequest()
+        xhr.onreadystatechange=function(){
+            if(xhr.status==200){
+                $('#id_progressbar').hide();
+                $('.productpost').text(xhr.responseText).show();
+                console.log(xhr.responseJSON);
+            }
+        }
+        xhr.open("POST","{% url 'admin-productcreate' %}",true);
+        $('#id_progressbar').show();
+
+
+        xhr.upload.addEventListener('progress',function(e){
+            if(e.lengthComputable){
+                var percentage = (e.loaded/e.total*100|0);
+                $('#bar_progress').css({'width':''+percentage+'%'}).text('Uploading... '+percentage+'%');
+                console.log(percentage)
+            }
+        });
+        xhr.send(form);
     });
 </script>
 
@@ -213,8 +398,8 @@ Add Product
 <script>
     tinymce.init({
         selector: '#product_long_description',
-        plugins: 'a11ychecker advcode casechange export formatpainter image editimage linkchecker autolink emoticons lists checklist media mediaembed pageembed permanentpen powerpaste table advtable tableofcontents tinycomments tinymcespellchecker',
-        toolbar: 'media a11ycheck addcomment showcomments casechange checklist code export formatpainter image editimage pageembed permanentpen table tableofcontents emoticons',
+        plugins: 'image autolink emoticons lists media table',
+        toolbar: 'media addcomment showcomments casechange code export formatpainter image table emoticons',
         toolbar_mode: 'floating',
         tinycomments_mode: 'embedded',
         tinycomments_author: 'Author name',
@@ -235,9 +420,25 @@ Add Product
     } );
 </script>
 {% endif %}
+{% endcompress %}
+{% compress js inline %}
+<script src="{% static 'ctm_admin/js/tag_input.js' %}"></script>
+{% endcompress %}
 {% endblock content %}
 
+{% block styles %}
+{% compress css inline %}
+<link rel="stylesheet" href="{% static 'ctm_admin/css/tag_input.css' %}">
+{% endcompress %}
+{% endblock styles %}
+
+{% block body_hidden %}
+{{ request.user.username |json_script:"user_name" }}
+{{ editor.editor |json_script:"editor_name" }}
+{% endblock body_hidden %}
+
 {% block scripts_top %}
+
 <script src="https://code.jquery.com/jquery-3.6.1.min.js" integrity="sha256-o88AwQnZB+VDvE9tvIXrMQaPlFFSUTR+nldQm1LuPXQ=" crossorigin="anonymous"></script>
 {% if editor.editor == 'TinyMCE' %}
 <script src="https://cdn.tiny.cloud/1/brffh1txjfz0f4byqyup0lsm9my705onsw592h4flbm5zxi0/tinymce/6/tinymce.min.js" referrerpolicy="origin"></script>

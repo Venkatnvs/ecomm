@@ -1,0 +1,13 @@
+{% extends 'blog/base.html' %}
+
+{% block title %}All Posts{% endblock title %}
+
+{% block body %}
+{% spaceless %}
+<h1>Posts</h1>
+
+{% for a in object_list %}
+    <li><a href="{% url 'blog-detail' a.id %}">{{a.title}}</a> - {{a.author}} <br/> {{a.body}}</li>
+{% endfor %}
+{% endspaceless %}
+{% endblock body %}

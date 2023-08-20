@@ -15,6 +15,7 @@
         <hr />
         <form action="{% url 'login' %}" method="post">
           {% csrf_token %}
+          <input type="hidden" name="next" value="{{next}}">
           {% include 'clients/messages.html' %}
           <div class="form-group mb-2">
             <label for="inputname">Username</label>
