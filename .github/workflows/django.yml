@@ -8,6 +8,13 @@ on:
 
 env:
   SECRET_KEY: django-insecure-tvu5sey(pive7yf951p09#o-fgxxbmip1veoofvf7z4zb5k+8g
+  EMAIL_HOST: smtp.gmail.com
+  EMAIL_HOST_USER: 202305442mar.venkatswaroope3@gmail.com
+  EMAIL_TLS: True
+  EMAIL_FROM_EMAIL: test@nvshome.tk
+  EMAIL_PORT: 587
+  EMAIL_HOST_PASSWORD: 1235456
+  FROM_MAIL: test@nvshome.tk
   DEBUG: True
   REQUEST: http://
 
