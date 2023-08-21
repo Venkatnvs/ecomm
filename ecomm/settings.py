@@ -2,6 +2,7 @@ from pathlib import Path
 from decouple import config
 from django.contrib import messages
 import os
+import dj_database_url
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
@@ -18,11 +19,6 @@ DEBUG = config('DEBUG', cast=bool)
 
 # ALLOWED_HOSTS = ['127.0.0.1','192.168.100.9','10.62.16.77','youthful-mountain-70598.pktriot.net']
 ALLOWED_HOSTS = ['*']
-
-CSRF_TRUSTED_ORIGINS = [
-    'https://ae31-14-99-167-142.ngrok-free.app'
-]
-
 
 ADMINS = (('venkat','venkatnvs2005@gmail.com'),)
 MANAGERS = ADMINS
@@ -65,6 +61,7 @@ INSTALLED_APPS = [
 
 MIDDLEWARE = [
     'django.middleware.gzip.GZipMiddleware', #This one
+    'whitenoise.middleware.WhiteNoiseMiddleware',
     'htmlmin.middleware.HtmlMinifyMiddleware', #This one
     'htmlmin.middleware.MarkRequestMiddleware', #This one
     # "debug_toolbar.middleware.DebugToolbarMiddleware",
@@ -112,21 +109,16 @@ ASGI_APPLICATION = "ecomm.asgi.application"
 
 # Database
 # https://docs.djangoproject.com/en/4.1/ref/settings/#databases
-
 DATABASES = {
-    'default': {
-        'ENGINE': 'django.db.backends.sqlite3',
-        'NAME': BASE_DIR / 'db.sqlite3',
-    }
+    'default': dj_database_url.config(
+        default = config('DB_URL'),
+        conn_max_age=600
+    )
 }
-
 CHANNEL_LAYERS = {
-    'default': {
-        'BACKEND': 'channels_redis.core.RedisChannelLayer',
-        'CONFIG': {
-            "hosts": [('127.0.0.1', 6379)],
-        },
-    },
+    "default": {
+        "BACKEND": "channels.layers.InMemoryChannelLayer"
+    }
 }
 
 # Password validation
@@ -177,6 +169,7 @@ STATICFILES_FINDERS = (
     # Add this
     'compressor.finders.CompressorFinder',
 )
+STATICFILES_STORAGE = 'whitenoise.storage.CompressedManifestStaticFilesStorage'
 
 LOGIN_URL = 'login'
 
