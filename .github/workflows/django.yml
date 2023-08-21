@@ -43,6 +43,6 @@ jobs:
     - name: Run migrate
       run: |
         python manage.py migrate
-    - name: Run test
+    - name: Run test main
       run: |
         python manage.py test
