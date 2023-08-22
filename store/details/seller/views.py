@@ -289,6 +289,8 @@ class ProductsListview(UserPassesTestMixin,ListView):
         if filter_val != "":
             print(user_to_get)
             prod = Product.objects.filter(
+                Q(subcategories__category__is_active=True) &
+                Q(subcategories__is_active=True)&
                 Q(by_seller__user_type__user = user_to_get) &
                 Q(name__contains=filter_val) | 
                 Q(description__contains=filter_val) | 
@@ -297,7 +299,7 @@ class ProductsListview(UserPassesTestMixin,ListView):
                 Q(subcategories__category__name__contains = filter_val)
             ).order_by(order_by)
         else:
-            prod = Product.objects.filter(by_seller__user_type__user = user_to_get).order_by(order_by)
+            prod = Product.objects.filter(by_seller__user_type__user = user_to_get, is_active=True,subcategories__category__is_active=True,subcategories__is_active=True).order_by(order_by)
         return prod
 
     def get_context_data(self, **kwargs):

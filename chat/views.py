@@ -29,7 +29,7 @@ def chatbot_api(request):
 
 @api_view(['GET'])
 def test_snippets(request):
-    products = Product.objects.all().reverse()[0:5]
+    products = Product.objects.filter(is_active=True,subcategories__category__is_active=True,subcategories__is_active=True).reverse()[0:5]
     context = {
         "products":products,
         "heading":"Top 5 Products:"

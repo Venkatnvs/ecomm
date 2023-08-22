@@ -84,7 +84,8 @@ INTERNAL_IPS = [
     "127.0.0.1",
 ]
 
-SITE_NAME = 'NvsTrades'
+# SITE_NAME = 'NvsTrades'
+SITE_NAME = 'GreenStore'
 ROOT_URLCONF = 'ecomm.urls'
 USE_OBFUSCATED_JS = True
 SHOW_ANIMATIONS = False

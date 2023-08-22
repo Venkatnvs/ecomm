@@ -1,10 +1,10 @@
 .password-toggle {
     cursor: pointer;
-    transition: all;
+    transition: all 0.5s ease-in-out;
 }
 
 .password-toggle:hover {
-    transform: scale(1.2);
+    transform: scale(1.15);
 }
 
 .password-toggle-2 {
@@ -68,4 +68,29 @@
 
 .picture-src {
     width: 100%;
+}
+.gradient-custom-3 {
+    background: #84fab0;
+    background: -webkit-linear-gradient(to right, rgba(132, 250, 176, 0.5), rgba(143, 211, 244, 0.5));
+    background: linear-gradient(to right, rgba(132, 250, 176, 0.5), rgba(143, 211, 244, 0.5))
+    }
+.gradient-custom-4 {
+    background: #84fab0;
+    background: -webkit-linear-gradient(to right, rgba(132, 250, 176, 1), rgba(143, 211, 244, 1));
+    background: linear-gradient(to right, rgba(132, 250, 176, 1), rgba(143, 211, 244, 1))
+    }
+.nav-item > a > span {
+    color: #012970;
+    font-weight: 500;
+}
+.reg_card {
+    background-image: url('https://img.freepik.com/free-vector/pastel-gradient-blur-background-vector_53876-174842.jpg');
+    background-size: 100% 100%;
+    
+}
+.reg_card h2{
+    font-weight: 500;
+}
+.text-muted{
+    color: #353535!important;
 }

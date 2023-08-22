@@ -26,7 +26,7 @@ class EmailThread(threading.Thread):
         threading.Thread.__init__(self)
 
     def run(self):
-        self.email.send(fail_silently=False)
+        self.email.send(fail_silently=True)
 
 def states_get_pin(request):
     try:
@@ -63,10 +63,10 @@ class Registration(View):
             if not User.objects.filter(email=email).exists():
 
                 if password != password2:
-                    messages.error(request, 'Password donot match')
+                    messages.error(request, 'Password does not match')
                     return render(request, 'clients/register.html', context)
                 if len(password)<8:
-                    messages.error(request, 'Password too short')
+                    messages.error(request, 'Password is too short')
                     return render(request, 'clients/register.html', context)
 
                 user = User.objects.create_user(username=username, email=email, first_name=firstname,last_name=lastname)

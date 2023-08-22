@@ -500,7 +500,7 @@ class ProductsListview(UserPassesTestMixin,ListView):
                 Q(subcategories__category__name__contains = filter_val)
             ).order_by(order_by)
         else:
-            prod = Product.objects.all().order_by(order_by)
+            prod = Product.objects.filter().order_by(order_by)
         return prod
 
     def get_context_data(self, **kwargs):

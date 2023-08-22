@@ -69,7 +69,7 @@ def ProductDetails(request,slug):
     order = data['order']
     items = data['items']
     product_data = ''
-    prod = Product.objects.filter(slug=slug,is_active=True)
+    prod = Product.objects.filter(slug=slug,is_active=True,subcategories__category__is_active=True,subcategories__is_active=True)
     img_d = ProductMedia.objects.filter(product=prod[0],is_active=True)
     data = {'product':prod,'imgs':img_d}
     product_data = data

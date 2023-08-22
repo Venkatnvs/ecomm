@@ -16,7 +16,7 @@ def UpdateCartItems(request):
         user = request.user
         if productid and action:
             cust = Customer.objects.filter(user=user).first()
-            product = Product.objects.filter(id=productid,is_active=True).first()
+            product = Product.objects.filter(id=productid,is_active=True,subcategories__category__is_active=True,subcategories__is_active=True).first()
             order, created = Order.objects.get_or_create(user=cust,is_completed=False)
             orderitem, created2 = OrderItems.objects.get_or_create(order=order,product=product)
             if action == 'add':

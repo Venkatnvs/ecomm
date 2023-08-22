@@ -36,13 +36,13 @@ class Order(models.Model):
 
     @property
     def get_cart_total(self):
-        orderitems = self.orderitems_set.all()
+        orderitems = self.orderitems_set.filter(product__is_active=True,product__subcategories__category__is_active=True,product__subcategories__is_active=True)
         total = sum([item.get_total for item in orderitems])
         return total
     
     @property
     def get_item_total(self):
-        orderitems = self.orderitems_set.all()
+        orderitems = self.orderitems_set.filter(product__is_active=True,product__subcategories__category__is_active=True,product__subcategories__is_active=True)
         total = sum([item.quantity for item in orderitems])
         return total
 
