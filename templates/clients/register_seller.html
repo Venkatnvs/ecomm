@@ -9,10 +9,10 @@
       <div class="card-body">
         <div class="card-headr text-center mb-1 p-1">
           <div class="card-title m-0 p-2">
-            <h2 class="m-0 p-0">Register</h2>
+            <h2 class="m-0 p-0">Register As Seller</h2>
           </div>
         </div>
-        <form action="{% url 'register' %}" method="post" enctype="multipart/form-data">
+        <form action="{% url 'register-seller' %}" method="post" enctype="multipart/form-data">
           {% csrf_token %} {% include 'clients/messages.html' %}
           <div class="container">
             <div class="picture-container">
@@ -48,6 +48,19 @@
               value="{{ FieldValues.email }}" />
             <div class="invalid-feedback invalid-email-feedback" style="display: none"></div>
             <p class="text-sm text-success email-success"></p>
+          </div>
+          <div class="company_details mb-3">
+            <h5><strong>Company Details</strong></h5>
+            <div class="form-group mt-1">
+                <label for="inputcompany_name">Company Name <small>(brand)</small> <span class="text-danger">*</span></label>
+                <input required type="text" name="company_name" placeholder="Brand name" class="form-control"
+                  id="inputcompany_name" value="{{ FieldValues.company_name }}" />
+            </div>
+            <div class="form-group mt-2">
+                <label for="inputgst_number">GST Number <span class="text-danger">*</span></label>
+                <input required type="text" name="gst_number" placeholder="Gst Number" class="form-control"
+                  id="inputgst_number" value="{{ FieldValues.gst_number }}" />
+            </div>
           </div>
           <div id="shipping-info mt-1">
             <!-- <hr /> -->
@@ -107,8 +120,8 @@
         <div class="mt-4">
           <p class="text-center text-muted mb-1">Have already an account? <a href="{% url 'login' %}"
             class="fw-bold text-body"><u>Login</u></a></p>
-          <p class="text-center text-muted mb-0">Sell at {{site_name}}? <a href="{% url 'register-seller' %}"
-            class="fw-bold text-body"><u>Register as Seller</u></a></p>
+          <p class="text-center text-muted mb-0">Buy at {{site_name}}? <a href="{% url 'register' %}"
+            class="fw-bold text-body"><u>Register as User</u></a></p>
         </div>
       </div>
     </div>
@@ -169,8 +182,8 @@ integrity="sha256-pvPw+upLPUjgMXY0G+8O0xUf+/Im1MZjXxxgOcBQBXU=" crossorigin="ano
 {% endblock scripts %}
 {% block header_links %}
 <li class="nav-item mx-2 fs-6">
-  <a class="text-center text-wrap" href="{% url 'register-seller' %}">
-    <span class="d-md-block ps-2 d-flex">Register Seller</span>
+  <a class="text-center text-wrap" href="{% url 'register' %}">
+    <span class="d-md-block ps-2 d-flex">Register User</span>
   </a>
 </li>
 <li class="nav-item mx-3 fs-6">

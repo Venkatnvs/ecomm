@@ -108,7 +108,7 @@ class StaffUser(models.Model):
 class SellerUser(models.Model):
     user_type = models.OneToOneField(Customer, on_delete=models.CASCADE)
     profile_pic = models.ImageField(upload_to='Customer/SellerUser/%Y/%m/%d/')
-    company_name = models.CharField(max_length=255, default="")
+    company_name = models.CharField(max_length=255, default="",unique=True)
     gst_details = models.CharField(max_length=255, default="")
     address = models.TextField(default="")
     state = models.CharField(max_length=255, default="")
