@@ -16,26 +16,31 @@ def NoAuthCookies(request):
     except:
         cart = {}
     items = []
-    order = {'get_item_total':0,'get_cart_total':0}
-    for i in cart:
-        order['get_item_total'] += cart[i]['quantity']
-        product = Product.objects.filter(id=i,is_active=True,subcategories__category__is_active=True,subcategories__is_active=True).first()
-        total = product.new_price * cart[i]['quantity']
-        img = ProductMedia.objects.filter(product=product,is_active=True,type=1)
-        order['get_cart_total'] += total
-        item = {
-            'product':{
-                'id':product.id,
-                'name':product.name,
-                'new_price':product.new_price,
-                'productmedia_set':{
-                    'all':img
-                }
-            },
-            'quantity':cart[i]['quantity'],
-            'get_total':total
-        }
-        items.append(item)
+    order = {'get_item_total':0,'get_cart_total':0,'shipping':False}
+    try:
+        for i in cart:
+            order['get_item_total'] += cart[i]['quantity']
+            product = Product.objects.filter(id=i,is_active=True,subcategories__category__is_active=True,subcategories__is_active=True).first()
+            total = product.new_price * cart[i]['quantity']
+            img = ProductMedia.objects.filter(product=product,is_active=True,type=1)
+            order['get_cart_total'] += total
+            item = {
+                'product':{
+                    'id':product.id,
+                    'name':product.name,
+                    'new_price':product.new_price,
+                    'productmedia_set':{
+                        'all':img
+                    }
+                },
+                'quantity':cart[i]['quantity'],
+                'get_total':total
+            }
+            items.append(item)
+            if product.is_digital == False:
+                order['shipping'] = True
+    except Exception as e:
+        pass
     return {'order':order,'items':items}
 
 

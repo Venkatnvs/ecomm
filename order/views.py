@@ -2,10 +2,13 @@ from django.shortcuts import render
 from rest_framework.decorators import api_view
 from rest_framework.response import Response
 from store.models import Product
-from .models import Order,OrderItems
+from .models import Order,OrderItems,ShippingAddress
 from store.utilitys import GetCartData
 from order.try_img import get_amazon_product_page
 from clients.models import Customer
+from django.http import JsonResponse
+import datetime
+import json
 
 @api_view(['GET','POST'])
 def UpdateCartItems(request):
@@ -44,3 +47,30 @@ def GetItemsFromAmazon(request):
     producturl = data.get("producturl",'https://www.amazon.in/gp/product/B0BDJ7P6NG/')
     data = get_amazon_product_page(producturl)
     return Response({"message":data,})
+
+def ProcessOrder(request):
+    transaction_id = datetime.datetime.now().timestamp()
+    data = json.loads(request.body)
+    if request.user.is_authenticated:
+        customer = request.user.customer
+        order, created = Order.objects.get_or_create(user=customer, is_completed=False)
+        
+    total = float(data['userFormData']['total'])
+    order.transaction_id = transaction_id
+    if total == order.get_cart_total:
+        order.is_completed = True
+        order.status = "order Confirmed"
+    order.save()
+    
+    if order.shipping == True:
+        ShippingAddress.objects.create(
+        user=customer,
+		order=order,
+		address_1=data['shipping']['address1'],
+		address_2=data['shipping']['address2'],
+		city=data['shipping']['city'],
+		state=data['shipping']['state'],
+		zipcode=data['shipping']['zipcode'],
+	)
+
+    return JsonResponse("processed", safe=False)

@@ -1,104 +1,110 @@
 <div class="col-lg-6">
-    <div class="card nvs-box">
-      <form class="form" action="#" method="post">
-        <div id="user-info">
-          <h5><strong>User Information</strong></h5>
-          <div class="form-row">
-            <div class="form-group d-inline-block col-md-4 m-1">
-              <label for="inputUsername">Username</label>
-              <input
-                required
-                type="text"
-                class="form-control"
-                id="inputUsername"
-                placeholder="Username"
-                {% if request.user.is_authenticated %}
-                  disabled
-                  value="{{request.user.username}}"
-                {% endif %}
-              />
-            </div>
-            <div class="form-group d-inline-block col-md-6 m-1">
-              <label for="inputEmail4">Email</label>
-              <input
-                required
-                type="email"
-                class="form-control"
-                id="inputEmail4"
-                placeholder="Email"
-                {% if request.user.is_authenticated %}
-                  disabled
-                  value="{{request.user.email}}"
-                {% endif %}
-              />
-            </div>
-          </div>
-        </div>
-        <div id="shipping-info">
-          <hr />
-          <h5><strong>Shipping Information</strong></h5>
-          <div class="form-group m-1">
-            <label for="inputAddress">Address</label>
+  <div id="user_form" class="card nvs-box">
+    <form id="form_ord_usr" class="form" action="#" method="post">
+      {% csrf_token %}
+      <div id="user-info">
+        <h5><strong>User Information</strong></h5>
+        <div class="form-row">
+          <div class="form-group d-inline-block col-md-4 m-1">
+            <label for="inputUsername">Username</label>
             <input
+              required
               type="text"
+              name="name"
               class="form-control"
-              id="inputAddress"
-              placeholder="1234 Main"
+              id="inputUsername"
+              placeholder="Username"
+              {% if request.user.is_authenticated %} 
+              disabled
+              value="{{request.user.username}}"
+              {% endif %}
             />
           </div>
-          <div class="form-group m-1">
-            <label for="inputAddress2">Address 2</label>
+          <div class="form-group d-inline-block col-md-6 m-1">
+            <label for="inputEmail4">Email</label>
             <input
-              type="text"
+              required
+              type="email"
+              name="email"
               class="form-control"
-              id="inputAddress2"
-              placeholder="Apartment, studio, or floor"
+              id="inputEmail4"
+              placeholder="Email"
+              {% if request.user.is_authenticated %}
+              disabled
+              value="{{request.user.email}}"
+              {% endif %}
             />
           </div>
-          <div class="form-row m-1">
-            <div class="form-group d-inline-block col-lg-5">
-              <label for="inputState">State</label>
-              <select id="inputState" class="form-control nvs-state">
-                <option selected>Choose...</option>
-                {% for x in data %}
-                <option>{{x}}</option>
-                {% endfor %}
-              </select>
-            </div>
-            <div class="form-group d-inline-block col-md-4">
-              <label for="inputState">City</label>
-              <select id="inputState" class="form-control nvs-city">
-                <option selected>Please select state</option>
-              </select>
-            </div>
-            <div class="form-group d-inline-block col-md-2">
-              <label for="inputZip">Zip</label>
-              <input type="text" class="form-control" id="inputZip" />
-            </div>
+        </div>
+      </div>
+      {% if order.shipping %}
+      <div id="shipping-info">
+        <hr />
+        <input disabled hidden type="hidden" value="{{order.shipping}}" name="shipping_d">
+        <h5><strong>Shipping Information</strong></h5>
+        <div class="form-group m-1">
+          <label for="inputAddress">Address</label>
+          <input
+            type="text"
+            class="form-control"
+            id="inputAddress"
+            placeholder="1234 Main"
+            name="address1"
+          />
+        </div>
+        <div class="form-group m-1">
+          <label for="inputAddress2">Address 2</label>
+          <input
+            type="text"
+            class="form-control"
+            id="inputAddress2"
+            placeholder="Apartment, studio, or floor"
+            name="address2"
+          />
+        </div>
+        <div class="form-row m-1">
+          <div class="form-group d-inline-block col-lg-5 m-1">
+            <label for="inputState">State</label>
+            <select name="state" id="inputState" class="form-control nvs-state">
+              <option selected>Choose...</option>
+              {% for x in data %}
+              <option>{{x}}</option>
+              {% endfor %}
+            </select>
           </div>
-          <hr />
-          <div class="form-group m-1">
-            <div class="form-check">
-              <input
-                class="form-check-input"
-                type="checkbox"
-                id="gridCheck"
-              />
-              <label class="form-check-label" for="gridCheck">
-                Check me out
-              </label>
-            </div>
+          <div class="form-group d-inline-block col-md-4 m-1">
+            <label for="inputState">City</label>
+            <select name="city" id="inputState" class="form-control nvs-city">
+              <option selected>Please select state</option>
+            </select>
+          </div>
+          <div class="form-group d-inline-block col-md-2 m-1">
+            <label for="inputZip">Zip</label>
+            <input name="zip" type="text" class="form-control" id="inputZip" />
           </div>
         </div>
-        <input
-          type="submit"
-          class="btn btn-info nvs-checkout-sub_btn"
-          value="Continue"
-        />
-      </form>
-    </div>
-    <br>
-    <div class="nvs-box">
-      <h5>Paypal Options</h5>
+      </div>
+      {% else %}
+      <input disabled hidden type="hidden" value="{{order.shipping}}" name="shipping_d">
+      {% endif %}
+      <hr />
+      <div class="form-group m-1">
+        <div class="form-check">
+          <input class="form-check-input" type="checkbox" id="gridCheck" />
+          <label class="form-check-label" for="gridCheck"> Check me out </label>
+        </div>
+      </div>
+      <input
+        type="submit"
+        class="btn btn-info nvs-checkout-sub_btn"
+        value="Continue"
+      />
+    </form>
+  </div>
+  <div id="paymenet_info" class="hidden_c card nvs-box">
+    <h5>Paypal Options</h5>
+    <div class="col">
+      <button id="make_pay_btn" class="btn btn-info">Make payment</button>
     </div>
   </div>
+</div>

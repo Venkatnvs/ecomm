@@ -35,6 +35,15 @@ class Order(models.Model):
     is_cancelled = models.BooleanField(default=False)
 
     @property
+    def shipping(self):
+        shipping = False
+        orderitems = self.orderitems_set.filter(product__is_active=True,product__subcategories__category__is_active=True,product__subcategories__is_active=True)
+        for i in orderitems:
+            if i.product.is_digital == False:
+                shipping = True
+        return shipping
+
+    @property
     def get_cart_total(self):
         orderitems = self.orderitems_set.filter(product__is_active=True,product__subcategories__category__is_active=True,product__subcategories__is_active=True)
         total = sum([item.get_total for item in orderitems])
