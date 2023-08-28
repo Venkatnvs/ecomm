@@ -22,6 +22,7 @@ from django.template.loader import get_template
 import threading
 from django.http import HttpResponseForbidden,HttpResponse
 from django.views import View
+from django.conf import settings
 
 class EmailThread(threading.Thread):
     def __init__(self, email):
@@ -225,14 +226,14 @@ class StaffUserCreate(UserPassesTestMixin,SuccessMessageMixin, CreateView):
                 from_mail = config('FROM_MAIL')
                 activate_url = request_main+domain+link
                 context_email_data = {
-                    'title':'NvsTrades',
+                    'title':settings.SITE_NAME,
                     'baseurl':domain+request_main,
                     'activate_url':activate_url,
                     'user_name':user.username,
                     'user_email':user.email,
                 }
                 email_body = get_template(email_tmp_path).render(context_email_data)
-                email_subject = 'Activate your account | NvsTrades'
+                email_subject = f'Activate your account | {settings.SITE_NAME}'
                 email = EmailMessage(
                     email_subject,
                     email_body,

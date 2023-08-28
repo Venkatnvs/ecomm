@@ -122,6 +122,24 @@
               <li>
                 <hr class="dropdown-divider">
               </li>
+              {% if request.user.customer.customer_type == "Seller" %}
+              <li>
+                <a class="dropdown-item d-flex align-items-center" href="{% url 'seller-index' %}">
+                  <i class="bi bi-person-workspace"></i>
+                  <span>Seller Dashboard</span>
+                </a>
+              </li>
+              {% elif request.user.customer.customer_type == "Admin" %}
+              <li>
+                <a class="dropdown-item d-flex align-items-center" href="{% url 'admin-home' %}">
+                  <i class="bi bi-person-workspace"></i>
+                  <span>Admin Dashboard</span>
+                </a>
+              </li>
+              {% endif %}
+              <li>
+                <hr class="dropdown-divider">
+              </li>
 
               <li>
                 <a class="dropdown-item d-flex align-items-center" href="pages-faq.html">

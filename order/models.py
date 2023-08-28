@@ -2,6 +2,17 @@ from django.db import models
 from clients.models import Customer
 from store.models import Product
 
+class Coupon(models.Model):
+    code = models.CharField(max_length=20, unique=True)
+    discount = models.DecimalField(max_digits=5, decimal_places=2)
+    is_active = models.BooleanField(default=True)
+    count = models.IntegerField(default=0)
+    created_on = models.DateTimeField(auto_now_add=True)
+    last_updated = models.DateTimeField(auto_now=True)
+
+    def __str__(self):
+        return self.code
+
 class BillingAddress(models.Model):
     user = models.ForeignKey(Customer, on_delete=models.SET_NULL, null=True)
     address_1 = models.CharField(max_length=255)
@@ -30,7 +41,11 @@ class Order(models.Model):
     last_updated = models.DateTimeField(auto_now=True)
     user = models.ForeignKey(Customer, null=True, on_delete=models.SET_NULL)
     billing = models.ForeignKey(BillingAddress, null=True, on_delete=models.SET_NULL)
+    coupon_code = models.ManyToManyField(Coupon,blank=True)
     transaction_id = models.CharField(max_length=255, null=True)
+    payment_type = models.CharField(max_length=255,default="COD")
+    is_delivered = models.BooleanField(default=False)
+    is_closed = models.BooleanField(default=False)
     is_completed = models.BooleanField(default=False)
     is_cancelled = models.BooleanField(default=False)
 
@@ -54,9 +69,44 @@ class Order(models.Model):
         orderitems = self.orderitems_set.filter(product__is_active=True,product__subcategories__category__is_active=True,product__subcategories__is_active=True)
         total = sum([item.quantity for item in orderitems])
         return total
+    
+    @property
+    def get_cart_tax(self):
+        return (self.get_cart_total * 5) // 100
+    
+    @property
+    def get_cart_shipping(self):
+        return 30
+    
+    @property
+    def get_coupon_check(self):
+        if self.coupon_code.exists():
+            discnt = self.coupon_code.first()
+            return discnt
+        else:
+            return False
+        
+    @property
+    def get_coupon_discount(self):
+        if self.coupon_code.exists():
+            discnt = self.coupon_code.first()
+            discount = discnt.discount
+            return discount
+        else:
+            return None
+    
+    @property
+    def get_cart_billing_total(self):
+        total_d = self.get_cart_total + self.get_cart_tax + self.get_cart_shipping
+        discount = 0
+        if self.coupon_code.exists():
+            discnt = self.coupon_code.first()
+            discount = discnt.discount
+        total_d = total_d - discount
+        return total_d
 
     def __str__(self):
-        return str(self.id)
+        return f'{self.id}-{self.user}'
 
 
 class ShippingAddress(models.Model):

@@ -4,7 +4,8 @@ from django.conf import settings
 import os
 import json
 from .models import Product,ProductMedia
-from .utilitys import GetProductsHome,GetCartData
+from .utilitys import GetProductsHome,GetCartData,GetRelatedProducts
+from django.contrib.auth.decorators import login_required
 
 def state_dist(request):
     if request.method == 'POST':
@@ -46,7 +47,7 @@ def Cart(request):
         }
     return render(request, 'main/cart.html', context)
 
-
+@login_required
 def Checkout(request):
     data = GetCartData(request)
     order = data['order']
@@ -69,13 +70,26 @@ def ProductDetails(request,slug):
     order = data['order']
     items = data['items']
     product_data = ''
-    prod = Product.objects.filter(slug=slug,is_active=True,subcategories__category__is_active=True,subcategories__is_active=True)
-    img_d = ProductMedia.objects.filter(product=prod[0],is_active=True)
+    prod = Product.objects.filter(slug=slug,is_active=True,subcategories__category__is_active=True,subcategories__is_active=True).first()
+    img_d = ProductMedia.objects.filter(product=prod,is_active=True)
     data = {'product':prod,'imgs':img_d}
     product_data = data
+    cart_std = True
+    try:
+        for i in items:
+            if request.user.is_authenticated:
+                if i.product.id == prod.id:
+                    cart_std = False
+            else:
+                if i["product"]["id"] == prod.id:
+                    cart_std = False
+    except Exception as e:
+        pass
     context = {
         'data':product_data,
         'items':items,
         'order':order,
+        'cart_std':cart_std,
+        'related_prod':GetRelatedProducts(prod.subcategories.category,prod.id)['product_data']
     }
     return render(request, 'main/productdetails.html', context)

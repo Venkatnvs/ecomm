@@ -1,0 +1,21 @@
+{% load humanize %}
+<div id="paymenet_info" class="hidden_c card nvs-box p-3">
+    <h5><strong>Payment Options</strong></h5>
+    <div class="row d-flex justify-content-center">
+        <div class="col-md-10">
+            <div class="d-flex justify-content-between border-y border-dashed py-3 mb-1">
+                <h4 class="mb-0">Total :</h4>
+                <h4 id="cart_pay_total" class="mb-">₹{{ order.get_cart_billing_total|intcomma }}</h4>
+            </div>
+            <select id="payment_type_check" class="form-select mb-2" aria-label="delivery type">
+                <option value="cod">Cash on Delivery</option>
+                <option value="card">Card</option>
+                <option value="paypal">Paypal</option>
+            </select>
+            <div id="invalid-payment-feedback" class="invalid-feedback mb-2">* Payment Type Not Activated</div>
+            <button type="submit" id="make_pay_btn" class="btn btn-info w-100 btn-sm disable">
+                Make payment
+            </button>
+        </div>
+    </div>
+</div>

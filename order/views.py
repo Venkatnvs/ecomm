@@ -1,14 +1,23 @@
-from django.shortcuts import render
+from django.shortcuts import render,get_object_or_404
 from rest_framework.decorators import api_view
 from rest_framework.response import Response
 from store.models import Product
-from .models import Order,OrderItems,ShippingAddress
+from .models import Order,OrderItems,ShippingAddress,Coupon
 from store.utilitys import GetCartData
 from order.try_img import get_amazon_product_page
 from clients.models import Customer
 from django.http import JsonResponse
 import datetime
 import json
+from clients.models import Customer
+from django.contrib.auth.decorators import login_required
+from django.http import HttpResponse
+from django.template.loader import get_template
+from xhtml2pdf import pisa
+from django.contrib.sites.shortcuts import get_current_site
+from .models import Order
+from io import BytesIO
+from django.contrib import messages
 
 @api_view(['GET','POST'])
 def UpdateCartItems(request):
@@ -60,6 +69,7 @@ def ProcessOrder(request):
     if total == order.get_cart_total:
         order.is_completed = True
         order.status = "order Confirmed"
+        order.payment_type = "Cash on Delivery"
     order.save()
     
     if order.shipping == True:
@@ -72,5 +82,113 @@ def ProcessOrder(request):
 		state=data['shipping']['state'],
 		zipcode=data['shipping']['zipcode'],
 	)
-
+    messages.success(request, 'Order successfully placed.')
     return JsonResponse("processed", safe=False)
+
+@api_view(['GET','POST'])
+def GetCouponCode(request):
+    data = request.data
+    coupon = data.get("coupon",'')
+    action = data.get("action",'')
+    try:
+        details = Coupon.objects.get(code=coupon,is_active=True)
+        customer = Customer.objects.get(user=request.user)
+        order = Order.objects.get(user=customer,is_completed=False)
+        if action == "add":
+            if not order.coupon_code.exists():
+                order.coupon_code.add(details)
+        elif action == "remove":
+            if order.coupon_code.exists():
+                order.coupon_code.remove(details)
+        order.save()
+        details = {"code":details.code,"discount":details.discount,"action":action}
+        type_d = True
+    except Exception as e:
+        print(e)
+        details = ""
+        type_d = False
+    return Response({"message":details,"typestatus":type_d})
+
+@api_view(['GET'])
+def GetCarBillingTotal(request):
+    try:
+        customer = Customer.objects.get(user=request.user)
+        data_fech = Order.objects.get(user=customer,is_completed=False)
+        rtn_data = data_fech.get_cart_billing_total
+        type_d = True
+    except Exception as e:
+        rtn_data = 100000
+        type_d = False
+    return Response({"message":{"total":rtn_data},"typestatus":type_d})
+
+@api_view(['GET'])
+def GetCouponExists(request):
+    coupon_st = False
+    try:
+        customer = Customer.objects.get(user=request.user)
+        order = Order.objects.get(user=customer,is_completed=False)
+        coupon_st = order.coupon_code.exists()
+        if coupon_st:
+            coupon = order.coupon_code.first()
+            message = {"code":coupon.code,"discount":coupon.discount}
+        else:
+            message = "no coupon"
+        type_d = True
+    except Exception as e:
+        message = "error"
+        type_d = False
+    return Response({"message":message,"typestatus":type_d,"coupon_st":coupon_st})
+
+@login_required
+def MyOrders(request):
+    data_kw = GetCartData(request)
+    customer = Customer.objects.get(user=request.user)
+    orders_comp = Order.objects.filter(user=customer,is_completed=True,is_delivered=True).order_by('-date')
+    orders_pend= Order.objects.filter(user=customer,is_completed=True,is_delivered=False).order_by('-date')
+    context = {
+        "orders_c":orders_comp,
+        "orders_p":orders_pend,
+        "order":data_kw['order'],
+        "items":data_kw['items']
+    }
+    return render(request, "main/orders/my_orders.html",context)
+
+@login_required
+def order_details(request, order_id):
+    data_kw = GetCartData(request)
+    order = get_object_or_404(Order, transaction_id=order_id)
+    shipping = get_object_or_404(ShippingAddress,order=order)
+    context = {
+        "orders":order,
+        "shipping":shipping,
+        "order":data_kw['order'],
+        "items":data_kw['items']
+    }
+    return render(request, 'main/orders/order_details.html',context)
+
+def generate_invoice(request, order_id):
+    order = Order.objects.get(transaction_id=order_id)
+    
+    return render(request, 'main/orders/invoice.html', {'order': order,})
+
+def render_to_pdf(template_path, context_dict):
+    template = get_template(template_path)
+    html = template.render(context_dict)
+    result = BytesIO()
+    pdf = pisa.pisaDocument(BytesIO(html.encode("UTF-8")), result)
+    if not pdf.err:
+        return result.getvalue()
+    return None
+
+def generate_invoice_pdf(request, order_id):
+    order = Order.objects.get(transaction_id=order_id)
+    site_name = get_current_site(request).name
+    context = {'order': order, 'site_name': site_name}
+    pdf = render_to_pdf('main/orders/invoice.html', context)
+    if pdf:
+        response = HttpResponse(pdf, content_type='application/pdf')
+        filename = f'invoice_{order_id}.pdf'
+        content = f'inline; filename={filename}'
+        response['Content-Disposition'] = content
+        return response
+    return HttpResponse("Error generating PDF", status=400)

@@ -2,22 +2,22 @@
 {% load static %}
 {% load compress %}
 {% block title %}
-{{ data.product.0.name | truncatechars:20 }} | {{site_name}}
+{{ data.product.name | truncatechars:20 }} | {{site_name}}
 {% endblock title %}
 
 {% block body_hidden %}
 {{ request.user.username |json_script:"user_name" }}
 {% include 'base/header.html' with order=order %}
-{% include 'base/sidebar.html' with categories=categories active=data.product.0.subcategories %}
+{% include 'base/sidebar.html' with active=data.product.subcategories %}
 {% endblock body_hidden %}
 
 {% block content %}
-<div class="container">
+<div class="container m-0 p-0">
     <div class="col">
         <div class="product-heading">
-            <span>{{data.product.0.subcategories.category}} ></span>
-            <span>{{data.product.0.subcategories}} ></span>
-            <h4><span class="nvs-heading">{{data.product.0.name}}</span></h4>
+            <span>{{data.product.subcategories.category}} ></span>
+            <span>{{data.product.subcategories}} ></span>
+            <h4><span class="nvs-heading">{{data.product.name}}</span></h4>
         </div>
         <hr>
         {% include 'main/_pdetails/pimgslider.html' with data=data %}
@@ -28,11 +28,29 @@
         <hr>
         {% include 'main/_pdetails/pdec_imgdec.html' with data=data %}
     </div>
+    <hr>
+    <div class="col relat_prod px-2 mb-2">
+        {% if related_prod %}
+            <h4>
+                <span class="fw-bold">Related products</span>
+            </h4>
+            <div id="main_productcontainer" class="container px-5">
+                {% for i in related_prod %}
+                    {% include 'main/_details/productcard.html' with product=i %}
+                {% endfor %}
+            </div>
+        {% endif %}
+    </div>
 </div>
 {% endblock content %}
 
 {% block styles %}
 {% compress css inline %}
+<style>
+    #main {
+        padding: 5px;
+    }
+</style>
 <link rel="stylesheet" href="{% static 'main/css/productdetails.css' %}">
 {% endcompress %}
 {% endblock styles %}

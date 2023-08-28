@@ -18,6 +18,7 @@ from django.contrib.auth.tokens import PasswordResetTokenGenerator
 import threading
 from .state_data import Pin_dis,state_data_sending
 from clients.models import Customer
+from django.conf import settings
 
 # Create your views here.
 class EmailThread(threading.Thread):
@@ -93,7 +94,7 @@ class Registration(View):
                 activate_url = request_main+domain+link
 
                 context_email_data = {
-                    'title':'NvsTrades',
+                    'title':settings.SITE_NAME,
                     'baseurl':domain+request_main,
                     'activate_url':activate_url,
                     'user_name':user.username,
@@ -102,7 +103,7 @@ class Registration(View):
 
                 email_body = get_template(email_tmp_path).render(context_email_data)
 
-                email_subject = 'Activate your account | NvsTrades'
+                email_subject = f'Activate your account | {settings.SITE_NAME}'
                 # email_body = 'Hi ' + user.username + " \n Please use this link to Verifi you identity \n" +activate_url
 
                 email = EmailMessage(
@@ -180,7 +181,7 @@ class Registration_seller(View):
                 activate_url = request_main+domain+link
 
                 context_email_data = {
-                    'title':'NvsTrades',
+                    'title':settings.SITE_NAME,
                     'baseurl':domain+request_main,
                     'activate_url':activate_url,
                     'user_name':user.username,
@@ -189,7 +190,7 @@ class Registration_seller(View):
 
                 email_body = get_template(email_tmp_path).render(context_email_data)
 
-                email_subject = 'Activate your account | NvsTrades'
+                email_subject = f'Activate your account | {settings.SITE_NAME}'
                 # email_body = 'Hi ' + user.username + " \n Please use this link to Verifi you identity \n" +activate_url
 
                 email = EmailMessage(
@@ -307,9 +308,9 @@ class ResetPassword(View):
             request_main = config('REQUEST')
             from_mail = config('FROM_MAIL')
             reset_url = request_main+domain+link
-            email_subject = 'Reset Password Link | NvsTrades'
+            email_subject = f'Reset Password Link | {settings.SITE_NAME}'
             context_email_data = {
-                    'title':'NvsTrades',
+                    'title':settings.SITE_NAME,
                     'baseurl':domain+request_main,
                     'reset_url':reset_url,
                     'user_name':user[0].username,

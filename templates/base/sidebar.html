@@ -35,6 +35,7 @@
       </li><!-- End Components Nav -->
 
       <li class="nav-heading">Pages</li>
+      {% if request.user.is_authenticated %}
 
       <li class="nav-item">
         <a class="nav-link collapsed" href="{% url 'utils-profile-pg' %}">
@@ -42,6 +43,14 @@
           <span>Profile</span>
         </a>
       </li><!-- End Profile Page Nav -->
+
+      <li class="nav-item">
+        <a class="nav-link collapsed{% if active_d == 'myorders' %}collapsed{% endif %}" href="{% url 'order-my-orders' %}">
+          <i class="fa-solid fa-scroll"></i>
+          <span>Your Orders</span>
+        </a>
+      </li>
+      {% endif %}
 
       <li class="nav-item">
         <a class="nav-link collapsed" href="{% url 'utils-help-pg' %}">

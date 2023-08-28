@@ -1,0 +1,116 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{{ site_name }} - Order Invoice</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 20px;
+        }
+
+        .invoice {
+            max-width: 800px;
+            margin: 0 auto;
+            background-color: #f7f7f7;
+            padding: 20px;
+            border: 1px solid #ccc;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+        }
+
+        .invoice h1 {
+            font-size: 24px;
+            margin-bottom: 10px;
+        }
+
+        .invoice-details {
+            margin-bottom: 20px;
+        }
+
+        .invoice-details p {
+            margin: 5px 0;
+        }
+
+        .invoice-items {
+            width: 100%;
+            border-collapse: collapse;
+            margin-bottom: 20px;
+        }
+
+        .invoice-items th, .invoice-items td {
+            padding: 10px;
+            text-align: left;
+            border-bottom: 1px solid #ccc;
+        }
+
+        .invoice-items th {
+            background-color: #f0f0f0;
+        }
+
+        .invoice-summary {
+            text-align: right;
+        }
+
+        .invoice-summary p {
+            margin: 5px 0;
+        }
+
+        .footer {
+            margin-top: 40px;
+            text-align: center;
+            color: #888;
+        }
+        .fw-bold{
+            font-weight: 700 !important;
+            color: rgb(16, 16, 16);
+        }
+    </style>
+</head>
+<body>
+    <div class="invoice">
+        <h1>Invoice</h1>
+        <div class="invoice-details">
+            <p>Order ID: {{ order.transaction_id }}</p>
+            <p>Date: {{ order.date|date:"M d, Y" }}</p>
+            <p>Customer: {{ order.user.user.username }}</p>
+            <p>Address: {{ order.billing.address_1 }}, {{ order.billing.city }}, {{ order.billing.state }}, {{ order.billing.zipcode }}</p>
+            <!-- Add more details as needed -->
+        </div>
+        <table class="invoice-items">
+            <thead>
+                <tr>
+                    <th>Product</th>
+                    <th>Quantity</th>
+                    <th>Unit Price</th>
+                    <th>Total</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for item in order.orderitems_set.all %}
+                <tr>
+                    <td>{{ item.product.name }}</td>
+                    <td>{{ item.quantity }}</td>
+                    <td>₹{{ item.product.new_price }}</td>
+                    <td>₹{{ item.get_total }}</td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+        <div class="invoice-summary">
+            <p>Subtotal: ₹{{ order.get_cart_total }}</p>
+            <p>Tax: ₹{{ order.get_cart_tax }}</p>
+            <p>Shipping: ₹{{ order.get_cart_shipping }}</p>
+            {% if order.get_coupon_check %}
+                <p>Coupon: <span class="fw-bold">{{order.get_coupon_check}}</span> -₹{{order.get_coupon_discount}}</p>
+            </tr>
+        {% endif %}
+            <p>Total: ₹{{ order.get_cart_billing_total }}</p>
+        </div>
+        <div class="footer">
+            <p>{{ site_name }} - Thank you for your order!</p>
+        </div>
+    </div>
+</body>
+</html>

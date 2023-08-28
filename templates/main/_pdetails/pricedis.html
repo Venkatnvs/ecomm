@@ -1,20 +1,44 @@
+{% load static %}
 <div class="price_data">
-    <div>
-        <span class="product_offer">-{{data.product.0.offer}}%</span>
-        &nbsp;&nbsp;
-        <div class="main_price">
-            <span class="price_sy">₹</span>
-            <span class="price_value">{{data.product.0.new_price}}</span>
+    <div class="row">
+        <div class="col-md-4">
+            <div>
+                <span class="product_offer">-{{data.product.offer}}%</span>
+                &nbsp;&nbsp;
+                <div class="main_price">
+                    <span class="price_sy">₹</span>
+                    <span class="price_value">{{data.product.new_price}}</span>
+                </div>
+            </div>
+            <div>
+                <span class="product_mrplabel">
+                    M.R.P:&nbsp;<p class="text-decoration-line-through m-0 p-0">{{data.product.old_price}}</p>
+                </span>
+            </div>
+            <div>
+                <span class="badge text-bg-primary">
+                    Brand: {{data.product.brand}}
+                </span><br>
+                <span>
+                    Inclusive of all taxes
+                </span>
+            </div>
         </div>
-    </div>
-    <div>
-        <span class="product_mrplabel">
-            M.R.P:&nbsp;{{data.product.0.old_price}}
-        </span>
-    </div>
-    <div>
-        <span>
-            Inclusive of all taxes
-        </span>
+        <div style="gap: 8px;" class="col-md-6 d-flex align-items-center mt-1">
+            {% if data.product.return_allowed %}
+            <div style="width: 90px;" class="card m-0 p-0 price_features_rtn shadow-sm">
+                <div class="card-body m-0 p-0 d-flex flex-column">
+                    <img src="{% static 'main/img/return_p.png' %}" alt="return img">
+                    <small><p class="m-0 p-0 py-1">7 days Return</p></small>
+                </div>
+            </div>
+            {% endif %}
+            <div style="width: 90px;" class="card m-0 p-0 price_features_rtn shadow-sm">
+                <div class="card-body m-0 p-0 d-flex flex-column">
+                    <img src="{% static 'main/img/top-brand.png' %}" alt="return img">
+                    <small><p class="m-0 p-0 py-1">Top Brand</p></small>
+                </div>
+            </div>
+        </div>
     </div>
 </div>

@@ -1,55 +1,130 @@
 {% extends 'ctm_admin/base/index.html' %}
 {% load static %}
 {% block title %}
-Home
+ADMIN|{{site_name}}
 {% endblock title %}
 
 {% block styles %}
 <link rel="stylesheet" href="{% static  'ctm_admin/css/index.css' %}">
+<style>
+    canvas{
+        width: 100% !important;
+        height: 100%;
+    }
+    .text-gray-800 {
+        color: #5a5c69!important;
+    }
+    .text-gray-300 {
+        color: #dddfeb!important;
+    }
+    .border-left-primary {
+        border-left: .25rem solid #4e73df!important
+    }
+    
+    .border-bottom-primary {
+        border-bottom: .25rem solid #4e73df!important
+    }
+    
+    .border-left-secondary {
+        border-left: .25rem solid #858796!important
+    }
+    
+    .border-bottom-secondary {
+        border-bottom: .25rem solid #858796!important
+    }
+    
+    .border-left-success {
+        border-left: .25rem solid #1cc88a!important
+    }
+    
+    .border-bottom-success {
+        border-bottom: .25rem solid #1cc88a!important
+    }
+    
+    .border-left-info {
+        border-left: .25rem solid #36b9cc!important
+    }
+    
+    .border-bottom-info {
+        border-bottom: .25rem solid #36b9cc!important
+    }
+    
+    .border-left-warning {
+        border-left: .25rem solid #f6c23e!important
+    }
+    
+    .border-bottom-warning {
+        border-bottom: .25rem solid #f6c23e!important
+    }
+    
+    .border-left-danger {
+        border-left: .25rem solid #e74a3b!important
+    }
+    
+    .border-bottom-danger {
+        border-bottom: .25rem solid #e74a3b!important
+    }
+    
+    .border-left-light {
+        border-left: .25rem solid #f8f9fc!important
+    }
+    
+    .border-bottom-light {
+        border-bottom: .25rem solid #f8f9fc!important
+    }
+    
+    .border-left-dark {
+        border-left: .25rem solid #5a5c69!important
+    }
+    
+    .border-bottom-dark {
+        border-bottom: .25rem solid #5a5c69!important
+    }
+    .text-xs {
+        font-size: .8rem;
+    }
+    .bg-gradient-primary {
+        background-color: #4e73df;
+        background-image: linear-gradient(180deg,#4e73df 10%,#224abe 100%);
+        background-size: cover
+    }
+</style>
 {% endblock styles %}
 
 {% block content %}
-hi
-<div class="card">
-    <div class="card-body">
-        <ul class="list-unstyled list-unstyled-border list-unstyled-noborder">
-            <li class="media">
-                <img alt="image" class="mr-3 rounded-circle" width="70" src="https://demo.getstisla.com/assets/img/avatar/avatar-1.png">
-                <div class="media-body">
-                    <div class="media-right"><div class="text-primary">Approved</div></div>
-                    <div class="media-title mb-1">Rizal Fakhri</div>
-                    <div class="text-time">Yesterday</div>
-                    <div class="media-description text-muted">Duis aute irure dolor in reprehenderit in voluptate velit esse
-                    cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non
-                    proident, sunt in culpa qui officia deserunt mollit anim id est laborum.</div>
-                    <div class="media-links">
-                        <a href="#">View</a>
-                        <div class="bullet"></div>
-                        <a href="#">Edit</a>
-                        <div class="bullet"></div>
-                        <a href="#" class="text-danger">Trash</a>
-                    </div>
-                </div>
-            </li>
-            <li class="media">
-                <img alt="image" class="mr-3 rounded-circle" width="70" src="https://demo.getstisla.com/assets/img/avatar/avatar-1.png">
-                <div class="media-body">
-                    <div class="media-right"><div class="text-primary">Approved</div></div>
-                    <div class="media-title mb-1">Rizal Fakhri</div>
-                    <div class="text-time">Yesterday</div>
-                    <div class="media-description text-muted">Duis aute irure dolor in reprehenderit in voluptate velit esse
-                    cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non
-                    proident, sunt in culpa qui officia deserunt mollit anim id est laborum.</div>
-                    <div class="media-links">
-                        <a href="#">View</a>
-                        <div class="bullet"></div>
-                        <a href="#">Edit</a>
-                        <div class="bullet"></div>
-                        <a href="#" class="text-danger">Trash</a>
-                    </div>
-                </div>
-            </li>
-        </ul>
+<h2>Dashboard</h2>
+<div class="col">
+    <div class="row">
+        <div class="col-md-3 mb-3">
+            {% include 'ctm_admin/dashboard/_details/get_cards_cnt.html' with title="User Registrations" count=user_act_cnt color="primary" icon="fa-user-plus" %}
+        </div>
+        <div class="col-md-3 mb-3">
+            {% include 'ctm_admin/dashboard/_details/get_cards_cnt.html' with title="User Registrations" count=user_act_cnt color="primary" icon="fa-user-plus" %}
+        </div>
+        <div class="col-md-3 mb-3">
+            {% include 'ctm_admin/dashboard/_details/get_cards_cnt.html' with title="Orders Completed" count=order_cmp_cnt color="success" icon="fa-bag-shopping" %}
+        </div>
+        <div class="col-md-3 mb-3">
+            {% include 'ctm_admin/dashboard/_details/get_cards_cnt.html' with title="User Registrations" count=user_act_cnt color="primary" icon="fa-user-plus" %}
+        </div>
     </div>
 </div>
+<!-- <div class="row">
+    
+    <div class="col-md-6">
+        <canvas id="userChart" width="auto" height="auto"></canvas>
+    </div>
+    <div class="col-md-6">
+        <canvas id="productChart" width="auto" height="auto"></canvas>
+    </div>
+</div> -->
 {% endblock content %}
+
+
+{% block scripts %}
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+<script>
+    // const user_data = {{ user_data|safe }};
+    //const product_data = {{ product_data|safe }};
+</script>
+{% endblock scripts %}

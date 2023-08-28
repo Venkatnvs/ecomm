@@ -69,3 +69,21 @@ def GetSubAndMainCate(request):
     return {
         'categories_list':categories_list,
     }
+
+def GetRelatedProducts(catdata,id):
+    product_data = []
+    prod = Product.objects.filter(
+        is_active=True,
+        subcategories__category__is_active=True,
+        subcategories__is_active=True,
+        subcategories__category = catdata
+    )
+    for i in prod:
+        if i.id == id:
+            continue
+        img_d = ProductMedia.objects.filter(product=i,is_active=True,type=1)
+        data = {'product':i,'imgs':img_d}
+        product_data.append(data)
+    return {
+        'product_data':product_data,
+    }
