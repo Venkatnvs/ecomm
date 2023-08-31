@@ -42,7 +42,13 @@
           <i class="bi bi-person"></i>
           <span>Profile</span>
         </a>
-      </li><!-- End Profile Page Nav -->
+      </li>
+      <li class="nav-item">
+        <a class="nav-link collapsed" href="{% url 'st-search-mn' %}?squery=">
+          <i class="fa-brands fa-searchengin"></i>
+          <span>Filters</span>
+        </a>
+      </li>
 
       <li class="nav-item">
         <a class="nav-link collapsed{% if active_d == 'myorders' %}collapsed{% endif %}" href="{% url 'order-my-orders' %}">

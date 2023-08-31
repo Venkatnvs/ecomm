@@ -32,7 +32,9 @@ def main(request):
         'user_data': json.dumps(user_data_list, cls=DjangoJSONEncoder),
         'product_data':json.dumps(product_data_list, cls=DjangoJSONEncoder),
         "user_act_cnt": GetCounts(request)['users'],
-        "order_cmp_cnt": GetCounts(request)['orders'],
+        "order_cmp_cnt": GetCounts(request)['orders_comp'],
+        "order_ncmp_cnt": GetCounts(request)['orders_ncomp'],
+        "prod_cmp_cnt": GetCounts(request)['products'],
     }
     return render(request, 'ctm_admin/index.html',context)
 

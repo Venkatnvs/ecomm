@@ -22,7 +22,12 @@ function addchats(){
             }]
         },
         options: {
-            responsive: false
+            responsive: true,
+            scales: {
+                y: {
+                    beginAtZero: true
+                }
+            }
         }
     });
 

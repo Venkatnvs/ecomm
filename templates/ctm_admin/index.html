@@ -1,92 +1,19 @@
 {% extends 'ctm_admin/base/index.html' %}
 {% load static %}
 {% block title %}
-ADMIN|{{site_name}}
+ADMIN | {{site_name}}
 {% endblock title %}
 
 {% block styles %}
 <link rel="stylesheet" href="{% static  'ctm_admin/css/index.css' %}">
 <style>
+    .chats canvas{
+        min-width:100px;
+        min-height: 250px !important;
+    }
     canvas{
-        width: 100% !important;
+        width: 100%;
         height: 100%;
-    }
-    .text-gray-800 {
-        color: #5a5c69!important;
-    }
-    .text-gray-300 {
-        color: #dddfeb!important;
-    }
-    .border-left-primary {
-        border-left: .25rem solid #4e73df!important
-    }
-    
-    .border-bottom-primary {
-        border-bottom: .25rem solid #4e73df!important
-    }
-    
-    .border-left-secondary {
-        border-left: .25rem solid #858796!important
-    }
-    
-    .border-bottom-secondary {
-        border-bottom: .25rem solid #858796!important
-    }
-    
-    .border-left-success {
-        border-left: .25rem solid #1cc88a!important
-    }
-    
-    .border-bottom-success {
-        border-bottom: .25rem solid #1cc88a!important
-    }
-    
-    .border-left-info {
-        border-left: .25rem solid #36b9cc!important
-    }
-    
-    .border-bottom-info {
-        border-bottom: .25rem solid #36b9cc!important
-    }
-    
-    .border-left-warning {
-        border-left: .25rem solid #f6c23e!important
-    }
-    
-    .border-bottom-warning {
-        border-bottom: .25rem solid #f6c23e!important
-    }
-    
-    .border-left-danger {
-        border-left: .25rem solid #e74a3b!important
-    }
-    
-    .border-bottom-danger {
-        border-bottom: .25rem solid #e74a3b!important
-    }
-    
-    .border-left-light {
-        border-left: .25rem solid #f8f9fc!important
-    }
-    
-    .border-bottom-light {
-        border-bottom: .25rem solid #f8f9fc!important
-    }
-    
-    .border-left-dark {
-        border-left: .25rem solid #5a5c69!important
-    }
-    
-    .border-bottom-dark {
-        border-bottom: .25rem solid #5a5c69!important
-    }
-    .text-xs {
-        font-size: .8rem;
-    }
-    .bg-gradient-primary {
-        background-color: #4e73df;
-        background-image: linear-gradient(180deg,#4e73df 10%,#224abe 100%);
-        background-size: cover
     }
 </style>
 {% endblock styles %}
@@ -99,32 +26,38 @@ ADMIN|{{site_name}}
             {% include 'ctm_admin/dashboard/_details/get_cards_cnt.html' with title="User Registrations" count=user_act_cnt color="primary" icon="fa-user-plus" %}
         </div>
         <div class="col-md-3 mb-3">
-            {% include 'ctm_admin/dashboard/_details/get_cards_cnt.html' with title="User Registrations" count=user_act_cnt color="primary" icon="fa-user-plus" %}
+            {% include 'ctm_admin/dashboard/_details/get_cards_cnt.html' with title="Products" count=prod_cmp_cnt color="info" icon="fa-truck-fast" %}
         </div>
         <div class="col-md-3 mb-3">
             {% include 'ctm_admin/dashboard/_details/get_cards_cnt.html' with title="Orders Completed" count=order_cmp_cnt color="success" icon="fa-bag-shopping" %}
         </div>
         <div class="col-md-3 mb-3">
-            {% include 'ctm_admin/dashboard/_details/get_cards_cnt.html' with title="User Registrations" count=user_act_cnt color="primary" icon="fa-user-plus" %}
+            {% include 'ctm_admin/dashboard/_details/get_cards_cnt.html' with title="Orders Pending" count=order_ncmp_cnt color="warning" icon="fa-business-time" %}
         </div>
     </div>
 </div>
-<!-- <div class="row">
-    
-    <div class="col-md-6">
+<div class="row mt-2">
+    <div class="chats col-md-6">
         <canvas id="userChart" width="auto" height="auto"></canvas>
     </div>
-    <div class="col-md-6">
+    <div class="chats col-md-6">
         <canvas id="productChart" width="auto" height="auto"></canvas>
     </div>
-</div> -->
+</div>
+<div class="row mt-2">
+    <div class="col-md-6">
+        
+    </div>
+    <div class="col-md-6"></div>
+</div>
 {% endblock content %}
 
 
 {% block scripts %}
 <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 <script>
-    // const user_data = {{ user_data|safe }};
-    //const product_data = {{ product_data|safe }};
+    const user_data = {{ user_data|safe }};
+    const product_data = {{ product_data|safe }};
 </script>
+<script src="{% static 'ctm_admin/js/dashboard/charts.js' %}" ></script>
 {% endblock scripts %}
