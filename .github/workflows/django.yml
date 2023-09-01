@@ -2,9 +2,9 @@ name: Django CI
 
 on:
   push:
-    branches: [ "master" ]
+    branches: [ "deploy" ]
   pull_request:
-    branches: [ "master" ]
+    branches: [ "deploy" ]
 
 env:
   SECRET_KEY: django-insecure-tvu5sey(pive7yf951p09#o-fgxxbmip1veoofvf7z4zb5k+8g
