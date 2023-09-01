@@ -4,8 +4,60 @@
 {{site_name}} | Seller
 {% endblock title %}
 
+
 {% block styles %}
+<link rel="stylesheet" href="{% static  'ctm_admin/css/index.css' %}">
+<style>
+    .chats canvas{
+        min-width:100px;
+        min-height: 250px !important;
+    }
+    canvas{
+        width: 100%;
+        height: 100%;
+    }
+</style>
 {% endblock styles %}
 
 {% block content %}
+<h2>Dashboard</h2>
+<div class="col">
+    <div class="row">
+        <div class="col-md-3 mb-3">
+            {% include 'ctm_seller/dashboard/_details/get_cards_cnt.html' with title="User Registrations" count=user_act_cnt color="primary" icon="fa-user-plus" %}
+        </div>
+        <div class="col-md-3 mb-3">
+            {% include 'ctm_seller/dashboard/_details/get_cards_cnt.html' with title="Products" count=prod_cmp_cnt color="info" icon="fa-truck-fast" %}
+        </div>
+        <div class="col-md-3 mb-3">
+            {% include 'ctm_seller/dashboard/_details/get_cards_cnt.html' with title="Orders Completed" count=order_cmp_cnt color="success" icon="fa-bag-shopping" %}
+        </div>
+        <div class="col-md-3 mb-3">
+            {% include 'ctm_seller/dashboard/_details/get_cards_cnt.html' with title="Orders Pending" count=order_ncmp_cnt color="warning" icon="fa-business-time" %}
+        </div>
+    </div>
+</div>
+<div class="row mt-2">
+    <div class="chats col-md-6">
+        <canvas id="userChart" width="auto" height="auto"></canvas>
+    </div>
+    <div class="chats col-md-6">
+        <canvas id="productChart" width="auto" height="auto"></canvas>
+    </div>
+</div>
+<div class="row mt-2">
+    <div class="col-md-6">
+        
+    </div>
+    <div class="col-md-6"></div>
+</div>
 {% endblock content %}
+
+{% block scripts %}
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+<script>
+    const user_data = {{ user_data|safe }};
+    const product_data = {{ product_data|safe }};
+</script>
+<script src="{% static 'ctm_admin/js/dashboard/charts.js' %}" ></script>
+{% endblock scripts %}

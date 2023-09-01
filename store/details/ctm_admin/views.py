@@ -16,11 +16,27 @@ from django.views import View
 from django.contrib.auth.decorators import user_passes_test
 from django.contrib.auth.mixins import UserPassesTestMixin
 from .models import *
+from django.db.models import Count
+from django.db.models.functions import TruncDate
+from django.core.serializers.json import DjangoJSONEncoder
+from .dashboard import GetCounts
 
 @login_required
 @user_passes_test(lambda u: u.is_superuser)
 def main(request):
-    return render(request, 'ctm_admin/index.html')
+    user_data = User.objects.annotate(day=TruncDate('date_joined')).values('day').annotate(count=Count('id'))
+    product_data = Product.objects.annotate(day=TruncDate('created_at')).values('day').annotate(count=Count('id'))
+    user_data_list = list(user_data)
+    product_data_list = list(product_data)
+    context = {
+        'user_data': json.dumps(user_data_list, cls=DjangoJSONEncoder),
+        'product_data':json.dumps(product_data_list, cls=DjangoJSONEncoder),
+        "user_act_cnt": GetCounts(request)['users'],
+        "order_cmp_cnt": GetCounts(request)['orders_comp'],
+        "order_ncmp_cnt": GetCounts(request)['orders_ncomp'],
+        "prod_cmp_cnt": GetCounts(request)['products'],
+    }
+    return render(request, 'ctm_admin/index.html',context)
 
 @login_required
 @user_passes_test(lambda u: u.is_superuser)
@@ -500,7 +516,7 @@ class ProductsListview(UserPassesTestMixin,ListView):
                 Q(subcategories__category__name__contains = filter_val)
             ).order_by(order_by)
         else:
-            prod = Product.objects.all().order_by(order_by)
+            prod = Product.objects.filter().order_by(order_by)
         return prod
 
     def get_context_data(self, **kwargs):

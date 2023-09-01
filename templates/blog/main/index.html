@@ -1,13 +1,28 @@
-{% extends 'blog/base.html' %}
+{% extends 'blog/base/index.html' %}
 
 {% block title %}All Posts{% endblock title %}
 
-{% block body %}
-{% spaceless %}
-<h1>Posts</h1>
+{% block content %}
+<div class="row">
 
-{% for a in object_list %}
-    <li><a href="{% url 'blog-detail' a.id %}">{{a.title}}</a> - {{a.author}} <br/> {{a.body}}</li>
-{% endfor %}
-{% endspaceless %}
-{% endblock body %}
+    <div class="col-md-8">
+        <div class="card">
+            <div class="card-body">
+                {% include 'blog/main/_details/blog_crd.html' %}
+                {% include 'blog/main/_details/blog_crd.html' %}
+                {% include 'blog/main/_details/blog_crd.html' %}
+            </div>
+        </div>
+    </div>
+    <div class="col-md-4">
+        <div class="d-flex justify-content-center flex-column">
+            <div class="col ad_block_blog1">
+                <img src="https://infinite.codingest.net/uploads/blocks/block_64352a7d040639-50759128-25531069.png" alt="">
+            </div>
+            <div class="col mt-2">
+                {% include 'blog/main/_details/blog_card_pop.html' %}
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock content %}

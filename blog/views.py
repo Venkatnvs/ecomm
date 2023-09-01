@@ -1,5 +1,6 @@
 from django.shortcuts import render
 import feedparser
+from blog.models import Blogs
 
 def BlogMain(request):
     return render(request,'blog/main/index.html')

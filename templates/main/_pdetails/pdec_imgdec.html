@@ -4,15 +4,86 @@
             <strong><span>Product description</span></strong>
         </h5>
         <p>
-            <span>{{data.product.0.description}}</span>
+            <span>{{data.product.description}}</span>
         </p>
+    </div>
+    <div class="col prod_details">
+        <div class="row mt-3">
+            <div class="col-md-12">
+                <h5>
+                    <strong><span>Product Details</span></strong>
+                </h5>
+                <div class="col-md-6">
+                    <table class="table prod_det_tb">
+                        <tbody>
+                            {% for detail in data.product.productdetails_set.all %}
+                                {% if detail.is_active %}
+                                    <tr>
+                                        <th>{{ detail.title }}</th>
+                                        <td>{{ detail.details }}</td>
+                                    </tr>
+                                {% endif %}
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>        
+    </div>
+    <div class="col about_prod">
+        <div class="row mt-3">
+            <div class="col-md-12">
+                <h5>
+                    <strong><span>About This Product</span></strong>
+                </h5>
+                {% for about in data.product.productabout_set.all %}
+                    {% if about.is_active %}
+                        <p>{{ about.title }}</p>
+                    {% endif %}
+                {% endfor %}
+            </div>
+        </div>
     </div>
     <div class="row">
         {% comment %} <h5>
             <strong><span>From the manufacturer</span></strong>
         </h5> {% endcomment %}
         <div class="html_details_pro">
-            {{data.product.0.long_description|safe}}
+            {{data.product.long_description|safe}}
+        </div>
+    </div>
+    <div class="col prod_qa">
+        {% if data.product.productquestions_set.all %}
+        <div class="row mt-5">
+            <div class="col-md-12">
+                <h3>Product Questions</h3>
+                {% for question in data.product.productquestions_set.all %}
+                {% if question.is_active %}
+                <div class="mb-3">
+                    <h5>Question by {{ question.user }}</h5>
+                    <p>{{ question.question }}</p>
+                    <h6>Answer:</h6>
+                    <p>{{ question.answer }}</p>
+                </div>
+                {% endif %}
+                {% endfor %}
+                {% endif %}
+            </div>
+        </div>
+        
+    </div>
+    <div class="col prod_tags">
+        <div class="row mt-4">
+            <div class="col-md-12">
+                <h5>
+                    <strong><span>Product Tags</span></strong>
+                </h5>
+                {% for tag in data.product.producttags_set.all %}
+                    {% if tag.is_active %}
+                        <span class="badge bg-primary">{{ tag.title }}</span>
+                    {% endif %}
+                {% endfor %}
+            </div>
         </div>
     </div>
 </div>

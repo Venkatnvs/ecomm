@@ -38,6 +38,20 @@ class Customer(models.Model):
             except:
                 url = '/static/main/img/default-user.jpg'
         return url
+    
+    @property
+    def all_address(self):
+        address = ""
+        if self.customer_type == "Admin":
+            address = f'{self.adminuser.address}, {self.adminuser.state}, {self.adminuser.city},{self.adminuser.zip}'
+        if self.customer_type == "Staff":
+            address = f'{self.staffuser.address}, {self.staffuser.state}, {self.staffuser.city},{self.staffuser.zip}'
+        if self.customer_type == "Seller":
+            address = f'{self.selleruser.address}, {self.selleruser.state}, {self.selleruser.city},{self.selleruser.zip}'
+        if self.customer_type == "Customer":
+            address = f'{self.customeruser.address}, {self.customeruser.state}, {self.customeruser.city},{self.customeruser.zip}'
+
+        return address
 
     def __str__(self):
         return self.user.username + ' ~' + self.customer_type
@@ -108,7 +122,7 @@ class StaffUser(models.Model):
 class SellerUser(models.Model):
     user_type = models.OneToOneField(Customer, on_delete=models.CASCADE)
     profile_pic = models.ImageField(upload_to='Customer/SellerUser/%Y/%m/%d/')
-    company_name = models.CharField(max_length=255, default="")
+    company_name = models.CharField(max_length=255, default="",unique=True)
     gst_details = models.CharField(max_length=255, default="")
     address = models.TextField(default="")
     state = models.CharField(max_length=255, default="")

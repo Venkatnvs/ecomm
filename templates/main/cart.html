@@ -8,6 +8,45 @@ Cart | {{site_name}}
 
 {% block styles %}
 <style>
+    .hidden_c{
+      display: none !important;
+    }
+    .container{
+      padding: 0px !important;
+    }
+    .empty_crt_cont{
+      display: flex;
+      max-width: 500px;
+      align-items: center;
+      border-radius: 7px;
+    }
+    .empty_crt_cont >h4{
+      text-align: center;
+    }
+    .empty_crt_cont-p{
+      align-items: center;
+      justify-content: center;
+      margin-top: 8px;
+    }
+    .empty_crt_cont-p >p{
+      text-align: center;
+      display:flex;
+      align-items: center;
+      justify-content: center;
+      margin: 0px !important;
+      color: rgb(107, 107, 107);
+    }
+    .empty_crt_cont-btn{
+      border-radius: 4px;
+      margin-top: 25px;
+      margin-bottom: 25px;
+      color: white;
+      background-color: rgb(41, 171, 41);
+      border: none;
+      padding: 13px 10px;
+    }
+  </style>
+<style>
     .col-md-12{
         padding: 0px !important;
     }
@@ -46,15 +85,16 @@ Cart | {{site_name}}
 {% block content %}
 <div class="row">
     <div class="col-md-12">
+        {% if items %}
         <div class="nvs-box">
-            <a class="btn btn-primary" href="{% url 'home' %}"><i class="bi bi-arrow-left"></i> Continue Shopping</a>
+            <a class="btn btn-primary btn-sm" href="{% url 'home' %}"><i class="bi bi-arrow-left"></i> Continue Shopping</a>
             <table class="table">
                 <thead>
                     <tr>
                         <th><h5>Items: <strong>{{order.get_item_total}}</strong></h5></th>
                         <th><h5>Total: <strong>₹{{order.get_cart_total|intcomma }}</strong></h5></th>
                         <th>
-                            <a href="{% url 'checkout' %}" class="btn btn-success nvs-checkout">Checkout</a>
+                            <a href="{% url 'checkout' %}" class="btn btn-success btn-sm nvs-checkout">Checkout</a>
                         </th>
                     </tr>
                 </thead>
@@ -79,9 +119,22 @@ Cart | {{site_name}}
                 </tr>
                 </thead>
                 <tbody>
-                    {% for i in items %}
-                        {% include 'main/_details/cartcarddetails_tbl.html' with data=i count=forloop.counter %}
-                    {% endfor %}
+                        {% for i in items %}
+                            {% include 'main/_details/cartcarddetails_tbl.html' with data=i count=forloop.counter %}
+                        {% endfor %}
+                    {% else %}
+                    <div class="row mt-1 d-flex justify-content-center align-items-center ">
+                        <div class="card empty_crt_cont">
+                          <img class="img-fluid" src="{% static 'main/img/empty_cart_img.jpg' %}" alt="Empty cart">
+                          <h4>Your Cart is Currently Empty</h4>
+                          <div class="empty_crt_cont-p">
+                            <p>You have no items in your shopping cart.</p>
+                            <p>Let's go buy something</p>
+                          </div>
+                          <button onclick="window.open('/','_self')" class="empty_crt_cont-btn"><i class="bi bi-cart"></i>&nbsp;RETURN TO SHOP</button>
+                        </div>
+                      </div>
+                    {% endif %}
                 </tbody>
             </table>
             {% comment %} <div class="nvs-cart-row">

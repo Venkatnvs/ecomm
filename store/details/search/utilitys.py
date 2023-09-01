@@ -39,13 +39,14 @@ def GetProductSearch(request):
                 new_price__lte =rpricemax,
                 new_price__gte =rpricemin,
                 offer__gte = discountper,
-                quantity__gte = stockava
+                quantity__gte = stockava,
+                subcategories__category__is_active=True,subcategories__is_active=True
             ).order_by(sort_by)
         else:
-            prod = Product.objects.filter(is_active=True,name__istartswith=squery,quantity__gte = stockava).order_by(sort_by)
+            prod = Product.objects.filter(is_active=True,name__istartswith=squery,quantity__gte = stockava,subcategories__category__is_active=True,subcategories__is_active=True).order_by(sort_by)
     except Exception as e:
         print(e)
-        prod = Product.objects.filter(is_active=True,name__istartswith=squery).order_by(sort_by)
+        prod = Product.objects.filter(is_active=True,name__istartswith=squery,subcategories__category__is_active=True,subcategories__is_active=True).order_by(sort_by)
     if prod.exists():
         for i in prod:
             img_d = ProductMedia.objects.filter(product=i,is_active=True,type=1)
@@ -61,9 +62,9 @@ def GetProCateFilter(request):
     squery = data.get("squery",False)
     p_c_filter = []
     if squery:
-        prod = Product.objects.filter(is_active=True,name__istartswith=squery)
+        prod = Product.objects.filter(is_active=True,name__istartswith=squery,subcategories__category__is_active=True,subcategories__is_active=True)
     else:
-        prod = Product.objects.filter(is_active=True,name__istartswith=squery)[0:5]
+        prod = Product.objects.filter(is_active=True,name__istartswith=squery,subcategories__category__is_active=True,subcategories__is_active=True)[0:5]
     if prod.exists():
         for i in prod:
             data = {'subcategory':i.subcategories.name,'category':i.subcategories.category.name}

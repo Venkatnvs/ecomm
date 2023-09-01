@@ -97,7 +97,7 @@ class ChatbotLogic:
         self.request.session['user_state'] = state
 
     def get_products_info(self):
-        products = Product.objects.all().reverse()[0:5]
+        products = Product.objects.filter(is_active=True,subcategories__category__is_active=True,subcategories__is_active=True).reverse()[0:5]
         context = {
             "products":products,
             "heading":"Top 5 Products:"
@@ -106,7 +106,7 @@ class ChatbotLogic:
         return products_info
     
     def get_product_info(self, product_id):
-        product = Product.objects.filter(id=product_id).first()
+        product = Product.objects.filter(id=product_id,is_active=True,subcategories__category__is_active=True,subcategories__is_active=True).first()
         if product:
             message_a = f'<a href="/product/{product.slug}" target="_blank"><img class="api-image" src="{product.first_img}" alt="{product.name}"/></a>'
             product_info = f"{product.pk}) {product.name} - {product.new_price}<br>{message_a}<br>Description: {product.description}"

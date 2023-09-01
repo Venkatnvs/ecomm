@@ -6,7 +6,7 @@
   {% if order.get_item_total != 0 %}
     <div class="row">
       {% include 'main/_details/checkoutsummerycard.html' with data=items %}
-      {% include 'main/_details/checkoutuserinfocard.html' %}
+      {% include 'main/_details/checkoutuserinfocard.html' with order=order %}
     </div>
   {% else %}
     <div class="row mt-1 d-flex justify-content-center align-items-center ">
@@ -23,11 +23,11 @@
   {% endif %}
 </div>
 {% endblock content %}
-{% block scripts %}
-    <script src="{% static 'main/js/add_pin.js' %}"></script>
-{% endblock scripts %}
 {% block styles %}
 <style>
+  .hidden_c{
+    display: none !important;
+  }
   .container{
     padding: 0px !important;
   }
@@ -64,3 +64,66 @@
   }
 </style>
 {% endblock styles %}
+
+{% block scripts %}
+<script src="{% static 'main/js/add_pin.js' %}"></script>
+<script>
+  var total = "{{order.get_cart_total}}"
+  var shipping = '{{order.shipping}}'
+  var form_ord = document.getElementById("form_ord_usr")
+  form_ord.addEventListener("submit", function(e){
+    e.preventDefault()
+    console.log("form submitted")
+    document.getElementById("user_form").classList.add("hidden_c")
+    document.getElementById("paymenet_info").classList.remove("hidden_c")
+  })
+  document.getElementById("make_pay_btn").addEventListener("click",function(e){
+    console.log("payment done")
+    var userFormData = {
+      'name':null,
+      'email':null,
+      'total':total,
+    }
+    var shippingInfo = {
+      'address1':null,
+      'address2':null,
+      'city':null,
+      'state':null,
+      'zipcode':null,
+    }
+    console.log(form_ord)
+    if (shipping != 'False'){
+        shippingInfo.address1 = form_ord.address1.value
+        shippingInfo.address2 = form_ord.address2.value
+        shippingInfo.state = form_ord.state.value
+        shippingInfo.city = form_ord.city.value
+        shippingInfo.zipcode = form_ord.zip.value
+    }
+    userFormData.name = form_ord.name.value
+    userFormData.email = form_ord.email.value
+
+  var SendData = {
+      shipping : shippingInfo,
+      userFormData:userFormData
+  }
+  console.log(SendData)
+  var apiUrl = '/order/order-process/';
+  var xhr = new XMLHttpRequest();
+  xhr.open('POST', apiUrl, true);
+  xhr.setRequestHeader("X-CSRFToken", csrftoken);
+  xhr.setRequestHeader('Content-Type', 'application/json');
+  xhr.onload = function() {
+      if (xhr.status === 200) {
+      var response = JSON.parse(xhr.responseText);
+      console.log(response.message)
+      cart = {}
+			document.cookie ='cart=' + JSON.stringify(cart) + ";domain=;path=/"
+      console.log("success...")
+      window.location.href = "{% url 'order-my-orders' %}"
+      }
+  };
+  xhr.send(JSON.stringify(SendData));
+  })
+</script>
+<script src="{% static 'main/js/check_out.js' %}"></script>
+{% endblock scripts %}
