@@ -1,0 +1,210 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <title>PDF Output</title>
+    <meta charset="UTF-8" />
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
+    <style>
+        @page {
+            size: a4;
+            margin: 0.8cm 1cm 1cm 1cm;
+        }
+        .date{
+            text-align: right;
+        }
+        .img {
+            text-align: center;
+            margin: 0;
+        }
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            border-spacing: 0;
+            margin-bottom: 20px;
+        }
+        table th,
+        table td {
+          text-align: center;
+        }
+        
+        table th {
+          color: #000000;
+          border-bottom: 1px solid #C1CED9;
+          white-space: nowrap;
+          font-size: 15px;
+        }
+        td{
+            font-size: 3;
+        }
+        table .service,
+        table .desc {
+          text-align: left;
+        }
+        
+        table td {
+        padding-top:5px;
+        padding-bottom:5px;
+           
+        }
+         
+        table tr {
+            border-bottom: 1px solid #C1CED9;
+        }
+         
+        table td.service,
+        table td.desc {
+          vertical-align: top;
+        }
+        
+        table td.unit,
+        table td.qty,
+        table td.total {
+          font-size: 12px;
+        }
+        
+        table td.grand {
+          border-top: 1px solid #5D6975;;
+        }
+        h1 {
+           color: #ac4848;
+           font-size: 2.4em;
+           font-weight: bold;
+           text-align: center;
+           margin: 0;
+        }
+        .tot{
+            font-size: 15px;
+            font-weight: bold;
+        }
+        h2 {
+            color: #000000;
+            font-size: 7;
+            font-weight: normal;
+            text-decoration: underline;
+        }
+        th{
+            font-size: 14px;
+            font-weight:bold;
+        }
+        td{
+            font-size: 13px;
+            font-weight: 100;
+        }
+        .hr{
+            color: #ac4848;
+            margin-bottom: 5;
+        }
+        .clearfix:after {
+            content: "";
+            display: table;
+            clear: both;
+        }
+        .head{
+            text-align: right;
+        }
+        .invoice-details p{
+            font-size: 12px;
+        }
+        .main_prod {
+            width: 46%;
+            align-items: center;
+            justify-content: center;
+            display: flex;
+        }
+        .invoice-items {
+            width: 100%;
+            border-collapse: collapse;
+        }
+        .invoice-items th {
+            background-color: #f0f0f0;
+        }
+        .fw-bold{
+            font-weight: 700 !important;
+            color: rgb(16, 16, 16);
+        }
+        .footer{
+            text-align: center;
+            font-size: 12px;
+        }
+    </style>
+</head>
+<body>
+    <div class="head">
+        <p>User: {{ user }} &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; {{ date }} &nbsp; &nbsp; </p>
+        <p></p>
+    </div>
+    <header class="clearfix">
+        <div class="img">
+            <img src="{{ site_url }}{% static 'icons/logo.jpg' %}" height="40" width="40" />
+            <h1>{{site_name}}</h1>
+        </div>
+    </header>
+    <div class="container">
+        <h2 style="margin: 0px;">Invoice: </h2>
+        <div class="invoice-details">
+            <p>Order ID: {{ order.transaction_id }}</p>
+            <p>Date: {{ order.date|date:"M d, Y" }}</p>
+            <p>Customer: {{ order.user.user.username }}</p>
+            <p>Address: {{ order.billing.address_1 }}, {{ order.billing.address_2 }}, {{ order.billing.city }}, {{ order.billing.state }}, {{ order.billing.zipcode }}</p>
+            <!-- Add more details as needed -->
+        </div>
+        <!-- <hr class="hr" > -->
+        <table class="table" style="overflow-x:auto">
+            <thead class="thead">
+                <tr>
+                    <th class="main_prod">Product</th>
+                    <th>Quantity</th>
+                    <th>Unit Price</th>
+                    <th>Total</th>
+                </tr>
+            </thead>
+            <tbody class="tbody invoice-items">
+                {% for item in order.orderitems_set.all %}
+                <tr>
+                    <td>{{ item.product.name }}</td>
+                    <td>{{ item.quantity }}</td>
+                    <td>{{ item.product.new_price }}</td>
+                    <td>{{ item.get_total }}</td>
+                </tr>
+                {% endfor %}
+                <tr>
+                    <td></td>
+                    <td></td>
+                    <td>Subtotal: </td>
+                    <td>{{ order.get_cart_total }}</td>
+                </tr>
+                <tr>
+                    <td></td>
+                    <td></td>
+                    <td>Tax: </td>
+                    <td>{{ order.get_cart_tax }}</td>
+                </tr>
+                <tr>
+                    <td></td>
+                    <td></td>
+                    <td>Shipping: </td>
+                    <td>{{ order.get_cart_shipping }}</td>
+                </tr>
+                {% if order.get_coupon_check %}
+                    <tr>
+                        <td></td>
+                        <td></td>
+                        <td>Coupon: <span class="fw-bold">{{order.get_coupon_check}}</span></td>
+                        <td>- {{order.get_coupon_discount}}</td>
+                    </tr>
+                {% endif %}
+                <tr class="total">
+                    <td></td>
+                    <td></td>
+                    <td class="tot">Total: </td>
+                    <td class="tot">{{ order.get_cart_billing_total }}</td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+    <div class="footer">
+        <p>{{ site_name }} - Thank you for your order!</p>
+    </div>
+</body>
+</html>

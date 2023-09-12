@@ -2,7 +2,7 @@ from django.shortcuts import render,get_object_or_404
 from rest_framework.decorators import api_view
 from rest_framework.response import Response
 from store.models import Product
-from .models import Order,OrderItems,ShippingAddress,Coupon
+from .models import Order,OrderItems,ShippingAddress,Coupon,BillingAddress
 from store.utilitys import GetCartData
 from order.try_img import get_amazon_product_page
 from clients.models import Customer
@@ -18,6 +18,19 @@ from django.contrib.sites.shortcuts import get_current_site
 from .models import Order
 from io import BytesIO
 from django.contrib import messages
+from django.conf import settings
+import threading
+from decouple import config
+from django.core.mail import EmailMessage
+from django.urls import reverse
+
+class EmailThread(threading.Thread):
+    def __init__(self, email):
+        self.email = email
+        threading.Thread.__init__(self)
+
+    def run(self):
+        self.email.send(fail_silently=True)
 
 @api_view(['GET','POST'])
 def UpdateCartItems(request):
@@ -63,13 +76,24 @@ def ProcessOrder(request):
     if request.user.is_authenticated:
         customer = request.user.customer
         order, created = Order.objects.get_or_create(user=customer, is_completed=False)
-        
     total = float(data['userFormData']['total'])
     order.transaction_id = transaction_id
+    if order.shipping == True:
+        billadd,created = BillingAddress.objects.get_or_create(
+            user=customer,
+            address_1=data['shipping']['address1'],
+            address_2=data['shipping']['address2'],
+            city=data['shipping']['city'],
+            state=data['shipping']['state'],
+            zipcode=data['shipping']['zipcode'],
+	        )
+    else:
+        billadd = None
     if total == order.get_cart_total:
         order.is_completed = True
         order.status = "order Confirmed"
         order.payment_type = "Cash on Delivery"
+    order.billing = billadd
     order.save()
     
     if order.shipping == True:
@@ -82,7 +106,42 @@ def ProcessOrder(request):
 		state=data['shipping']['state'],
 		zipcode=data['shipping']['zipcode'],
 	)
+    email_tmp_path = 'emails/order/order_successfull.html'
+    domain = get_current_site(request).domain
+    request_main = config('REQUEST')
+    from_mail = config('FROM_MAIL')
+
+    site_url =f"http://{get_current_site(request).domain}"
+    context = {
+        'order': order,
+        'site_name':settings.SITE_NAME,
+        "user":request.user,
+        "date":datetime.datetime.now,
+        "site_url":site_url
+        }
+    pdf = render_to_pdf('main/orders/invoice_pdf.html', context)
+    filename = f'invoice_{order.id}.pdf'
+
+    context_email_data = {
+        'title':settings.SITE_NAME,
+        'activate_url':f"{request_main}{domain}{reverse('order-generate_invoice_pdf', args=[transaction_id])}",
+        'user_name':request.user.username,
+        'user_email':request.user.email,
+    }
+    email = request.user.email
+    email_body = get_template(email_tmp_path).render(context_email_data)
+    email_subject = f'Order Placed Success | {settings.SITE_NAME}'
+    email = EmailMessage(
+        email_subject,
+        email_body,
+        from_mail,
+        [email],
+    )
+    email.content_subtype = 'html'
+    email.attach(filename,pdf,'application/pdf')
+    EmailThread(email).start()
     messages.success(request, 'Order successfully placed.')
+    messages.info(request, 'Invoice is emailed')
     return JsonResponse("processed", safe=False)
 
 @api_view(['GET','POST'])
@@ -182,9 +241,15 @@ def render_to_pdf(template_path, context_dict):
 
 def generate_invoice_pdf(request, order_id):
     order = Order.objects.get(transaction_id=order_id)
-    site_name = get_current_site(request).name
-    context = {'order': order, 'site_name': site_name}
-    pdf = render_to_pdf('main/orders/invoice.html', context)
+    site_url =f"http://{get_current_site(request).domain}"
+    context = {
+        'order': order,
+        'site_name':settings.SITE_NAME,
+        "user":request.user,
+        "date":datetime.datetime.now,
+        "site_url":site_url
+        }
+    pdf = render_to_pdf('main/orders/invoice_pdf.html', context)
     if pdf:
         response = HttpResponse(pdf, content_type='application/pdf')
         filename = f'invoice_{order_id}.pdf'

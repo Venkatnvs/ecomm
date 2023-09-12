@@ -20,7 +20,7 @@ DEBUG = config('DEBUG', cast=bool)
 ALLOWED_HOSTS = ['*']
 
 CSRF_TRUSTED_ORIGINS = [
-    'https://56d5-14-99-167-142.ngrok-free.app'
+    'https://7d65-14-99-167-142.ngrok-free.app'
 ]
 
 
@@ -46,6 +46,7 @@ INSTALLED_APPS = [
     'django_celery_results',
     'django_celery_beat',
     'utils',
+    'analytics',
     'store',
     'store.details.categories',
     'store.details.search',
@@ -60,7 +61,9 @@ INSTALLED_APPS = [
     'voice',
     'videos',
     'src',
-    'draggables'
+    'draggables',
+    'ipware',
+    "geoip2",
 ]
 
 MIDDLEWARE = [
@@ -76,6 +79,7 @@ MIDDLEWARE = [
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
     'corsheaders.middleware.CorsMiddleware',
+    'utils.middleware.TrackUserViewsMiddleware',
 ]
 
 CORS_ORIGIN_ALLOW_ALL = True
@@ -83,6 +87,8 @@ CORS_ORIGIN_ALLOW_ALL = True
 INTERNAL_IPS = [
     "127.0.0.1",
 ]
+
+GEOIP_PATH = os.path.join(BASE_DIR, 'data_files/geoip')
 
 # SITE_NAME = 'NvsTrades'
 SITE_NAME = 'GreenStore'

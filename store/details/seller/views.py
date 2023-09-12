@@ -78,9 +78,13 @@ class CategoryListview(UserPassesTestMixin,ListView):
         filter_val = self.request.GET.get('filter','')
         order_by = self.request.GET.get('order_by','id')
         if filter_val != "":
-            cagr = Category.objects.filter(Q(name__contains=filter_val) | Q(description__contains=filter_val)).order_by(order_by)
+            cagr = Category.objects.filter(
+                Q(name__contains=filter_val) | 
+                Q(description__contains=filter_val) |
+                Q(is_active = True)
+                ).order_by(order_by)
         else:
-            cagr = Category.objects.all().order_by(order_by)
+            cagr = Category.objects.filter(is_active=True).order_by(order_by)
         return cagr
 
     def get_context_data(self, **kwargs):

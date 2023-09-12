@@ -104,8 +104,7 @@
             <p>Shipping: ₹{{ order.get_cart_shipping }}</p>
             {% if order.get_coupon_check %}
                 <p>Coupon: <span class="fw-bold">{{order.get_coupon_check}}</span> -₹{{order.get_coupon_discount}}</p>
-            </tr>
-        {% endif %}
+            {% endif %}
             <p>Total: ₹{{ order.get_cart_billing_total }}</p>
         </div>
         <div class="footer">

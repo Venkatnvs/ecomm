@@ -207,3 +207,5 @@ yarn-debug.log*
 yarn-error.log*
 *.obfuscated.js
 temp_pdf.txt
+fulldata.json
+analytics/analytics.py

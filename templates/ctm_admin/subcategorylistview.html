@@ -46,8 +46,8 @@ SubCategory List
                 <div class="article-title">
                 <h2><a href="#">{{x.name}}</a></h2>
                 </div>
-                <span class="badge bg-secondary">Description: {{x.description}}</span>
-                <span class="badge bg-success">Slug: {{x.slug}}</span>
+                <span style="white-space: wrap;" class="badge bg-secondary">Description: {{x.description}}</span>
+                <span style="white-space: wrap;" class="badge bg-success">Slug: {{x.slug}}</span>
                 <span class="badge bg-primary">Category: {{x.category}}</span>
                 <div class="form-check form-switch mt-2">
                     <input type="checkbox" name="checkbox" id="active-checkbox" class="form-check-input" {% if x.is_active %}checked{% endif %}>

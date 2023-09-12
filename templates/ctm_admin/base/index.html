@@ -28,6 +28,7 @@
     }
   </style>
   {% endcompress %}
+  <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.4/jquery.min.js"></script>
   {% compress js inline %}
   <script>
     document.addEventListener("keyup", function (e) {
@@ -60,6 +61,7 @@
   {% endcompress %}
   {% block styles %}
   {% endblock styles %}
+  {% include 'base/_details/topscript.html' %}
   {% block scripts_top %}
   {% endblock scripts_top %}
 

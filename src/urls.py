@@ -9,5 +9,4 @@ urlpatterns = [
     path('d/post2', views.post_img2, name='src-home4'),
     path('d/post3', views.post_imd3, name='src-home5'),
     re_path('^d/post4/media/(?P<path>.*)$', views.post_imd4, name='src-home6'),
-    path('img', views.getimage, name='src-img'),
 ]

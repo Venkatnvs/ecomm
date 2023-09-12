@@ -47,9 +47,9 @@ Category List
                 <div class="article-title">
                     <h2><a href="#">{{x.user_type.user}}</a></h2>
                 </div>
-                <span class="badge bg-primary">Email: {{x.user_type.user.email | truncatechars:20 }}</span>
-                <span class="badge bg-success"><strong class="text-dark">Address:</strong> {{x.address}}</span>
-                <span class="badge bg-secondary"><strong class="text-dark">Company:</strong> {{x.company_name}}</span>
+                <span style="white-space: wrap;" class="badge bg-primary">Email: {{x.user_type.user.email | truncatechars:20 }}</span>
+                <span style="white-space: wrap;" class="badge bg-success"><strong class="text-dark">Address:</strong> {{x.address}}</span>
+                <span style="white-space: wrap;" class="badge bg-secondary"><strong class="text-dark">Company:</strong> {{x.company_name}}</span>
                 <span class="badge bg-info"><strong class="text-dark">gst:</strong> {{x.gst_details}}</span>
                 <span class="badge bg-primary"><strong class="text-dark">By Admin:</strong> {{x.by_admin}}</span>
                 <div class="form-check form-switch mt-2">

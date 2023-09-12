@@ -145,13 +145,13 @@ class ProductTransaction(models.Model):
 class ProductDetails(models.Model):
     product = models.ForeignKey(Product, on_delete=models.CASCADE)
     title = models.CharField(max_length=255)
-    details = models.TextField()
+    details = models.TextField(blank=True,null=True,default="")
     is_active = models.BooleanField(default=True)
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
 
     def __str__(self):
-        return self.product.name
+        return f'{self.product.name}-{self.id}'
 
 
 class ProductAbout(models.Model):

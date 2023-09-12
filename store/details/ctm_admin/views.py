@@ -19,7 +19,7 @@ from .models import *
 from django.db.models import Count
 from django.db.models.functions import TruncDate
 from django.core.serializers.json import DjangoJSONEncoder
-from .dashboard import GetCounts
+from .dashboard import GetCounts,unique_visitors_data,device_type_data_last_30_days
 
 @login_required
 @user_passes_test(lambda u: u.is_superuser)
@@ -28,6 +28,12 @@ def main(request):
     product_data = Product.objects.annotate(day=TruncDate('created_at')).values('day').annotate(count=Count('id'))
     user_data_list = list(user_data)
     product_data_list = list(product_data)
+
+    dates ,counts = unique_visitors_data()
+    data = {'labels':json.dumps(dates,cls=DjangoJSONEncoder), 'data':json.dumps(counts,cls=DjangoJSONEncoder)}
+
+    device_types, counts_dev = device_type_data_last_30_days()
+    data_d = {'labels':json.dumps(device_types,cls=DjangoJSONEncoder), 'data':json.dumps(counts_dev,cls=DjangoJSONEncoder)}
     context = {
         'user_data': json.dumps(user_data_list, cls=DjangoJSONEncoder),
         'product_data':json.dumps(product_data_list, cls=DjangoJSONEncoder),
@@ -35,6 +41,9 @@ def main(request):
         "order_cmp_cnt": GetCounts(request)['orders_comp'],
         "order_ncmp_cnt": GetCounts(request)['orders_ncomp'],
         "prod_cmp_cnt": GetCounts(request)['products'],
+        "data":data,
+        "devices_d":data_d
+        # "data":json.dumps(data, cls=DjangoJSONEncoder)
     }
     return render(request, 'ctm_admin/index.html',context)
 

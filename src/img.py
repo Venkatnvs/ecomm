@@ -1,5 +1,4 @@
 from django.shortcuts import HttpResponse
-from .models import image
 import requests
 import os
 import numpy as np
@@ -34,7 +33,6 @@ def imgfun(data):
         con = base64.b64encode(images.read())
     with open(path+id.hex+'_encode.bin', 'wb') as file:
         file.write(con)
-    image.objects.create(name=id.hex, base64=con.decode('utf-8'))
     os.remove(path+id.hex+'_image.jpg')
     return con.decode('utf-8')
 

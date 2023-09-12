@@ -86,7 +86,7 @@ Your Orders | {{site_name}}
             <p class="badge bg-info">Payment Type: {{orders.payment_type }}</p>
         </div>
         <div class="col">
-            <a class="btn btn-sm btn-secondary" href="{% url 'order-generate_invoice' orders.transaction_id %}"><i class="fa-regular fa-eye"></i>&nbsp;&nbsp;Invoice</a>
+            <a class="btn btn-sm btn-secondary" href="{% url 'order-generate_invoice_pdf' orders.transaction_id %}"><i class="fa-regular fa-eye"></i>&nbsp;&nbsp;Invoice</a>
         </div>
         <div class="col"></div>
     </div>

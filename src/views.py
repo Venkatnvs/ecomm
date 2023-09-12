@@ -1,7 +1,6 @@
 from django.shortcuts import render, HttpResponse
 from django.http import StreamingHttpResponse,JsonResponse,FileResponse
 from .img import imgfun, img2fun
-from .models import image
 import uuid
 import numpy as np
 import cv2 as cv
@@ -135,14 +134,6 @@ def post_img2(request):
     b.seek(0)
     b.close()
     return HttpResponse(img_c, content_type='image/jpeg')
-
-def getimage(request):
-    img = image.objects.all()
-    if request.method == "GET":
-        return render(request, 'ctm_admin/test2.html', {'imgs':img})
-    # if request.method == 'POST':
-    #     a = imgfun(request.POST['url'])
-    #     return render(request, 'ctm_admin/test.html', {'a':a})
 
 from .ctmserver import MainCtm
 
