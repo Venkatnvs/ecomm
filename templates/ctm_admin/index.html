@@ -14,7 +14,7 @@ ADMIN | {{site_name}}
     .chats2 canvas{
         min-width:100px;
         min-height: 250px !important;
-        height: 250px;
+        height: 250px!important;
     }
     canvas{
         width: 100%;
@@ -51,7 +51,7 @@ ADMIN | {{site_name}}
     </div>
 </div>
 <hr>
-<h4 style="display: inline-flex;">Visitor Dashboard</h4>
+<h4 style="display: inline-flex;">Visitor Analysis</h4>
 <p class="fw-bold" style="float: right;display: inline-flex;margin-right: 20px;">Last 30 Days</p>
 <br>
 <div class="row mt-2">
@@ -64,10 +64,10 @@ ADMIN | {{site_name}}
 </div>
 <hr>
 <div class="row mt-2">
-    <div class="chats2 col-md-8 my-1">
+    <div class="chats2 col-md-8">
         <canvas id="uniqueVisitorsChart" width="auto" height="auto"></canvas>
     </div>
-    <div class="col-md-4 my-1">
+    <div class="chats2 col-md-4">
         <canvas id="deviceTypeChart" width="auto" height="auto"></canvas>
     </div>
 </div>

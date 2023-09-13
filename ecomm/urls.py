@@ -13,7 +13,7 @@ urlpatterns = [
     path('analytics/', include('analytics.urls')),
     path('order/', include('order.urls')),
     path('src/', include('src.urls')),
-    path('note/', include('notification.urls')),
+    path('notification/', include('notification.urls')),
     path('voice/', include('voice.urls')),
     path('videos/', include('videos.urls')),
     path('nvs-admin/', include('store.details.ctm_admin.urls')),
