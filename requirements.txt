@@ -121,5 +121,5 @@ wcwidth==0.2.6
 webencodings==0.5.1
 whitenoise==6.5.0
 wikipedia==1.4.0
-xformers==0.0.22.dev591
+xformers==0.0.21
 xhtml2pdf
