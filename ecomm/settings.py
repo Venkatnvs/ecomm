@@ -20,13 +20,9 @@ DEBUG = config('DEBUG', cast=bool)
 # ALLOWED_HOSTS = ['127.0.0.1','192.168.100.9','10.62.16.77','youthful-mountain-70598.pktriot.net']
 ALLOWED_HOSTS = ['*']
 
-
-
-
-
-
-
-
+CSRF_TRUSTED_ORIGINS = [
+    'https://nvstrades.onrender.com'
+]
 
 ADMINS = (('venkat','venkatnvs2005@gmail.com'),)
 MANAGERS = ADMINS
