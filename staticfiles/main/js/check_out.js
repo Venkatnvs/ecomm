@@ -103,8 +103,7 @@ window.onload = () =>{
   xhr.send();
 }
 document.getElementById("payment_type_check").addEventListener("change",function(e){
-  console.log(document.getElementById("payment_type_check").value)
-  if(document.getElementById("payment_type_check").value != "cod"){
+  if (document.getElementById("payment_type_check").value !== "cod" && document.getElementById("payment_type_check").value !== "razorpay") {
     document.getElementById("make_pay_btn").classList.add("disabled")
     document.getElementById("invalid-payment-feedback").style.display = "block"
   }else{

@@ -8,6 +8,7 @@ urlpatterns = [
     path('get-item-amz',GetItemsFromAmazon, name='getitemamz'),
     path('pro-amt',try_amas, name='proam-try'),
     path('order-process/',ProcessOrder, name='order-process'),
+    path('order-handel/<trans_id>',orderHandel, name='order-handel'),
     path('coupon-code/',GetCouponCode, name='order-get-coupon-code'),
     path('cart-bill-total/',GetCarBillingTotal, name='order-cart-bill-total'),
     path('coupon-order-st/',GetCouponExists, name='order-coupon-order-st'),

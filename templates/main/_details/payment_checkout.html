@@ -8,6 +8,7 @@
                 <h4 id="cart_pay_total" class="mb-">₹{{ order.get_cart_billing_total|intcomma }}</h4>
             </div>
             <select id="payment_type_check" class="form-select mb-2" aria-label="delivery type">
+                <option value="razorpay">Razorpay</option>
                 <option value="cod">Cash on Delivery</option>
                 <option value="card">Card</option>
                 <option value="paypal">Paypal</option>

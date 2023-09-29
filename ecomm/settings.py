@@ -208,7 +208,7 @@ COMPRESS_FILTERS = {
         'compressor.filters.jsmin.JSMinFilter',
     ]
 }
-HTML_MINIFY = True
+HTML_MINIFY = False
 KEEP_COMMENTS_ON_MINIFYING = False
 CONSERVATIVE_WHITESPACE_ON_MINIFYING = False
 

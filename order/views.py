@@ -21,8 +21,13 @@ from django.contrib import messages
 from django.conf import settings
 import threading
 from decouple import config
+from django.views.decorators.csrf import csrf_exempt
 from django.core.mail import EmailMessage
 from django.urls import reverse
+
+import razorpay
+razorpay_client = razorpay.Client(auth=(config('razorpay_key_id'), config('razorpay_key_secret')))
+razorpay_client.set_app_details({"title" : "NVSTRADES", "version" : "1.1.1"})
 
 class EmailThread(threading.Thread):
     def __init__(self, email):
@@ -86,36 +91,53 @@ def ProcessOrder(request):
             city=data['shipping']['city'],
             state=data['shipping']['state'],
             zipcode=data['shipping']['zipcode'],
-	        )
+	    )
     else:
         billadd = None
-    if total == order.get_cart_total:
-        order.is_completed = True
-        order.status = "order Confirmed"
-        order.payment_type = "Cash on Delivery"
     order.billing = billadd
-    order.save()
-    
     if order.shipping == True:
-        ShippingAddress.objects.create(
-        user=customer,
-		order=order,
-		address_1=data['shipping']['address1'],
-		address_2=data['shipping']['address2'],
-		city=data['shipping']['city'],
-		state=data['shipping']['state'],
-		zipcode=data['shipping']['zipcode'],
-	)
+        a = ShippingAddress.objects.filter(user=customer,order=order)
+        if not a.exists():
+            ShippingAddress.objects.create(
+            user=customer,
+            order=order,
+            address_1=data['shipping']['address1'],
+            address_2=data['shipping']['address2'],
+            city=data['shipping']['city'],
+            state=data['shipping']['state'],
+            zipcode=data['shipping']['zipcode'],
+        )
+        
+    if total == order.get_cart_total:
+        if data['paymentType'] == "razorpay":
+            order.payment_type = "razorpay"
+            callback_url = f'http://{get_current_site(request)}/order/order-handel/{transaction_id}'
+            razorpay_data = { "amount": int(order.get_cart_billing_total)*100, "currency": "INR", "receipt":str(transaction_id) }
+            razorpay_payment = razorpay_client.order.create(data=razorpay_data)
+            order.payment_id = razorpay_payment['id']
+            return_data = {"type":"razorpay","tranc_id":transaction_id,"callback_url":callback_url,"razpay_id":config('razorpay_key_id'),"final_price":f'{order.get_cart_billing_total*100}',"order_pay_id":razorpay_payment['id']}
+        elif data['paymentType'] == "cod":
+            order.is_completed = True
+            order.status = "order Confirmed"
+            order.payment_type = "Cash on Delivery"
+            domain = get_current_site(request).domain
+            order_send_inc = orderSendInvoice(request.user.username,request.user.email,domain,request,order,transaction_id)
+            messages.success(request, 'Order successfully placed.')
+            messages.info(request, 'Invoice is emailed')
+            return_data = {"type":"cod","tranc_id":transaction_id}
+    order.save()
+    return JsonResponse(return_data, safe=False)
+
+def orderSendInvoice(username,email,domain,order,transaction_id):
     email_tmp_path = 'emails/order/order_successfull.html'
-    domain = get_current_site(request).domain
     request_main = config('REQUEST')
     from_mail = config('FROM_MAIL')
 
-    site_url =f"http://{get_current_site(request).domain}"
+    site_url =f"http://{domain}"
     context = {
         'order': order,
         'site_name':settings.SITE_NAME,
-        "user":request.user,
+        "user":username,
         "date":datetime.datetime.now,
         "site_url":site_url
         }
@@ -125,10 +147,10 @@ def ProcessOrder(request):
     context_email_data = {
         'title':settings.SITE_NAME,
         'activate_url':f"{request_main}{domain}{reverse('order-generate_invoice_pdf', args=[transaction_id])}",
-        'user_name':request.user.username,
-        'user_email':request.user.email,
+        'user_name':username,
+        'user_email':email,
     }
-    email = request.user.email
+    email = email
     email_body = get_template(email_tmp_path).render(context_email_data)
     email_subject = f'Order Placed Success | {settings.SITE_NAME}'
     email = EmailMessage(
@@ -140,9 +162,7 @@ def ProcessOrder(request):
     email.content_subtype = 'html'
     email.attach(filename,pdf,'application/pdf')
     EmailThread(email).start()
-    messages.success(request, 'Order successfully placed.')
-    messages.info(request, 'Invoice is emailed')
-    return JsonResponse("processed", safe=False)
+    return True
 
 @api_view(['GET','POST'])
 def GetCouponCode(request):
@@ -257,3 +277,74 @@ def generate_invoice_pdf(request, order_id):
         response['Content-Disposition'] = content
         return response
     return HttpResponse("Error generating PDF", status=400)
+
+@csrf_exempt
+def orderHandel(request,trans_id):
+    if request.method == "POST":
+        try:
+            payment_id = request.POST.get('razorpay_payment_id', '')
+            order_id = request.POST.get('razorpay_order_id','')
+            signature = request.POST.get('razorpay_signature','')
+            params_dict = { 
+            'razorpay_order_id': order_id, 
+            'razorpay_payment_id': payment_id,
+            'razorpay_signature': signature
+            }
+            try:
+                order_db = Order.objects.get(payment_id=order_id)
+            except:
+                return HttpResponse("505 Not Found")
+            order_db.payment_id = payment_id
+            # order_db.payment_status = signature
+            result = razorpay_client.utility.verify_payment_signature(params_dict)
+            print(result,"1234567890-")
+            if result:
+                # amount = order_db.get_cart_total * 100   # we have to pass in paisa
+                try:
+                    domain = get_current_site(request).domain
+                    order_send_inc = orderSendInvoice(order_db.user.user.username,order_db.user.user.email,domain,order_db,order_db.transaction_id)
+                except Exception as e:
+                    print(e)
+                try:
+                    # a = razorpay_client.payment.capture(payment_id, amount)
+                    # print(a,"99999")
+                    order_db.payment_status = 1
+                    order_db.is_completed = True
+                    order_db.status = "order Confirmed"
+                    order_db.save()
+                    messages.success(request, 'Order successfully placed.')
+                    messages.info(request, 'Invoice is emailed')
+                    context = {
+                        "trans_id":trans_id,
+                        "type":"Successful",
+                        "status":True
+                        }
+                    return render(request,"main/orders/order_handel.html",context)
+                except:
+                    print("4567890")
+                    order_db.payment_status = 2
+                    order_db.save()
+                    context = {
+                        "trans_id":trans_id,
+                        "type":"Fail",
+                        "status":False
+                        }
+                    return render(request,"main/orders/order_handel.html",context)
+            else:
+                order_db.payment_status = 2
+                order_db.save()
+                context = {
+                        "trans_id":trans_id,
+                        "type":"Fail",
+                        "status":False
+                        }
+                return render(request,"main/orders/order_handel.html",context)
+        except:
+            return HttpResponse("505 not found")
+    # context = {
+    #                     "trans_id":trans_id,
+    #                     "type":"Fail",
+    #                     "status":False
+    #                     }
+    # return render(request,"main/orders/order_handel.html",context)
+    return HttpResponse("No Access")

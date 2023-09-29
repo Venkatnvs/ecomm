@@ -44,6 +44,8 @@ class Order(models.Model):
     coupon_code = models.ManyToManyField(Coupon,blank=True)
     transaction_id = models.CharField(max_length=255, null=True)
     payment_type = models.CharField(max_length=255,default="COD")
+    payment_id = models.CharField(max_length=255,null=True,blank=True)
+    payment_status = models.CharField(max_length=255,null=True,blank=True)
     is_delivered = models.BooleanField(default=False)
     is_closed = models.BooleanField(default=False)
     is_completed = models.BooleanField(default=False)
@@ -112,13 +114,13 @@ class Order(models.Model):
 class ShippingAddress(models.Model):
     user = models.ForeignKey(Customer, on_delete=models.SET_NULL, null=True)
     order = models.ForeignKey(Order, on_delete=models.SET_NULL, null=True)
-    address_1 = models.CharField(max_length=255)
-    address_2 = models.CharField(max_length=255, blank=True)
-    state = models.CharField(max_length=255)
-    city = models.CharField(max_length=255)
-    zipcode = models.CharField(max_length=255)
-    date = models.DateTimeField(auto_now_add=True)
-    last_updated = models.DateTimeField(auto_now=True)
+    address_1 = models.CharField(max_length=255,null=True,blank=True)
+    address_2 = models.CharField(max_length=255,null=True, blank=True)
+    state = models.CharField(max_length=255,null=True, blank=True)
+    city = models.CharField(max_length=255,null=True, blank=True)
+    zipcode = models.CharField(max_length=255,null=True, blank=True)
+    date = models.DateTimeField(auto_now_add=True,null=True, blank=True)
+    last_updated = models.DateTimeField(auto_now=True,null=True, blank=True)
 
     def __str__(self):
         return self.address_1
