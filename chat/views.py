@@ -2,7 +2,7 @@ from django.shortcuts import render
 from django.contrib.auth.decorators import login_required
 from rest_framework.response import Response
 from rest_framework.decorators import api_view
-from .chat_responce_v4 import ChatbotLogic
+from .chat_responce_v6 import ChatbotLogic,profiler
 from store.models import Product
 from django.template.loader import get_template
 
@@ -15,7 +15,7 @@ def room(request, room_name):
     }
     return render(request, 'chatapp/room.html', context)
 
-# @login_required()
+@login_required()
 def ChatBotIndex(request):
     return render(request, 'chatapp/chatbot_fullpg/index.html')
 
@@ -25,11 +25,12 @@ def chatbot_api(request):
     user_message = user_message.lower()
     chatbot_logic = ChatbotLogic(request)
     bot_response = chatbot_logic.process_user_message(user_message)
+    profiler.print_stats()
     return Response({'response': bot_response})
 
 @api_view(['GET'])
 def test_snippets(request):
-    products = Product.objects.all().reverse()[0:5]
+    products = Product.objects.filter(is_active=True,subcategories__category__is_active=True,subcategories__is_active=True).reverse()[0:5]
     context = {
         "products":products,
         "heading":"Top 5 Products:"

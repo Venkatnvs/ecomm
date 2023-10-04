@@ -12,8 +12,8 @@ def HomeSearch(request):
     filter_val = data.get("stext",False)
     if filter_val:
         cate = Category.objects.filter(is_active=True,name__istartswith=filter_val)[:5]
-        subcate = SubCategory.objects.filter(is_active=True,name__istartswith=filter_val)[:5]
-        prod = Product.objects.filter(is_active=True,name__istartswith=filter_val)[:6]
+        subcate = SubCategory.objects.filter(is_active=True,name__istartswith=filter_val,category__is_active=True)[:5]
+        prod = Product.objects.filter(is_active=True,name__istartswith=filter_val,subcategories__category__is_active=True,subcategories__is_active=True)[:6]
         for j in cate:
             cate_rt_data = {
                 'id':j.pk,

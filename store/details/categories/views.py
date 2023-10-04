@@ -9,7 +9,7 @@ def CategoriePage(request,slug):
     items = data['items']
     categories = Category.objects.filter(slug=slug,is_active=True).first()
     product_data = []
-    prod = Product.objects.filter(is_active=True,subcategories__category = categories)
+    prod = Product.objects.filter(is_active=True,subcategories__category = categories,subcategories__category__is_active=True,subcategories__is_active=True)
     for i in prod:
         img_d = ProductMedia.objects.filter(product=i,is_active=True,type=1)
         data = {'product':i,'imgs':img_d}
@@ -28,7 +28,7 @@ def SubCategoriePage(request,slug):
     items = data['items']
     subcategories = SubCategory.objects.filter(slug=slug,is_active=True).first()
     product_data = []
-    prod = Product.objects.filter(is_active=True,subcategories=subcategories)
+    prod = Product.objects.filter(is_active=True,subcategories=subcategories,subcategories__category__is_active=True,subcategories__is_active=True)
     for i in prod:
         img_d = ProductMedia.objects.filter(product=i,is_active=True,type=1)
         data = {'product':i,'imgs':img_d}

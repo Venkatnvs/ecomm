@@ -7,9 +7,9 @@ Help Page | {{site_name}}
 
 
 {% block content %}
-<section class="faq-section py-5">
+<section class="faq-section py-2">
     <div class="container">
-        <h1 class="text-center mb-5">Frequently Asked Questions</h1>
+        <h1 class="text-center mb-3">Frequently Asked Questions</h1>
         <div class="accordion" id="faqAccordion">
             <!-- FAQ Item 1 -->
             <div class="card">
@@ -47,6 +47,29 @@ Help Page | {{site_name}}
 
         </div>
     </div>
+    <div class="card mb-2">
+        <div class="card-header"><h5 class="text-center fs-5 fw-bolder">Want to chat now or get a call from us?</h5></div>
+    </div>
+    <div style="gap: 8px;" class="col-md-4 px-2 d-flex w-100">
+        
+        <div class="card mb-2">
+            <div class="card-header p-2"><h6 class="text-center text-dark m-0">Chat right now</h6></div>
+            <div class="card-body">
+                <p class="fs-6">Our messaging assistant can quickly solve many issues or direct you to the right person or place.</p>
+                <b><p class="fs-6">Instant chat and always available.</p></b>
+                <a target="_blank" href="{% url 'chatbot_fullpg_index' %}" class="btn btn-sm btn-outline-primary d-flex justify-content-center">Start Chatting</a>
+            </div>
+        </div>
+        <div class="card mb-2">
+            <div class="card-header p-2"><h6 class="text-center text-dark m-0">Have us call you</h6></div>
+            <div class="card-body">
+                <p class="fs-6">We'll first get a few details about your issue and then someone will call you right away.</p>
+                <p>.</p>
+                <a href="#" class="btn btn-sm btn-outline-primary d-flex justify-content-center">Call me</a>
+            </div>
+        </div>
+    </div>
+</div>
 </section>
 {% endblock content %}
 

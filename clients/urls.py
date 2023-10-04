@@ -7,6 +7,7 @@ urlpatterns = [
     path('api/', include('clients.api_urls')),
     path('', Registration.as_view(), name='just-auth' ),
     path('register/', Registration.as_view(), name='register' ),
+    path('register-seller/', Registration_seller.as_view(), name='register-seller' ),
     path('login/', Login.as_view(), name='login' ),
     path('logout/', Logout.as_view(), name='logout' ),
     path('reset-password', ResetPassword.as_view(), name='reset-password' ),

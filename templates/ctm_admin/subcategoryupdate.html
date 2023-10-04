@@ -49,7 +49,7 @@ Sub Category Update
                 {% if field.field.widget.input_type == 'file' %}
                 <div class="form-group mt-2">
                     <label>Current {{field.label}}: </label>
-                    <img class="img-thumbnail" src="/media/{{field.value}}" alt="category">
+                    <img style="max-height: 280px;" class="img-thumbnail" src="/media/{{field.value}}" alt="category">
                 </div>
                 {% endif %}
                 {% endfor %}

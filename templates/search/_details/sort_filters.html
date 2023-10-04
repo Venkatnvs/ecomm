@@ -6,7 +6,7 @@
             {% elif searchdata.sort == 'h2l' %}
             High to Low
             {% elif searchdata.sort == 'pbdt' %}
-            Publication Date
+            Latest
             {% else %}
             Features
             {% endif %}
@@ -23,7 +23,6 @@
                 href="{% url 'st-search-mn' %}?squery={{searchdata.squery}}&rpricemax={{searchdata.rpricemax}}&rpricemin={{searchdata.rpricemin}}&discountper={{searchdata.discountper}}&stockava={{searchdata.stockava}}&sort=h2l">Price:
                 High to Low </a></li>
         <li><a class="dropdown-item"
-                href="{% url 'st-search-mn' %}?squery={{searchdata.squery}}&rpricemax={{searchdata.rpricemax}}&rpricemin={{searchdata.rpricemin}}&discountper={{searchdata.discountper}}&stockava={{searchdata.stockava}}&sort=pbdt">Publication
-                Date</a></li>
+                href="{% url 'st-search-mn' %}?squery={{searchdata.squery}}&rpricemax={{searchdata.rpricemax}}&rpricemin={{searchdata.rpricemin}}&discountper={{searchdata.discountper}}&stockava={{searchdata.stockava}}&sort=pbdt">Latest</a></li>
     </ul>
 </div>

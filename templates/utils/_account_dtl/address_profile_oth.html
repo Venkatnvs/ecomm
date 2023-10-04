@@ -11,7 +11,7 @@
                         <h5 class="text-1000">Address</h5>
                     </div>
                     <div class="col-auto">
-                        <p class="text-800">{{request.user.customer.customeruser.address}}<br>{{request.user.customer.customeruser.state}}</p>
+                        <p class="text-800">{{ request.user.customer.all_address }}</p>
                     </div>
                 </div>
             </div>
@@ -20,14 +20,8 @@
                     <div class="col-auto">
                         <h5 class="text-1000 mb-0">Email</h5>
                     </div>
-                    <div class="col-auto"><a class="lh-1" href="mailto:shatinon@jeemail.com">shatinon@jeemail.com</a>
+                    <div class="col-auto"><a class="lh-1" href="mailto:{{request.user.email}}">{{request.user.email}}</a>
                     </div>
-                </div>
-                <div class="row flex-between-center">
-                    <div class="col-auto">
-                        <h5 class="text-1000 mb-0">Phone</h5>
-                    </div>
-                    <div class="col-auto"><a href="tel:+1234567890">+1234567890</a></div>
                 </div>
             </div>
         </div>

@@ -1,0 +1,81 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+  <meta http-equiv="content-type" content="text/html; charset=utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0;" />
+  <meta name="format-detection" content="telephone=no" />
+</head>
+<body bgcolor="#333" style="margin: 0; padding: 0; background-color: #333; color: #f0f0f0;">
+  <table width="100%" border="0" cellpadding="0" cellspacing="0" align="center">
+    <tr>
+      <td align="center" bgcolor="#333" style="padding: 8px;">
+        <!-- Header -->
+        <table width="100%" border="0" cellpadding="0" cellspacing="0">
+          <tr>
+            <td align="center" style="font-size: 24px; font-weight: bold; padding: 10px;">
+              <img src="https://nvs-meet.onrender.com/static/icons/favicon.png" width="60" height="60" alt="The Idea" title="The Idea" />
+              <h2 style="margin: 0; color: #fff;">Order Placed Successfully</h2>
+            </td>
+          </tr>
+        </table>
+        
+        <!-- Content -->
+        <table width="100%" border="0" cellpadding="0" cellspacing="0">
+          <tr>
+            <td align="center" style="padding: 10px;">
+              <p style="font-size: 17px; font-weight: 400; line-height: 160%; color: #f0f0f0; font-family: 'Helvetica Neue', Arial, sans-serif;">
+                Hi {{user_name}},
+              </p>
+              <p style="font-size: 15px; font-weight: 400; line-height: 21px; color: gray; font-family: 'Helvetica Neue', Arial, sans-serif;">
+                Your order has been placed successfully. Below is the invoice for your order.
+              </p>
+              <p style="color: #f0f0f0;font-size: 15px; font-weight: 400; line-height: 21px; color: gray; font-family: 'Helvetica Neue', Arial, sans-serif;">
+                Invoice is attached to this email.
+              </p>
+            </td>
+          </tr>
+          <tr>
+            <td align="center" style="padding: 10px;">
+              <a href="{{activate_url}}" target="_blank" style="text-decoration: none; color: #ffffff; font-family: 'Helvetica Neue', Arial, sans-serif; font-size: 17px; font-weight: 400; line-height: 120%; display: inline-block; padding: 10px 24px; background-color: #3969d5; border-radius: 4px;">
+                View Invoice
+              </a>
+            </td>
+          </tr>
+          <tr>
+            <td align="left" style="padding: 10px;">
+              <p style="margin: 0; color: #f0f0f0;">
+                If you have any questions or concerns about your order, please feel free to contact us.
+              </p>
+            </td>
+          </tr>
+          <tr>
+            <td align="left" style="padding: 10px;">
+              <p style="margin: 0; color: #f0f0f0;">
+                Best regards,
+              </p>
+              <a href="#" style="text-decoration: none;">
+                <h4 style="margin: 0; color: #fff;">{{title}}</h4>
+              </a>
+            </td>
+          </tr>
+          <!-- Footer -->
+          <tr>
+            <td align="center" style="padding: 10px;">
+              <hr color="#E0E0E0" align="center" width="100%" size="1" noshade style="margin: 0; padding: 0;" />
+              <p style="font-size: 13px; font-weight: 400; line-height: 150%; color: #999999; font-family: 'Helvetica Neue', Arial, sans-serif;">
+                If you have any questions, please contact our support team at <a href="mailto:{{contact_email}}" style="text-decoration: none; color: #0f90ba;">{{contact_email}}</a>.
+              </p>
+              <p style="font-size: 13px; font-weight: 300; line-height: 18px; color: #f0f0f0; font-family: 'Helvetica Neue', Arial, sans-serif; margin: 0;">
+                This email was sent to <a href="mailto:{{user_email}}" style="text-decoration: none; color: #0f90ba;">{{user_email}}</a>
+              </p>
+              <p style="font-size: 13px; font-weight: 300; line-height: 18px; color: #f0f0f0; font-family: 'Helvetica Neue', Arial, sans-serif; margin: 0;">
+                Copyright &copy; 2022 {{title}}. All rights reserved.
+              </p>
+            </td>
+          </tr>
+        </table>
+      </td>
+    </tr>
+  </table>
+</body>
+</html>

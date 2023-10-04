@@ -1,55 +1,90 @@
 {% extends 'ctm_admin/base/index.html' %}
 {% load static %}
 {% block title %}
-Home
+ADMIN | {{site_name}}
 {% endblock title %}
 
 {% block styles %}
 <link rel="stylesheet" href="{% static  'ctm_admin/css/index.css' %}">
+<style>
+    .chats canvas{
+        min-width:100px;
+        min-height: 250px !important;
+    }
+    .chats2 canvas{
+        min-width:100px;
+        min-height: 250px !important;
+        height: 250px!important;
+    }
+    canvas{
+        width: 100%;
+        height: 100%;
+    }
+</style>
+<link rel="stylesheet" href="https://unpkg.com/leaflet@1.7.1/dist/leaflet.css" />
 {% endblock styles %}
 
 {% block content %}
-hi
-<div class="card">
-    <div class="card-body">
-        <ul class="list-unstyled list-unstyled-border list-unstyled-noborder">
-            <li class="media">
-                <img alt="image" class="mr-3 rounded-circle" width="70" src="https://demo.getstisla.com/assets/img/avatar/avatar-1.png">
-                <div class="media-body">
-                    <div class="media-right"><div class="text-primary">Approved</div></div>
-                    <div class="media-title mb-1">Rizal Fakhri</div>
-                    <div class="text-time">Yesterday</div>
-                    <div class="media-description text-muted">Duis aute irure dolor in reprehenderit in voluptate velit esse
-                    cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non
-                    proident, sunt in culpa qui officia deserunt mollit anim id est laborum.</div>
-                    <div class="media-links">
-                        <a href="#">View</a>
-                        <div class="bullet"></div>
-                        <a href="#">Edit</a>
-                        <div class="bullet"></div>
-                        <a href="#" class="text-danger">Trash</a>
-                    </div>
-                </div>
-            </li>
-            <li class="media">
-                <img alt="image" class="mr-3 rounded-circle" width="70" src="https://demo.getstisla.com/assets/img/avatar/avatar-1.png">
-                <div class="media-body">
-                    <div class="media-right"><div class="text-primary">Approved</div></div>
-                    <div class="media-title mb-1">Rizal Fakhri</div>
-                    <div class="text-time">Yesterday</div>
-                    <div class="media-description text-muted">Duis aute irure dolor in reprehenderit in voluptate velit esse
-                    cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non
-                    proident, sunt in culpa qui officia deserunt mollit anim id est laborum.</div>
-                    <div class="media-links">
-                        <a href="#">View</a>
-                        <div class="bullet"></div>
-                        <a href="#">Edit</a>
-                        <div class="bullet"></div>
-                        <a href="#" class="text-danger">Trash</a>
-                    </div>
-                </div>
-            </li>
-        </ul>
+<h2>Dashboard</h2>
+<div class="col">
+    <div class="row">
+        <div class="col-md-3 mb-3">
+            {% include 'ctm_admin/dashboard/_details/get_cards_cnt.html' with title="User Registrations" count=user_act_cnt color="primary" icon="fa-user-plus" %}
+        </div>
+        <div class="col-md-3 mb-3">
+            {% include 'ctm_admin/dashboard/_details/get_cards_cnt.html' with title="Products" count=prod_cmp_cnt color="info" icon="fa-truck-fast" %}
+        </div>
+        <div class="col-md-3 mb-3">
+            {% include 'ctm_admin/dashboard/_details/get_cards_cnt.html' with title="Orders Completed" count=order_cmp_cnt color="success" icon="fa-bag-shopping" %}
+        </div>
+        <div class="col-md-3 mb-3">
+            {% include 'ctm_admin/dashboard/_details/get_cards_cnt.html' with title="Orders Pending" count=order_ncmp_cnt color="warning" icon="fa-business-time" %}
+        </div>
+    </div>
+</div>
+<div class="row mt-2">
+    <div class="chats col-md-6">
+        <canvas id="userChart" width="auto" height="auto"></canvas>
+    </div>
+    <div class="chats col-md-6">
+        <canvas id="productChart" width="auto" height="auto"></canvas>
+    </div>
+</div>
+<hr>
+<h4 style="display: inline-flex;">Visitor Analysis</h4>
+<p class="fw-bold" style="float: right;display: inline-flex;margin-right: 20px;">Last 30 Days</p>
+<br>
+<div class="row mt-2">
+    <div class="col-md-8">
+        <div id="map" style="height: 400px;"></div>
+    </div>
+    <div class="col-md-4">
+        <canvas id="CountryChart" width="auto" height="auto"></canvas>
+    </div>
+</div>
+<hr>
+<div class="row mt-2">
+    <div class="chats2 col-md-8">
+        <canvas id="uniqueVisitorsChart" width="auto" height="auto"></canvas>
+    </div>
+    <div class="chats2 col-md-4">
+        <canvas id="deviceTypeChart" width="auto" height="auto"></canvas>
     </div>
 </div>
 {% endblock content %}
+
+
+{% block scripts %}
+<script src="https://unpkg.com/leaflet@1.7.1/dist/leaflet.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+<script>
+    const dates = {{data.labels|safe }}
+    const counts ={{ data.data|safe }}
+    const deviceTypes = {{ devices_d.labels|safe }}
+    const counts_d = {{ devices_d.data|safe }}
+    const user_data = {{ user_data|safe }};
+    const product_data = {{ product_data|safe }};
+</script>
+<script src="{% static 'ctm_admin/js/dashboard/charts.js' %}" ></script>
+<script src="{% static 'ctm_admin/js/dashboard/mapchart.js' %}" ></script>
+{% endblock scripts %}

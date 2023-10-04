@@ -22,6 +22,7 @@ from django.template.loader import get_template
 import threading
 from django.http import HttpResponseForbidden,HttpResponse
 from django.views import View
+from django.conf import settings
 
 class EmailThread(threading.Thread):
     def __init__(self, email):
@@ -77,9 +78,13 @@ class CategoryListview(UserPassesTestMixin,ListView):
         filter_val = self.request.GET.get('filter','')
         order_by = self.request.GET.get('order_by','id')
         if filter_val != "":
-            cagr = Category.objects.filter(Q(name__contains=filter_val) | Q(description__contains=filter_val)).order_by(order_by)
+            cagr = Category.objects.filter(
+                Q(name__contains=filter_val) | 
+                Q(description__contains=filter_val) |
+                Q(is_active = True)
+                ).order_by(order_by)
         else:
-            cagr = Category.objects.all().order_by(order_by)
+            cagr = Category.objects.filter(is_active=True).order_by(order_by)
         return cagr
 
     def get_context_data(self, **kwargs):
@@ -225,14 +230,14 @@ class StaffUserCreate(UserPassesTestMixin,SuccessMessageMixin, CreateView):
                 from_mail = config('FROM_MAIL')
                 activate_url = request_main+domain+link
                 context_email_data = {
-                    'title':'NvsTrades',
+                    'title':settings.SITE_NAME,
                     'baseurl':domain+request_main,
                     'activate_url':activate_url,
                     'user_name':user.username,
                     'user_email':user.email,
                 }
                 email_body = get_template(email_tmp_path).render(context_email_data)
-                email_subject = 'Activate your account | NvsTrades'
+                email_subject = f'Activate your account | {settings.SITE_NAME}'
                 email = EmailMessage(
                     email_subject,
                     email_body,
@@ -289,6 +294,8 @@ class ProductsListview(UserPassesTestMixin,ListView):
         if filter_val != "":
             print(user_to_get)
             prod = Product.objects.filter(
+                Q(subcategories__category__is_active=True) &
+                Q(subcategories__is_active=True)&
                 Q(by_seller__user_type__user = user_to_get) &
                 Q(name__contains=filter_val) | 
                 Q(description__contains=filter_val) | 
@@ -297,7 +304,7 @@ class ProductsListview(UserPassesTestMixin,ListView):
                 Q(subcategories__category__name__contains = filter_val)
             ).order_by(order_by)
         else:
-            prod = Product.objects.filter(by_seller__user_type__user = user_to_get).order_by(order_by)
+            prod = Product.objects.filter(by_seller__user_type__user = user_to_get, is_active=True,subcategories__category__is_active=True,subcategories__is_active=True).order_by(order_by)
         return prod
 
     def get_context_data(self, **kwargs):
