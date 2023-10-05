@@ -61,6 +61,7 @@ INSTALLED_APPS = [
     'voice',
     'videos',
     'src',
+    "account",
     'draggables',
     'ipware',
     "geoip2",

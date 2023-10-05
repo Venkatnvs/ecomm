@@ -19,7 +19,7 @@
               {% for order in orders %}
               <tr>
                 <td>{{ order.transaction_id }}</td>
-                <td>{{ order.date }}</td>
+                <td>{{ order.last_updated }}</td>
                 <td>₹{{ order.get_cart_billing_total }}</td>
                 <td><span class="badge bg-warning">{{ order.status }}</span></td>
                 <td>
