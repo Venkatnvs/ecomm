@@ -19,6 +19,7 @@ urlpatterns = [
     path('nvs-admin/', include('store.details.ctm_admin.urls')),
     path('support/', include('chat.urls')),
     path('auth/', include('clients.urls')),
+    path('account/', include('account.urls')),
     path('blog/', include('blog.urls')),
     path('blog/admin/', include('blog.details.blog_admin.urls')),
     path('sd/', include('store.details.categories.urls')),
