@@ -1,0 +1,20 @@
+{% load static %}
+<div class="col-md-5 col-lg-4 col-sm-5">
+    <a href="{% url redirect %}">
+        <div class="card border-left-{{border_col}}">
+            <div class="card-body p-1">
+                <div class="cds-account">
+                    <div class="row container-fluid">
+                        <div class="col-4 d-flex">
+                            <img src="{% static image %}" alt="box-{{title}}" class="img-fluid">
+                        </div>
+                        <div class="col-8 align-items-center">
+                            <h5 class="fw-semibold m-0">{{title}}</h5>
+                            <p class="text-xs text-gray-800 m-1">{{description}}</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </a>
+</div>

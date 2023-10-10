@@ -1,25 +1,71 @@
-{% load static %}
+{% load static %} 
 {% load humanize %}
 <div class="col-lg-6">
-    <div class="nvs-box">
-      <a href="{% url 'cart' %}" class="btn btn-dark"><i class="bi bi-arrow-left"></i>Back to cart</a>
-      <hr>
-      <h5><strong>Order Summery</strong></h5>
-      <hr>
-      {% for i in data %}
-      <div class="nvs-cart-row mt-2">
-          <div style="margin-right: 8px;" class="nvs-cart-items">{{forloop.counter}}</div>
-          <div style="margin-right:5px;" class="nvs-cart-items1"><img class="nvs-cart-img" src="{{i.product.productmedia_set.all.0.img_url}}" alt="product"></div>
-          <div style="margin-right: 4px;" class="nvs-cart-items2">{{i.product.name | truncatechars:40}}</div>
-          <div class="nvs-cart-items1">₹{{i.product.new_price |floatformat:0|intcomma }}</div>
-          <div class="nvs-cart-items1">x{{i.quantity}}</div>
+  <div class="nvs-box p-3">
+    <a href="{% url 'cart' %}" class="btn btn-dark btn-sm"
+      ><i class="bi bi-arrow-left"></i>Back to cart</a
+    >
+    <hr />
+    <h5><strong>Order Summary</strong></h5>
+    <hr />
+    {% for i in data %}
+    <div class="nvs-cart-row mt-2">
+      <div style="margin-right: 8px" class="nvs-cart-items">
+        {{forloop.counter}}
       </div>
-      {% endfor %}
-      <br>
-      <div>
-          <h5>Items: <strong>{{order.get_item_total}}</strong></h5>
-          <h5>Total: <strong>₹{{order.get_cart_total|intcomma }}</strong></h5>
+      <div style="margin-right: 5px" class="nvs-cart-items1">
+        <img
+          class="nvs-cart-img"
+          src="{{i.product.productmedia_set.all.0.img_url}}"
+          alt="product"
+        />
+      </div>
+      <div style="margin-right: 4px" class="nvs-cart-items2">
+        {{i.product.name | truncatechars:40}}
+      </div>
+      <div class="nvs-cart-items1">
+        ₹{{i.product.new_price |floatformat:0|intcomma }}
+      </div>
+      <div class="nvs-cart-items1">x{{i.quantity}}</div>
+    </div>
+    {% endfor %}
+    <br />
+    <div class="row d-flex justify-content-center">
+      <div class="col-md-9">
+        <div class="d-flex flex-between-center mb-1">
+          <h3 class="card-title mb-0 p-0"><strong>Summary</strong></h3>
+        </div>
+        <div class="d-flex justify-content-between">
+          <p class="text-900 fw-semi-bold">Items :</p>
+          <p class="text-1100 fw-semi-bold">{{order.get_item_total}}</p>
+        </div>
+        <div class="d-flex justify-content-between">
+          <p class="text-900 fw-semi-bold">Items subtotal :</p>
+          <p class="text-1100 fw-semi-bold">₹{{order.get_cart_total|intcomma }}</p>
+        </div>
+        <div class="d-flex justify-content-between">
+          <p class="text-900 fw-semi-bold">Tax :</p>
+          <p class="text-1100 fw-semi-bold">₹{{order.get_cart_tax|intcomma }}</p>
+        </div>
+        <div class="d-flex justify-content-between">
+          <p class="text-900 fw-semi-bold">Shipping Cost :</p>
+          <p class="text-1100 fw-semi-bold">₹{{order.get_cart_shipping|intcomma }}</p>
+        </div>
+        <div id="coupon_code_show" class="d-flex justify-content-between hidden_c">
+        </div>
+        <div id="coupon_get_form" class="input-group mb-3">
+          <input class="form-control" type="text" placeholder="Coupon Code" id="coupon_get"/>
+          <button id="coupon_sbt" class="btn btn-primary px-5">
+            Apply
+          </button>
+          <div id="invalid-coupon-feedback" class="invalid-feedback">Coupon code Not found</div>
+        </div>
+        <div class="d-flex justify-content-between border-y border-dashed py-3 mb-1">
+          <h4 class="mb-0">Total :</h4>
+          <h4 id="cart_bill_total" class="mb-">₹{{ order.get_cart_billing_total|intcomma }}</h4>
+        </div>
       </div>
     </div>
-    <br>
+  </div>
+  <br />
 </div>

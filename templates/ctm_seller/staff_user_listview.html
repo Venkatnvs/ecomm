@@ -45,8 +45,8 @@ Category List
                 <div class="article-title">
                     <h2><a href="#">{{x.user_staff}}</a></h2>
                 </div>
-                <span class="badge bg-primary">Email: {{x.user.email | truncatechars:20 }}</span>
-                <span class="badge bg-success"><strong class="text-dark">Type: </strong> {{x.customer_type}}</span>
+                <span style="white-space: wrap;" class="badge bg-primary">Email: {{x.user.email | truncatechars:20 }}</span>
+                <span style="white-space: wrap;" class="badge bg-success"><strong class="text-dark">Type: </strong> {{x.customer_type}}</span>
                 <div class="form-check form-switch mt-2">
                     <input type="checkbox" name="checkbox" id="active-checkbox" class="form-check-input" disabled {% if x.user.is_active %}checked{% endif %}>
                     <label for="active-checkbox" class="form-check-label">Active</label>

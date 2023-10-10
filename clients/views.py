@@ -18,6 +18,7 @@ from django.contrib.auth.tokens import PasswordResetTokenGenerator
 import threading
 from .state_data import Pin_dis,state_data_sending
 from clients.models import Customer
+from django.conf import settings
 
 # Create your views here.
 class EmailThread(threading.Thread):
@@ -26,7 +27,7 @@ class EmailThread(threading.Thread):
         threading.Thread.__init__(self)
 
     def run(self):
-        self.email.send(fail_silently=False)
+        self.email.send(fail_silently=True)
 
 def states_get_pin(request):
     try:
@@ -63,10 +64,10 @@ class Registration(View):
             if not User.objects.filter(email=email).exists():
 
                 if password != password2:
-                    messages.error(request, 'Password donot match')
+                    messages.error(request, 'Password does not match')
                     return render(request, 'clients/register.html', context)
                 if len(password)<8:
-                    messages.error(request, 'Password too short')
+                    messages.error(request, 'Password is too short')
                     return render(request, 'clients/register.html', context)
 
                 user = User.objects.create_user(username=username, email=email, first_name=firstname,last_name=lastname)
@@ -93,7 +94,7 @@ class Registration(View):
                 activate_url = request_main+domain+link
 
                 context_email_data = {
-                    'title':'NvsTrades',
+                    'title':settings.SITE_NAME,
                     'baseurl':domain+request_main,
                     'activate_url':activate_url,
                     'user_name':user.username,
@@ -102,7 +103,94 @@ class Registration(View):
 
                 email_body = get_template(email_tmp_path).render(context_email_data)
 
-                email_subject = 'Activate your account | NvsTrades'
+                email_subject = f'Activate your account | {settings.SITE_NAME}'
+                # email_body = 'Hi ' + user.username + " \n Please use this link to Verifi you identity \n" +activate_url
+
+                email = EmailMessage(
+                    email_subject,
+                    email_body,
+                    from_mail,
+                    [email],
+                )
+                email.content_subtype = 'html'
+                EmailThread(email).start()
+                messages.success(request, 'Account successfully created')
+                messages.info(request, 'A Verification email have been sent')
+                return render(request, 'clients/register.html',context)
+
+
+        return render(request, 'clients/register.html',context)
+
+class Registration_seller(View):
+    def get(self, request):
+        states_data=state_data_sending()
+        return render(request, 'clients/register_seller.html',{'data': states_data})
+
+    def post(self, request):
+        states_data=state_data_sending()
+        username = request.POST['username']
+        firstname = request.POST['firstname']
+        lastname = request.POST['lastname']
+        email = request.POST['email']
+        password = request.POST['password']
+        password2 = request.POST['password2']
+        profile_pic = request.FILES['profile_img']
+        addr_line = request.POST['addr_line']
+        addr_state = request.POST['addr_state']
+        addr_city = request.POST['addr_city']
+        addr_zip = request.POST['addr_zip']
+        company_name = request.POST['company_name']
+        gst_number = request.POST['gst_number']
+        context = {
+            'data': states_data,
+            'FieldValues':request.POST
+        }
+        if not User.objects.filter(username=username).exists():
+            if not User.objects.filter(email=email).exists():
+
+                if password != password2:
+                    messages.error(request, 'Password does not match')
+                    return render(request, 'clients/register.html', context)
+                if len(password)<8:
+                    messages.error(request, 'Password is too short')
+                    return render(request, 'clients/register.html', context)
+
+                user = User.objects.create_user(username=username, email=email, first_name=firstname,last_name=lastname)
+                user.set_password(password)
+                user.is_active=False
+                user.save()
+
+                customer = Customer.objects.create(user=user, customer_type="Seller")
+                customer.save()
+
+                customer.selleruser.profile_pic=profile_pic
+                customer.selleruser.company_name=company_name
+                customer.selleruser.gst_details=gst_number
+                customer.selleruser.address=addr_line
+                customer.selleruser.state=addr_state
+                customer.selleruser.city=addr_city
+                customer.selleruser.zip=addr_zip
+                customer.selleruser.save()
+
+                email_tmp_path = 'emails/auth/email_verification.html'
+                domain = get_current_site(request).domain
+                request_main = config('REQUEST')
+                uidb64 = urlsafe_base64_encode(force_bytes(user.pk))
+                link = reverse('activate', kwargs={'uidb64':uidb64, 'token':token_generater.make_token(user)})
+                from_mail = config('FROM_MAIL')
+                activate_url = request_main+domain+link
+
+                context_email_data = {
+                    'title':settings.SITE_NAME,
+                    'baseurl':domain+request_main,
+                    'activate_url':activate_url,
+                    'user_name':user.username,
+                    'user_email':user.email,
+                }
+
+                email_body = get_template(email_tmp_path).render(context_email_data)
+
+                email_subject = f'Activate your account | {settings.SITE_NAME}'
                 # email_body = 'Hi ' + user.username + " \n Please use this link to Verifi you identity \n" +activate_url
 
                 email = EmailMessage(
@@ -179,7 +267,7 @@ class Login(View):
             if user:
                 if user.is_active:
                     auth.login(request, user)
-                    messages.success(request, 'Welcome '+user.username+' You are now loggined')
+                    messages.success(request, 'Welcome '+user.username+'! You are now logged in')
                     return HttpResponseRedirect(next)
 
                 messages.error(request, 'Account is not activated, Please check your email')
@@ -213,20 +301,29 @@ class ResetPassword(View):
         user = User.objects.filter(email=email)
 
         if user.exists():
+            email_tmp_path = 'emails/auth/reset_password.html'
             uidb64 = urlsafe_base64_encode(force_bytes(user[0].pk))
             domain = get_current_site(request).domain
             link = reverse('reset-user-password', kwargs={'uidb64':uidb64, 'token':PasswordResetTokenGenerator().make_token(user[0])})
             request_main = config('REQUEST')
             from_mail = config('FROM_MAIL')
             reset_url = request_main+domain+link
-            email_subject = 'Reset Password Link'
-            email_body = "Hi there, \n Please use this link to Reset your Password\n" +reset_url
+            email_subject = f'Reset Password Link | {settings.SITE_NAME}'
+            context_email_data = {
+                    'title':settings.SITE_NAME,
+                    'baseurl':domain+request_main,
+                    'reset_url':reset_url,
+                    'user_name':user[0].username,
+                    'user_email':user[0].email,
+            }
+            email_body = get_template(email_tmp_path).render(context_email_data)
             email = EmailMessage(
                 email_subject,
                 email_body,
                 from_mail,
                 [email],
             )
+            email.content_subtype = 'html'
             EmailThread(email).start()
             messages.success(request, 'Email have been send to reset your password')
             return render(request, 'clients/reset_password.html')

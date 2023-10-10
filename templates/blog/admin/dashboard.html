@@ -7,6 +7,6 @@
 
 {% block body_hidden %}
 {{ request.user.username |json_script:"user_name" }}
-{% include 'blog/base/header.html' with order=order %}
-{% include 'blog/base/sidebar.html' %}
+{% include 'blog/admin/base/header.html' with order=order %}
+{% include 'blog/admin/base/sidebar.html' %}
 {% endblock body_hidden %}

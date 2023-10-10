@@ -1,0 +1,62 @@
+{% extends 'base2/index.html' %}
+{% load static %}
+{% load compress %}
+
+{% block title %}
+Payment | {{site_name}}
+{% endblock title %}
+
+{% block styles %}
+<style>
+  .container{
+    margin-top: 65px !important;
+  }
+</style>
+{% endblock styles%}
+
+{% block body_hidden %}
+{{ request.user.username |json_script:"user_name" }}
+{% include 'base2/header.html' with order=order %}
+{% endblock body_hidden %}
+
+{% block content %}
+<div class="container2">
+
+    <h2>order- {{trans_id}}</h2>
+    <h1>order status: {{type}}</h1>
+    <br>
+    <p id = "result"></p>
+    <button class="btn btn-outline-primary mx-1" onclick = "myURL()">Click to Redirect</button>
+    <button class="btn btn-outline-warning" onclick="clearInterval(intervalId)">Stop Redirect</button>
+</div>
+    <script>
+        var delayInSeconds = 10;
+        function redirect() {
+            var result = document.getElementById("result");
+            result.innerHTML = "<b>The page will redirect after delay of <span class='text-info'>" + delayInSeconds + "</span> seconds</b>";
+            delayInSeconds--;
+            if (delayInSeconds < 0) {
+                myURL()
+            }
+        }
+        var intervalId = setInterval(redirect, 1000);
+        window.onload = ()=>{
+            redirect()
+        }
+    </script>
+    {% if status %}
+    <script>
+        function myURL() {
+            document.location.href = "{% url 'order-my-orders' %}";
+        }
+        cart = {};
+        document.cookie = "cart=" + JSON.stringify(cart) + ";domain=;path=/";
+    </script>
+    {% elif not status %}
+    <script>
+        function myURL() {
+            document.location.href = "{% url 'home' %}";
+        }
+    </script>
+    {% endif %}
+{% endblock content %}

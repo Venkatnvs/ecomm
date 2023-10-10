@@ -1,0 +1,194 @@
+{% extends 'clients/base.html' %}
+{% load static %} 
+{% load compress %}
+{% block title %} Register {% endblock %}
+{% block content %}
+<div class="row mask m-0 gradient-custom-3 d-flex justify-content-center">
+  <div class="col-md-7">
+    <div class="card mt-4 p-2 reg_card">
+      <div class="card-body">
+        <div class="card-headr text-center mb-1 p-1">
+          <div class="card-title m-0 p-2">
+            <h2 class="m-0 p-0">Register As Seller</h2>
+          </div>
+        </div>
+        <form action="{% url 'register-seller' %}" method="post" enctype="multipart/form-data">
+          {% csrf_token %} {% include 'clients/messages.html' %}
+          <div class="container">
+            <div class="picture-container">
+              <div class="picture">
+                <img src="{% static 'clients/img/image_upload.jpg' %}" class="picture-src" id="wizardPicturePreview"
+                  title="">
+                <input required type="file" id="wizard-picture" name="profile_img" onchange="Filevalidation()">
+              </div>
+              <h6>Profile Picture <span class="text-danger">*</span></h6>
+            </div>
+          </div>
+          <div class="form-group">
+            <h5><strong>Basic Information</strong></h5>
+            <label class="" for="inputname">Username <span class="text-danger">*</span></label>
+            <input required type="text" name="username" placeholder="Username" class="form-control" id="inputname"
+            value="{{ FieldValues.username }}" />
+            <div class="invalid-feedback invalid-username-feedback" style="display: none"></div>
+            <p class="text-sm text-success username-success"></p>
+          </div>
+          <div class="form-group mt-1">
+            <label for="inputfirstname">Firstname <span class="text-danger">*</span></label>
+            <input required type="text" name="firstname" placeholder="Firstname" class="form-control"
+              id="inputfirstname" value="{{ FieldValues.firstname }}" />
+          </div>
+          <div class="form-group mt-1">
+            <label for="inputlastname">Lastname <span class="text-danger">*</span></label>
+            <input required type="text" name="lastname" placeholder="Lastname" class="form-control"
+              id="inputlastname" value="{{ FieldValues.lastname }}" />
+          </div>
+          <div class="form-group mt-1">
+            <label for="inputemail">Email address <span class="text-danger">*</span></label>
+            <input required type="email" name="email" placeholder="abc@gmail.com" class="form-control" id="inputemail"
+              value="{{ FieldValues.email }}" />
+            <div class="invalid-feedback invalid-email-feedback" style="display: none"></div>
+            <p class="text-sm text-success email-success"></p>
+          </div>
+          <div class="company_details mb-3">
+            <h5><strong>Company Details</strong></h5>
+            <div class="form-group mt-1">
+                <label for="inputcompany_name">Company Name <small>(brand)</small> <span class="text-danger">*</span></label>
+                <input required type="text" name="company_name" placeholder="Brand name" class="form-control"
+                  id="inputcompany_name" value="{{ FieldValues.company_name }}" />
+            </div>
+            <div class="form-group mt-2">
+                <label for="inputgst_number">GST Number <span class="text-danger">*</span></label>
+                <input required type="text" name="gst_number" placeholder="Gst Number" class="form-control"
+                  id="inputgst_number" value="{{ FieldValues.gst_number }}" />
+            </div>
+          </div>
+          <div id="shipping-info mt-1">
+            <!-- <hr /> -->
+            <h5><strong>Address</strong></h5>
+            <div class="form-group m-1">
+              <label for="inputAddress2">Line 1 <span class="text-danger">*</span></label>
+              <input type="text" class="form-control" name="addr_line" id="inputAddress2"
+                placeholder="1234 Main,Apartment, studio, or floor" value="{{ FieldValues.addr_line }}" />
+            </div>
+            <div class="form-row m-1">
+              <div class="form-group d-inline-block col-lg-5 m-1">
+                <label for="inputState">State <span class="text-danger">*</span></label>
+                <select id="inputState" name="addr_state" class="form-control nvs-state">
+                  <option selected>Choose...</option>
+                  {% for x in data %}
+                  <option {% if FieldValues.addr_line == x %}selected{% endif %}>{{x}}</option>
+                  {% endfor %}
+                </select>
+              </div>
+              <div class="form-group d-inline-block col-md-4 m-1">
+                <label for="inputCity">City <span class="text-danger">*</span></label>
+                <select id="inputCity" name="addr_city" class="form-control nvs-city">
+                  <option selected>Please select state</option>
+                </select>
+              </div>
+              <div class="form-group d-inline-block col-md-2 m-1">
+                <label for="inputZip">Zip <span class="text-danger">*</span></label>
+                <input type="text" name="addr_zip" class="form-control pin_dist" id="inputZip" value="{{ FieldValues.addr_zip }}" />
+              </div>
+            </div>
+            <hr />
+            <div class="form-group mb-3">
+              <label for="inputpassword">Password <span class="text-danger">*</span></label>
+              <input required type="password" name="password" placeholder="password" class="form-control"
+                id="inputpassword" />
+              <small class="float-end p-2 password-toggle">SHOW</small>
+            </div>
+            <div class="form-group mb-3">
+              <label for="inputpassword">Confirm Password <span class="text-danger">*</span></label>
+              <input required type="password" name="password2" placeholder="Conform Password" class="form-control"
+                id="inputpassword2" />
+              <small class="float-end p-2 password-toggle-2">SHOW</small>
+            </div>
+            <br>
+            <hr class="mt-0" />
+            <div class="form-group m-1">
+              <div class="form-check">
+                <input class="form-check-input" name="terms_cond" type="checkbox" id="gridCheck" {% if FieldValues.terms_cond == 'on' %}checked{% endif %}/>
+                <label class="form-check-label" for="gridCheck">
+                  I agree all statements in <a target="_blank" href="{% url 'utils-terms-conditions-pg' %}" class="text-body"><u>Terms of service</u></a>
+                </label>
+              </div>
+            </div>
+          </div>
+          <input type="submit" value="Register" class="btn w-100 btn-primary submit-btn mt-2 gradient-custom-4 text-body" />
+        </form>
+        <div class="mt-4">
+          <p class="text-center text-muted mb-1">Have already an account? <a href="{% url 'login' %}"
+            class="fw-bold text-body"><u>Login</u></a></p>
+          <p class="text-center text-muted mb-0">Buy at {{site_name}}? <a href="{% url 'register' %}"
+            class="fw-bold text-body"><u>Register as User</u></a></p>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+{% endblock content %}
+
+
+{% block scripts %}
+<script src="https://code.jquery.com/jquery-3.6.3.min.js"
+integrity="sha256-pvPw+upLPUjgMXY0G+8O0xUf+/Im1MZjXxxgOcBQBXU=" crossorigin="anonymous"></script>
+{% compress js inline %}
+<script>
+  $(document).ready(function () {
+    $("#wizard-picture").change(function () {
+      readURL(this);
+    });
+  });
+  function readURL(input) {
+    const fileInput = document.getElementById('wizard-picture');
+    var filePath = fileInput.value;
+    // Allowing file type
+    var allowedExtensions = /(\.jpg|\.jpeg|\.png|\.gif|\.apng|\.avif|\.webp)$/i;
+    if (!allowedExtensions.exec(filePath)) {
+      alert('Invalid file type');
+    }
+    else {
+      const fi = document.getElementById('wizard-picture');
+      // Check if any file is selected.
+      if (fi.files.length > 0) {
+        for (const i = 0; i <= fi.files.length - 1; i++) {
+
+          const fsize = fi.files.item(i).size;
+          const file = Math.round((fsize / 1024));
+          // The size of the file.
+          if (file >= 6144) {
+            alert(
+              "File too Big, please select a file less than 6mb");
+          } else {
+            if (input.files && input.files[0]) {
+              var reader = new FileReader();
+
+              reader.onload = function (e) {
+                $('#wizardPicturePreview').attr('src', e.target.result).fadeIn('slow');
+              }
+              reader.readAsDataURL(input.files[0]);
+            }
+          }
+        }
+      }
+    }
+  }
+</script>
+<script src="{% static 'clients/js/register.js' %}"></script>
+<script src="{% static 'clients/js/address.js' %}"></script>
+<script src="{% static 'clients/js/add_pin.js' %}"></script>
+{% endcompress %}
+{% endblock scripts %}
+{% block header_links %}
+<li class="nav-item mx-2 fs-6">
+  <a class="text-center text-wrap" href="{% url 'register' %}">
+    <span class="d-md-block ps-2 d-flex">Register User</span>
+  </a>
+</li>
+<li class="nav-item mx-3 fs-6">
+  <a class="" href="{% url 'login' %}">
+    <span class="d-md-block ps-2">Login</span>
+  </a>
+</li>
+{% endblock header_links %}
