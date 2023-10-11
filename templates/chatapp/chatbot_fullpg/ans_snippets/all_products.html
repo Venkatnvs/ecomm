@@ -4,13 +4,13 @@
         {% for i in products %}
         <div class="col">
             <div class="card">
-                <div class="card-header">
-                    <span>{{i.name | truncatechars:50}}</span>
+                <div class="card-header bg-success text-light p-1">
+                    <span>{{i.id}}>&nbsp;</span><a href="{% url 'productdetails' i.slug %}" target="_blank" ><span>{{i.name | truncatechars:35}}</span></a>
                 </div>
-                <div class="card-body">
+                <div class="card-body m-0 p-1 d-flex row ">
                     <img class="api-image" src="{{i.first_img}}" alt="{{i.name}}">
                     <div>
-                        <p>{{i.new_price}}</p>
+                        <p>₹{{i.new_price}}</p>
                     </div>
                 </div>
             </div>

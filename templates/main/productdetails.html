@@ -53,6 +53,14 @@
 </style>
 <link rel="stylesheet" href="{% static 'main/css/productdetails.css' %}">
 {% endcompress %}
+<link href="{% static 'main/css/mobile_pro_view.css' %}" rel="stylesheet">
+<style>
+    @media (max-width: 550px){
+        #main_product_details{
+            width: 165px;
+        }
+    }
+</style>
 {% endblock styles %}
 
 {% block scripts %}

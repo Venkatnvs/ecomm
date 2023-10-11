@@ -166,12 +166,12 @@
 
         {% else %}
           <li class="nav-item">
-            <a href="{% url 'login' %}" class="btn btn-success login_btn_gsap">Login</a>
+            <a href="{% url 'login' %}" class="btn btn-sm btn-success login_btn_gsap">Login</a>
           </li>
         {% endif %}
         <li class="nav-item nvs-cart">
           <a class="position-relative" href="{% url 'cart' %}">
-            <img  src="{% static 'main/img/cart.png' %}" alt="cart" height="60">
+            <img  src="{% static 'main/img/cart.png' %}" alt="cart" height="55">
             <span class="badge top-0 start-90 translate-middle rounded-pill bg-danger position-absolute nvs_cart_cnt_bag">{{order.get_item_total}}</span>
             <!-- <span class="badge top-0 start-100 translate-middle rounded-pill bg-danger position-absolute top-0 start-100 translate-middle badge">100</span> -->
           </a>

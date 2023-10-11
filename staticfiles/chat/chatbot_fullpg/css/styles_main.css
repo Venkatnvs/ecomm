@@ -20,6 +20,7 @@ body {
   display: flex;
   align-items: center;
   justify-content: center;
+  box-sizing: border-box;
 }
 .chat-container {
   background-color: #fff;
@@ -41,7 +42,7 @@ body {
   padding: 10px;
   text-align: center;
   gap: 8px;
-  height: 10vh;
+  height: 55px;
 }
 .chat-header h2 {
   padding: 0;
@@ -49,7 +50,7 @@ body {
 }
 .chat-header > img{
   width: auto;
-  height: 50px;
+  height: 40px;
   border-radius: 4px;
   aspect-ratio: 2/2;
   object-fit: contain;
@@ -85,7 +86,7 @@ body {
 }
 .user-input {
   flex-grow: 1;
-  padding: 10px 8px;
+  padding: 8px 8px;
   border: 1px solid #ccc;
   border-radius: 5px;
   font-size: 18px;
@@ -94,7 +95,7 @@ body {
 }
 .send-button {
   margin-left: 20px;
-  padding: 10px 2rem;
+  padding: 8px;
   background-color: #007bff;
   color: #fff;
   border: none;
@@ -132,4 +133,45 @@ body {
   height: 100px;
   object-fit: contain;
   aspect-ratio: 3/2;
+}
+a{
+  color: white;
+  text-decoration: none!important;
+}
+a:hover {
+  color:#88e7ff; 
+  text-decoration:none; 
+  cursor:pointer;  
+}
+/* Add this CSS at the end of your existing CSS */
+
+@media screen and (max-width: 768px) {
+  body {
+    overflow: auto;
+    height: auto;
+  }
+  
+  .chat-container {
+    max-width: none;
+    height: 93vh;
+    border-radius: 8px;
+  }
+
+  /* .chat-messages {
+    max-height: 100%;
+  } */
+
+  .user-input {
+    width: 100%;
+    margin-top: 10px;
+  }
+
+  .send-button {
+    margin-left: 3px;
+    margin-top: 10px;
+
+  }
+  .fa-paper-plane{
+    display: none;
+  }
 }
