@@ -1,15 +1,16 @@
 <div class="card">
-    <div class="card-header m-0 p-1 mx-2">
-      <h4 class="">Pending Orders</h4>
-    </div>
-    <div class="card-body">
+  <div class="card-header m-0 p-1 mx-2">
+    <h4 class="">Pending Orders</h4>
+  </div>
+  <div class="card-body p-1">
+    <div class="table-responsive"> <!-- Added this div for responsiveness -->
       <div class="row">
         <div class="col-md-12">
           <table class="table">
             <thead>
               <tr>
                 <th>Order ID</th>
-                <th>Date</th>
+                <th class="tb-date">Date</th>
                 <th>Total Amount</th>
                 <th>Status</th>
                 <th>Details</th>
@@ -19,7 +20,7 @@
               {% for order in orders %}
               <tr>
                 <td>{{ order.transaction_id }}</td>
-                <td>{{ order.last_updated }}</td>
+                <td class="tb-date">{{ order.last_updated }}</td>
                 <td>₹{{ order.get_cart_billing_total }}</td>
                 <td><span class="badge bg-warning">{{ order.status }}</span></td>
                 <td>
@@ -38,4 +39,4 @@
       </div>
     </div>
   </div>
-  
+</div>

@@ -20,9 +20,14 @@ from decouple import config
 from django.urls import reverse
 from django.template.loader import get_template
 import threading
+import json
 from django.http import HttpResponseForbidden,HttpResponse
 from django.views import View
 from django.conf import settings
+from django.db.models import Count
+from django.db.models.functions import TruncDate
+from django.core.serializers.json import DjangoJSONEncoder
+from .dashboard import GetCounts
 
 class EmailThread(threading.Thread):
     def __init__(self, email):
@@ -35,7 +40,41 @@ class EmailThread(threading.Thread):
 @login_required
 @user_passes_test(lambda u: True if((u.customer.customer_type == 'Admin') or (u.customer.customer_type == 'Seller')) else False)
 def main(request):
-    return render(request,'ctm_seller/index.html')
+    user_type = request.user.customer.customer_type
+    if user_type == 'Admin':
+        if 'admin_seller_sel' in request.session:
+            admin_sel_sell = request.session['admin_seller_sel']
+            user_to_get = SellerUser.objects.filter(id=admin_sel_sell).first()
+            user_to_get = user_to_get.user_type.user
+        else:
+            return redirect('seller-sel-seller')
+    else:
+        user_to_get = request.user
+    user_data = SellerStaff.objects.filter(
+            seller__user_type__user = user_to_get,
+            user__is_active=True,
+        ).annotate(day=TruncDate('created_at')).values('day').annotate(count=Count('id'))
+    product_data = Product.objects.filter(
+        is_active=True,
+        subcategories__category__is_active=True,
+        subcategories__is_active=True,
+        by_seller__user_type__user = user_to_get
+    ).annotate(day=TruncDate('created_at')).values('day').annotate(count=Count('id'))
+    user_data_list = list(user_data)
+    product_data_list = list(product_data)
+    count_data = GetCounts(request,user_to_get)
+    context = {
+        'user_data': json.dumps(user_data_list, cls=DjangoJSONEncoder),
+        'product_data':json.dumps(product_data_list, cls=DjangoJSONEncoder),
+        "user_act_cnt": count_data['users'],
+        "order_cmp_cnt": count_data['orders_comp'],
+        "order_ncmp_cnt": count_data['orders_ncomp'],
+        "prod_cmp_cnt": count_data['products'],
+        # "data":data,
+        # "devices_d":data_d
+        # "data":json.dumps(data, cls=DjangoJSONEncoder)
+    }
+    return render(request,'ctm_seller/index.html',context)
 
 
 @login_required

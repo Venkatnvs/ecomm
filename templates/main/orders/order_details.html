@@ -7,6 +7,10 @@ Your Orders | {{site_name}}
 
 {% block styles %}
 <style>
+    .container {
+        padding: 0px;
+        margin: 0px;
+    }
     .timeline {
         display: flex;
         justify-content: space-between;
@@ -63,13 +67,19 @@ Your Orders | {{site_name}}
         font-weight: 700 !important;
         color: rgb(16, 16, 16);
     }
+    @media (max-width: 550px) {
+        .timeline-item {
+            padding: 8px 16px;
+            min-width: 130px;
+        }
+    }
 </style>
 {% endblock styles %}
 
 {% block content %}
 <div class="col">
     <div class="row mt-2">
-        <div class="col-md-9">
+        <div class="col-md-8">
             <h3 class="fw-bold">Order Details</h5>
         </div>
         <div class="col-md-3">
@@ -88,7 +98,7 @@ Your Orders | {{site_name}}
         <div class="col">
             <a class="btn btn-sm btn-secondary" href="{% url 'order-generate_invoice_pdf' orders.transaction_id %}"><i class="fa-regular fa-eye"></i>&nbsp;&nbsp;Invoice</a>
         </div>
-        <div class="col"></div>
+        <!-- <div class="col"></div> -->
     </div>
     <h5><strong>Order Tracking</strong></h5>
     <div class="timeline">

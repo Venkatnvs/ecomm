@@ -7,7 +7,7 @@ Your Orders | {{site_name}}
 
 
 {% block content %}
-<div class="container">
+<div class="container m-0 p-0">
     <h2 class="mb-4">
         <span class="fw-bold">
             Your Orders
@@ -31,3 +31,16 @@ Your Orders | {{site_name}}
 <script src="{% static 'main/js/cart.js' %}"></script>
 {% endcompress %}
 {% endblock scripts %}
+
+
+{% block styles %}
+    <style>
+        .container{
+            padding: 0px;
+            margin: 0px;
+        }
+        .tb-date{
+            min-width: 120px;
+        }
+    </style>
+{% endblock styles %}

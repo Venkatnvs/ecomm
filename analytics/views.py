@@ -81,6 +81,7 @@ def get_country_graph(request):
     today_date_1 = datetime.date.today()+datetime.timedelta(days=1)
     last_months_ago =today_date - datetime.timedelta(days=30)
     data = Visitor.objects.filter(timestamp__gte=last_months_ago, timestamp__lte=today_date_1)
+    print(data)
     count_data = Visitor.objects.filter(timestamp__gte=last_months_ago, timestamp__lte=today_date_1).values('city').annotate(count=Count('city'))
     geoData = []
     for i in data:

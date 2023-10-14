@@ -25,7 +25,11 @@ from .dashboard import GetCounts,unique_visitors_data,device_type_data_last_30_d
 @user_passes_test(lambda u: u.is_superuser)
 def main(request):
     user_data = User.objects.annotate(day=TruncDate('date_joined')).values('day').annotate(count=Count('id'))
-    product_data = Product.objects.annotate(day=TruncDate('created_at')).values('day').annotate(count=Count('id'))
+    product_data = Product.objects.filter(
+        is_active=True,
+        subcategories__category__is_active=True,
+        subcategories__is_active=True,
+    ).annotate(day=TruncDate('created_at')).values('day').annotate(count=Count('id'))
     user_data_list = list(user_data)
     product_data_list = list(product_data)
 
