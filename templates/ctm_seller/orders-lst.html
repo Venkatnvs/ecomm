@@ -1,0 +1,90 @@
+{% extends 'ctm_seller/base/index.html' %}
+{% load static %}
+{% block title %}
+Orders List | {{site_name}}
+{% endblock title %}
+
+
+{% block content %}
+<div class="card">
+    <div class="card-header m-0 p-1 mx-2">
+      <h4 class="">Pending Orders</h4>
+    </div>
+    <div class="card-body p-1">
+      <div class="table-responsive">
+        <div class="row">
+          <div class="col-md-12">
+            <table id="table_rr" class="table table-hover table-sm">
+              <thead class="table-secondary">
+                <tr>
+                  <th>Order ID</th>
+                  <th class="tb-date">Date</th>
+                  <th>Total Amount</th>
+                  <th>Status</th>
+                  <th>Details</th>
+                </tr>
+              </thead>
+              <tbody>
+                {% for order in order_list %}
+                <tr>
+                  <td>{{ order.transaction_id }}</td>
+                  <td class="tb-date">{{ order.last_updated }}</td>
+                  <td>₹{{ order.get_cart_billing_total }}</td>
+                  <td><span class="badge bg-warning">{{ order.status }}</span></td>
+                  <td>
+                    <div class="dropdown">
+                        <button class="btn btn-info dropdown-toggle btn-sm" type="button" data-bs-toggle="dropdown" aria-expanded="false">
+                            Action
+                        </button>
+                        <ul class="dropdown-menu">
+                          <li><a class="dropdown-item" href="{% url 'seller-orders-details' order.transaction_id %}">View Details</a></li>
+                        </ul>
+                    </div>
+                  </td>
+                </tr>
+                {% endfor %}
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+{% endblock content %}
+
+
+{% block styles %}
+<link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/1.13.6/css/dataTables.bootstrap5.min.css">
+<link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/buttons/2.4.2/css/buttons.dataTables.min.css">
+<style>
+        .container{
+            padding: 0px;
+            margin: 0px;
+        }
+        .tb-date{
+            min-width: 120px;
+        }
+</style>
+{% endblock styles %}
+
+{% block scripts %}
+<script type="text/javascript" src="https://cdn.datatables.net/1.13.6/js/jquery.dataTables.min.js"></script>
+<script type="text/javascript" src="https://cdn.datatables.net/1.13.6/js/dataTables.bootstrap5.min.js"></script>
+<script type="text/javascript" src="https://cdn.datatables.net/buttons/2.4.2/js/dataTables.buttons.min.js"></script>
+<script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/jszip/3.10.1/jszip.min.js"></script>
+<script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/pdfmake/0.1.53/pdfmake.min.js"></script>
+<script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/pdfmake/0.1.53/vfs_fonts.js"></script>
+<script type="text/javascript" src="https://cdn.datatables.net/buttons/2.4.2/js/buttons.html5.min.js"></script>
+<script>
+    $(document).ready(function() {
+        $('.table').DataTable( {
+            buttons: [
+                'copyHtml5',
+                'excelHtml5',
+                'csvHtml5',
+                'pdfHtml5'
+            ]
+        } );
+    } );
+</script>
+{% endblock scripts %}

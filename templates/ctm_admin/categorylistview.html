@@ -22,7 +22,8 @@ Category List
                 <a class="badge badge-sm bg-warning text-dark" href="{% url 'admin-categorylist' %}?filter={{filter}}&order_by=id&page={{page_obj.number}}">Id</a>|
                 <a class="badge badge-sm bg-warning text-dark" href="{% url 'admin-categorylist' %}?filter={{filter}}&order_by=name&page={{page_obj.number}}">Name</a>|
                 <a class="badge badge-sm bg-warning text-dark" href="{% url 'admin-categorylist' %}?filter={{filter}}&order_by=description&page={{page_obj.number}}">Description</a>|
-                <a class="badge badge-sm bg-warning text-dark" href="{% url 'admin-categorylist' %}?filter={{filter}}&order_by=updated_at&page={{page_obj.number}}">Time</a>
+                <a class="badge badge-sm bg-warning text-dark" href="{% url 'admin-categorylist' %}?filter={{filter}}&order_by=updated_at&page={{page_obj.number}}">Time</a>|
+                <a class="badge badge-sm bg-warning text-dark" href="{% url 'admin-categorylist' %}?filter={{filter}}&order_by=id&page={{page_obj.number}}&is_active=0">Not Active</a>
             </div>
         </div>
     </div>

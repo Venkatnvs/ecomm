@@ -1,4 +1,4 @@
-from django.shortcuts import render
+from django.shortcuts import get_object_or_404, render
 from django.contrib.auth.decorators import login_required,user_passes_test
 from store.models import *
 from django.views.generic import ListView,CreateView, UpdateView, DetailView
@@ -28,6 +28,7 @@ from django.db.models import Count
 from django.db.models.functions import TruncDate
 from django.core.serializers.json import DjangoJSONEncoder
 from .dashboard import GetCounts
+from order.models import Order,ShippingAddress
 
 class EmailThread(threading.Thread):
     def __init__(self, email):
@@ -76,6 +77,90 @@ def main(request):
     }
     return render(request,'ctm_seller/index.html',context)
 
+class OrdersListview(UserPassesTestMixin,ListView):
+    model = Order
+    template_name = 'ctm_seller/orders-lst.html'
+
+    def get(self,request, *args, **kwargs):
+        user_type = self.request.user.customer.customer_type
+        if user_type == 'Admin':
+            if 'admin_seller_sel' in self.request.session:
+                admin_sel_sell = self.request.session['admin_seller_sel']
+                self.user_to_get = SellerUser.objects.filter(id=admin_sel_sell).first()
+                self.user_to_get = self.user_to_get.user_type.user
+            else:
+                return redirect('seller-sel-seller')
+        else:
+            self.user_to_get = self.request.user
+        response = super().get(request, *args, **kwargs)
+        return response
+
+    def test_func(self):
+        try:
+            user_type = self.request.user.customer.customer_type
+            if user_type == 'Admin' or user_type=='Seller':
+                return True
+            else:
+                return False
+        except Exception as e:
+            return False
+
+    def get_queryset(self):
+        completed_orders = Order.objects.filter(
+            orderitems__product__by_seller__user_type__user=self.user_to_get,
+            is_completed=True,
+            is_delivered=False
+        ).distinct()
+        return completed_orders
+
+class OrdersListDetailsView(UserPassesTestMixin,ListView):
+    model = Order
+    template_name = 'ctm_seller/order_lst_details.html'
+
+    def get(self,request,trans_id, *args, **kwargs):
+        user_type = self.request.user.customer.customer_type
+        self.trans_id = trans_id
+        if user_type == 'Admin':
+            if 'admin_seller_sel' in self.request.session:
+                admin_sel_sell = self.request.session['admin_seller_sel']
+                self.user_to_get = SellerUser.objects.filter(id=admin_sel_sell).first()
+                self.user_to_get = self.user_to_get.user_type.user
+            else:
+                return redirect('seller-sel-seller')
+        else:
+            self.user_to_get = self.request.user
+        response = super().get(request,trans_id, *args, **kwargs)
+        return response
+
+    def test_func(self):
+        try:
+            user_type = self.request.user.customer.customer_type
+            if user_type == 'Admin' or user_type=='Seller':
+                return True
+            else:
+                return False
+        except Exception as e:
+            return False
+
+    def get_queryset(self):
+        orders = Order.objects.filter(
+            transaction_id = self.trans_id,
+            orderitems__product__by_seller__user_type__user=self.user_to_get,
+            is_completed=True,
+            is_delivered=False,
+        ).distinct().first()
+        return orders
+
+    def get_context_data(self, **kwargs):
+        context = super(OrdersListDetailsView, self).get_context_data(**kwargs)
+        orders = Order.objects.filter(
+            transaction_id = self.trans_id,
+            orderitems__product__by_seller__user_type__user=self.user_to_get,
+            is_completed=True,
+            is_delivered=False,
+        ).distinct().first()
+        context['shipping']=get_object_or_404(ShippingAddress,order=orders)
+        return context
 
 @login_required
 @user_passes_test(lambda u: True if(u.customer.customer_type == 'Admin') else False)

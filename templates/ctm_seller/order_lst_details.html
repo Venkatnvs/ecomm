@@ -1,0 +1,98 @@
+{% extends 'ctm_seller/base/index.html' %}
+{% load static %}
+{% block title %}
+Order {{object_list.transaction_id}} | {{site_name}}
+{% endblock title %}
+
+
+{% block content %}
+<div class="col">
+    <div class="row mt-2">
+        <div class="col-md-8">
+            <h3 class="fw-bold">Order Details</h5>
+        </div>
+    </div>
+    <h5>Order ID: {{ object_list.transaction_id }}</h5>
+    <div class="row mb-2">
+        <div class="col d-flex align-items-center">
+            <p class="badge bg-info">Order status: {{object_list.status }}</p><p class="d-inline-flex mx-2 btn btn-sm btn-warning"  data-bs-toggle="modal" data-bs-target="#staticBackdrop">Change</p>
+        </div>
+    </div>
+    
+<table class="table mt-2 table-hover">
+    <thead>
+        <tr>
+            <th style="max-width: 350px;">Product</th>
+            <th>Image</th>
+            <th>Quantity</th>
+            <th>Total</th>
+        </tr>
+    </thead>
+    <tbody>
+        {% for item in object_list.orderitems_set.all %}
+        <tr>
+            <td style="max-width: 350px;"><a href="{% url 'productdetails' item.product.slug %}">{{ item.product.name }}</a></td>
+            <td><a href="{% url 'productdetails' item.product.slug %}"><img src="{{ item.product.first_img }}" alt="Product Image" class="img-thumbnail" width="100"></a></td>
+            <td>{{ item.quantity }}</td>
+            <td>₹{{ item.get_total }}</td>
+        </tr>
+        {% endfor %}
+        <tr>
+            <td></td>
+            <td class="table-active" colspan="2"><span class="fw-bold2">Subtotal:</span></td>
+            <td class="table-active">₹{{object_list.get_cart_total}}</td>
+        </tr>
+        <tr>
+            <td></td>
+            <td class="table-active" colspan="2"><span class="fw-bold2">Tax:</span></td>
+            <td class="table-active">₹{{object_list.get_cart_tax}}</td>
+        </tr>
+        <tr>
+            <td></td>
+            <td class="table-active" colspan="2"><span class="fw-bold2">Shipping Cost:</span></td>
+            <td class="table-active">₹{{object_list.get_cart_shipping}}</td>
+        </tr>
+        {% if object_list.get_coupon_check %}
+            <tr>
+                <td></td>   
+                <td class="table-active" colspan="2"><span class="fw-bold2">Coupon: <span class="fw-bold">{{object_list.get_coupon_check}}</span></span></td>
+                <td class="table-active"><span class="text-danger">-₹{{object_list.get_coupon_discount}}</span></td>
+            </tr>
+        {% endif %}
+        <tr>
+            <td></td>
+            <td class="table-active" colspan="2"><span class="fw-bold fs-5">Total</span></td>
+            <td class="table-active"><span class="fs-5 fw-bold ">₹{{object_list.get_cart_billing_total}}</span></td>
+        </tr>
+    </tbody>
+</table>
+<div class="card">
+    <div class="card-header bg-primary text-white m-0 p-1">
+        <h6>Shipping Address</h6>
+    </div>
+    <div class="card-body">
+        <h6 class="card-subtitle mb-2 mt-2 text-muted">Order ID: {{ object_list.transaction_id }}</h6>
+        <p><strong>Address:</strong> {{ shipping.address_1 }}, {{ shipping.city }}, {{ shipping.state }}, {{ shipping.zipcode }}</p>
+        <p><strong>Date:</strong> {{ shipping.date|date:"M d, Y" }}</p>
+        <p><strong>Last Updated:</strong> {{ shipping.last_updated|date:"M d, Y, H:i" }}</p>
+    </div>
+</div>
+</div>
+<div class="modal fade" id="staticBackdrop" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h1 class="modal-title fs-5" id="staticBackdropLabel">Updated Order Status</h1>
+          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+        </div>
+        <div class="modal-body">
+          ...
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+          <button type="button" class="btn btn-primary">Understood</button>
+        </div>
+      </div>
+    </div>
+  </div>
+{% endblock content %}

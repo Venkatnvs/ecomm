@@ -21,7 +21,7 @@ profiler = LineProfiler()
 class ChatbotLogic:
     def __init__(self, request):
         self.request = request
-        self.name = "nvsbot"
+        self.name = "GreenBot"
         self.nlp = spacy.load("en_core_web_sm")
         # self.sentiment_analyzer = pipeline("sentiment-analysis", model="nlptown/bert-base-multilingual-uncased-sentiment", framework="pt")
         file_path = os.path.join(settings.BASE_DIR, 'data_files/training_data.csv')

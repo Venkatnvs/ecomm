@@ -4,7 +4,7 @@
     <ul class="sidebar-nav" id="sidebar-nav">
 
       <li class="nav-item">
-        <a class="nav-link" href="{% url 'home' %}">
+        <a class="nav-link" href="{% url 'seller-index' %}">
           <i class="bi bi-grid"></i>
           <span>Dashboard</span>
         </a>
@@ -39,6 +39,23 @@
           <li>
             <a href="{% url 'seller-staff-usercreate' %}">
               <i class="bi bi-circle"></i><span>Add StaffUser</span>
+            </a>
+          </li>
+        </ul>
+      </li><!-- End Components Nav -->
+      <li class="nav-item">
+        <a class="nav-link collapsed" data-bs-target="#orders" data-bs-toggle="collapse" href="#">
+          <i class="fa-solid fa-bag-shopping"></i><span>Orders</span><i class="bi bi-chevron-down ms-auto"></i>
+        </a>
+        <ul id="orders" class="nav-content collapse" data-bs-parent="#sidebar-nav">
+          <li>
+            <a href="{% url 'seller-orders-lst' %}" class="active">
+              <i class="bi bi-circle"></i><span>Pending Orders</span>
+            </a>
+          </li>
+          <li>
+            <a href="{% url 'seller-staff-usercreate' %}">
+              <i class="bi bi-circle"></i><span>Completed Orders</span>
             </a>
           </li>
         </ul>

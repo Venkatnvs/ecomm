@@ -70,16 +70,22 @@ class CategoryListview(UserPassesTestMixin,ListView):
     def get_queryset(self):
         filter_val = self.request.GET.get('filter','')
         order_by = self.request.GET.get('order_by','id')
+        is_active = self.request.GET.get('is_active','1')
+        try:
+            is_active = int(is_active)
+        except:
+            return HttpResponse("404 Error")
         if filter_val != "":
-            cagr = Category.objects.filter(Q(name__contains=filter_val) | Q(description__contains=filter_val)).order_by(order_by)
+            cagr = Category.objects.filter(Q(name__contains=filter_val) | Q(description__contains=filter_val) | Q(is_active=bool(is_active))).order_by(order_by)
         else:
-            cagr = Category.objects.all().order_by(order_by)
+            cagr = Category.objects.filter(is_active=bool(is_active)).order_by(order_by)
         return cagr
 
     def get_context_data(self, **kwargs):
         context = super(CategoryListview, self).get_context_data(**kwargs)
         context['filter']=self.request.GET.get('filter','')
         context['order_by']=self.request.GET.get('order_by','id')
+        context['is_active']=self.request.GET.get('is_active','1')
         context['all_table_data']=Category._meta.get_fields()
         return context
 

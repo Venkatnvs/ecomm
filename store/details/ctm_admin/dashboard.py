@@ -33,8 +33,8 @@ def unique_visitors_data():
     return dates, counts
 
 def device_type_data_last_30_days():
-    end_date = timezone.now()  # Current date and time
-    start_date = end_date - timezone.timedelta(days=30)  # 30 days ago
+    end_date = timezone.now()
+    start_date = end_date - timezone.timedelta(days=30)
 
     device_types = Visitor.objects.filter(timestamp__date__range=(start_date, end_date)) \
         .values('devicetype') \

@@ -31,4 +31,4 @@ class Visitor(models.Model):
     updated_at = models.DateTimeField(auto_now=True)
 
     def __str__(self):
-        return f"{self.city} - {self.continent_name}"
+        return f"{self.city} - {self.continent_name} - {self.title}"

@@ -20,7 +20,7 @@ DEBUG = config('DEBUG', cast=bool)
 ALLOWED_HOSTS = ['*']
 
 CSRF_TRUSTED_ORIGINS = [
-    'https://60a9-14-99-167-142.ngrok-free.app'
+    'https://8b8f-2401-4900-4e5b-1d0d-e146-b825-b4fd-df07.ngrok-free.app'
 ]
 
 

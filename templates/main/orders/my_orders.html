@@ -27,6 +27,25 @@ Your Orders | {{site_name}}
 {% endblock body_hidden %}
 
 {% block scripts %}
+<script type="text/javascript" src="https://cdn.datatables.net/1.13.6/js/jquery.dataTables.min.js"></script>
+<script type="text/javascript" src="https://cdn.datatables.net/1.13.6/js/dataTables.bootstrap5.min.js"></script>
+<script type="text/javascript" src="https://cdn.datatables.net/buttons/2.4.2/js/dataTables.buttons.min.js"></script>
+<script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/jszip/3.10.1/jszip.min.js"></script>
+<script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/pdfmake/0.1.53/pdfmake.min.js"></script>
+<script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/pdfmake/0.1.53/vfs_fonts.js"></script>
+<script type="text/javascript" src="https://cdn.datatables.net/buttons/2.4.2/js/buttons.html5.min.js"></script>
+<script>
+    $(document).ready(function() {
+        $('.table').DataTable( {
+            buttons: [
+                'copyHtml5',
+                'excelHtml5',
+                'csvHtml5',
+                'pdfHtml5'
+            ]
+        } );
+    } );
+</script>
 {% compress js inline %}
 <script src="{% static 'main/js/cart.js' %}"></script>
 {% endcompress %}
@@ -34,7 +53,9 @@ Your Orders | {{site_name}}
 
 
 {% block styles %}
-    <style>
+<link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/1.13.6/css/dataTables.bootstrap5.min.css">
+<link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/buttons/2.4.2/css/buttons.dataTables.min.css">
+<style>
         .container{
             padding: 0px;
             margin: 0px;
@@ -42,5 +63,5 @@ Your Orders | {{site_name}}
         .tb-date{
             min-width: 120px;
         }
-    </style>
+</style>
 {% endblock styles %}

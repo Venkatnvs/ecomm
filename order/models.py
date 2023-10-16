@@ -108,7 +108,10 @@ class Order(models.Model):
         return total_d
 
     def __str__(self):
-        return f'{self.id}-{self.user}'
+        if self.is_completed:
+            return f'{self.id}-{self.user} -- {self.status} ---- {self.get_cart_billing_total}'
+        else:
+            return f'{self.id}-{self.user}'
 
 
 class ShippingAddress(models.Model):
@@ -123,7 +126,7 @@ class ShippingAddress(models.Model):
     last_updated = models.DateTimeField(auto_now=True,null=True, blank=True)
 
     def __str__(self):
-        return self.address_1
+        return f'{self.address_1} -- {self.order}'
 
 
 class OrderItems(models.Model):

@@ -36,6 +36,11 @@
         .fs-7{
             font-size: 14px;
         }
+        .img_pre_close{
+            position: absolute;
+            margin: 3px;
+            padding: 6px;
+        }
     </style>
 {% endblock styles %}
 
@@ -101,6 +106,10 @@
                             <label for="">Tags <small style="font-size: 12px;">(Type tag and hit enter)</small></label>
                             <input class="bootstrap-tagsinput w-100" type="text" name="tags" data-role="tagsinput" />
                         </div>
+                        <div class="form-group mb-3">
+                            <label for="blog_description" class="fs-6">Blog Description</label>
+                            <textarea class="form-control" name="blog_description" id="blog_description" cols="30" rows="10"></textarea>
+                        </div>
                     </div>
                 </div>
             </div>
@@ -109,12 +118,20 @@
                     <div class="card-body mt-3">
                         <h6 class="mb-0 pb-0">Image</h6>
                         <p style="line-height: 2px;" class="m-0 p-0 mt-2 mb-3"><small class="text-secondary" style="font-size: 10px;">Main post image</small></p>
-                        <div class="sele_image_main">
+                        <div id="image_sel_pre" class="sele_image_main">
                             <div class="nvs_sel_img-main">
                                 <i style="color: #dadbdd;" class="bi bi-image fs-1"></i><br>
-                                <button style="border-radius: 3px;" class="btn border border-secondary-subtle" type="button">Select image</button>
+                                <div class="d-flex">
+                                    <input type="file" class="d-none" id="main_img" name="main_img">
+                                    <label for="main_img" style="border-radius: 3px;" class="btn border border-secondary-subtle" type="button">Select image</label>
+                                </div>
                             </div>
-                            <input type="file" class="d-none" id="main_img" name="main_img">
+                        </div>
+                        <div id="image_show_pre" class="sele_image_main d-none">
+                            <div>
+                                <button id="image_pre_show_close" type="button" class="btn-close img_pre_close bg-danger" aria-label="Close"></button>
+                            </div>
+                            <img class="img-fluid img-thumbnail w-100" src="" alt="img_pre" id="image_show_pre-img">
                         </div>
                         <h6 class="mt-2">or Add Image Url</h6>
                         <div class="form-group">
@@ -156,8 +173,8 @@
                 <div class="card">
                     <div class="card-body mt-3">
                         <h6 class="mb-3">Publish</h6>
-                        <button class="btn btn-sm btn-success mx-1 float-end" type="submit">Add Post</button>
-                        <button class="btn btn-sm btn-warning mx-1 float-end" type="button">Save as Draft</button>
+                        <button class="btn btn-sm btn-success mx-1 float-end">Add Post</button>
+                        <button class="btn btn-sm btn-warning mx-1 float-end">Save as Draft</button>
                     </div>
                 </div>
             </div>
@@ -174,3 +191,49 @@
 {% include 'blog/admin/base/header.html' with order=order %}
 {% include 'blog/admin/base/sidebar.html' %}
 {% endblock body_hidden %}
+
+{% block scripts %}
+<script src="https://cdn.tiny.cloud/1/brffh1txjfz0f4byqyup0lsm9my705onsw592h4flbm5zxi0/tinymce/6/tinymce.min.js" referrerpolicy="origin"></script>
+<script>
+    document.getElementById("title").onkeyup=function(){
+        document.getElementById("slug").value=document.getElementById("title").value.toLowerCase().replace(/[^\w ]+/g,'').replace(/ +/g,'-');
+    };
+
+    const actualBtn = document.getElementById('main_img');
+    const DivChosen = document.getElementById('image_sel_pre');
+    const DivChosen2 = document.getElementById('image_show_pre');
+    const fileShow = document.getElementById('image_show_pre-img');
+    const fileShowCls = document.getElementById('image_pre_show_close');
+
+    actualBtn.addEventListener('change', function(){
+        showPreviewMedia(actualBtn,fileShow)
+        DivChosen.classList.add("d-none")
+        DivChosen2.classList.remove("d-none")
+    })
+    function showPreviewMedia(input, image_pre){
+        if(input.files && input.files[0]){
+            var reader = new FileReader();
+            reader.onload = function(e){
+                image_pre.src = e.target.result;
+            }
+            reader.readAsDataURL(input.files[0]);
+        }
+    }
+    fileShowCls.addEventListener("click",function(){
+        actualBtn.value = '';
+        fileShow.src = "";
+        DivChosen.classList.remove("d-none")
+        DivChosen2.classList.add("d-none")
+    })
+</script>
+<script>
+    tinymce.init({
+        selector: '#blog_description',
+        plugins: 'image autolink emoticons lists media table',
+        toolbar: 'media addcomment showcomments casechange code export formatpainter image table emoticons',
+        toolbar_mode: 'floating',
+        tinycomments_mode: 'embedded',
+        tinycomments_author: 'Author name',
+    });
+</script>
+{% endblock scripts %}
