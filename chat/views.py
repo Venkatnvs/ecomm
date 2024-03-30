@@ -2,7 +2,7 @@ from django.shortcuts import render
 from django.contrib.auth.decorators import login_required
 from rest_framework.response import Response
 from rest_framework.decorators import api_view
-from .chat_responce_v6 import ChatbotLogic,profiler
+from .chat_responce_v7 import ChatbotLogic
 from store.models import Product
 from django.template.loader import get_template
 
@@ -25,7 +25,7 @@ def chatbot_api(request):
     user_message = user_message.lower()
     chatbot_logic = ChatbotLogic(request)
     bot_response = chatbot_logic.process_user_message(user_message)
-    profiler.print_stats()
+    # profiler.print_stats()
     return Response({'response': bot_response})
 
 @api_view(['GET'])

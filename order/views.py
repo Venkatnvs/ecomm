@@ -27,7 +27,7 @@ from django.urls import reverse
 
 import razorpay
 razorpay_client = razorpay.Client(auth=(config('razorpay_key_id'), config('razorpay_key_secret')))
-razorpay_client.set_app_details({"title" : "NVSTRADES", "version" : "1.1.1"})
+razorpay_client.set_app_details({"title" : "GreenStore", "version" : "1.1.1"})
 
 class EmailThread(threading.Thread):
     def __init__(self, email):

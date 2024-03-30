@@ -1,33 +1,27 @@
+import joblib
 import spacy
-from transformers import pipeline
-from sklearn.feature_extraction.text import CountVectorizer
-from sklearn.naive_bayes import MultinomialNB
-from store.models import Product,ProductMedia
-import torch
-import pandas as pd
-from django.template.loader import get_template
-from django.conf import settings
 import os
-from order.models import Order,ShippingAddress,OrderItems
 import re
-from line_profiler import LineProfiler
-from django.http import HttpRequest
+from django.conf import settings
+from store.models import Product,ProductMedia
+from order.models import Order,ShippingAddress,OrderItems
+from django.template.loader import get_template
 
-profiler = LineProfiler()
+# Load the model
+vector_model_path = os.path.join(settings.BASE_DIR, 'data_files/chat_vector.joblib')
+model_path = os.path.join(settings.BASE_DIR, 'data_files/chat.joblib')
+vectorizer = joblib.load(vector_model_path)
+model = joblib.load(model_path)
+nlp_model = spacy.load("en_core_web_sm")
+
 
 class ChatbotLogic:
     def __init__(self, request):
         self.request = request
-        self.name = "nvsbot"
-        self.nlp = spacy.load("en_core_web_sm")
-        self.sentiment_analyzer = pipeline("sentiment-analysis", model="nlptown/bert-base-multilingual-uncased-sentiment", framework="pt")
-        self.vectorizer = CountVectorizer(lowercase=True)
-        self.classifier = MultinomialNB()
-        file_path = os.path.join(settings.BASE_DIR,'data_files/training_data.csv')
-        data = pd.read_csv(file_path)
-        X = self.vectorizer.fit_transform(data['Message'])
-        y = data['Intent']
-        self.classifier.fit(X, y)
+        self.name = "GreenBot"
+        self.nlp = nlp_model
+        self.vectorizer = vectorizer
+        self.classifier = model
 
     def classify_intent(self, message):
         vectorized_message = self.vectorizer.transform([message])
@@ -41,15 +35,9 @@ class ChatbotLogic:
             response = self.generate_response("greeting", message)
         else:
             response = self.generate_response(intent, message)
-        # sentiment = self.analyze_sentiment(message)
-        # named_entities = self.extract_named_entities(message)
 
         self.set_user_state(intent)
-        return f"{response}<br>" #Sentiment: {sentiment}<br>Entities: {named_entities}"
-
-    def analyze_sentiment(self, message):
-        sentiment_score = self.sentiment_analyzer(message)[0]['label']
-        return sentiment_score.capitalize()
+        return f"{response}<br>"
 
     def extract_named_entities(self, message):
         doc = self.nlp(message)
@@ -61,6 +49,8 @@ class ChatbotLogic:
             response = self.process_greeting_intent()
         elif intent == 'product':
             response = self.process_product_intent(message)
+        elif intent == 'orders':
+            response = self.process_orders_lst()
         elif intent == 'order_status':
             response = self.process_order_status_intent()
         elif intent == 'order_address':
@@ -150,12 +140,22 @@ class ChatbotLogic:
             if order_items:
                 items_info = f"Items in Order {order.id}:\n"
                 for item in order_items:
-                    items_info += f"- {item.product.name} (Quantity: {item.quantity})\n"
+                    items_info += f"- {item.product.name[0:50]}... (Quantity: {item.quantity})\n"
                 return items_info
             else:
                 return "No items found in this order."
         else:
             return "Order not found."
+        
+    def process_orders_lst(self):
+        order = Order.objects.filter(user=self.request.user.customer,is_completed=True).order_by('-date')[0:3]
+        if order:
+            items_info = f"Last 3 Order :\n"
+            for item in order:
+                items_info += f"- {item.id}... (Quantity: {item.get_item_total}) --- {item.status}\n"
+            return items_info
+        else:
+            return "No latest Order"
     
     def process_greeting_intent(self):
         return "Hello! How can I assist you today?"
@@ -197,4 +197,4 @@ class ChatbotLogic:
             message_a = f'<a href="/product/{product.slug}" target="_blank"><img class="api-image" src="{product.first_img}" alt="{product.name}"/></a>'
             product_info = f"{product.pk}) {product.name} - {product.new_price}<br>{message_a}<br>Description: {product.description}"
             return product_info
-        return "Product not found."
+        return "Product not found."    

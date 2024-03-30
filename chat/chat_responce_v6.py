@@ -67,6 +67,8 @@ class ChatbotLogic:
             response = self.process_greeting_intent()
         elif intent == 'product':
             response = self.process_product_intent(message)
+        elif intent == 'orders':
+            response = self.process_orders_lst()
         elif intent == 'order_status':
             response = self.process_order_status_intent()
         elif intent == 'order_address':
@@ -156,12 +158,22 @@ class ChatbotLogic:
             if order_items:
                 items_info = f"Items in Order {order.id}:\n"
                 for item in order_items:
-                    items_info += f"- {item.product.name} (Quantity: {item.quantity})\n"
+                    items_info += f"- {item.product.name[0:50]}... (Quantity: {item.quantity})\n"
                 return items_info
             else:
                 return "No items found in this order."
         else:
             return "Order not found."
+        
+    def process_orders_lst(self):
+        order = Order.objects.filter(user=self.request.user.customer,is_completed=True).order_by('-date')[0:3]
+        if order:
+            items_info = f"Last 3 Order :\n"
+            for item in order:
+                items_info += f"- {item.id}... (Quantity: {item.get_item_total}) --- {item.status}\n"
+            return items_info
+        else:
+            return "No latest Order"
     
     def process_greeting_intent(self):
         return "Hello! How can I assist you today?"
